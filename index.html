@@ -3,126 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>群吃饭零食打卡月历</title>
+<title>好事发生！</title>
 <style>
   :root{
-    --paper:#F6F0E3;
-    --card:#FFFDF8;
-    --ink:#2E251C;
-    --ink-soft:#7A6B58;
-    --line:#E7DCC8;
-    --line-strong:#D8C9AC;
-    --meal:#E07B39;      /* 吃饭 暖橙 */
-    --meal-soft:#FBEEDF;
-    --snack:#C25E8A;     /* 零食 莓红 */
-    --snack-soft:#F8E7EE;
-    --today:#3F6B4F;
-    --shadow:0 1px 2px rgba(46,37,28,.06), 0 8px 24px rgba(46,37,28,.06);
-    --r:14px;
+    --paper:#F6F0E3; --card:#FFFDF8; --ink:#2E251C; --ink-soft:#7A6B58;
+    --line:#E7DCC8; --line-strong:#D8C9AC;
+    --meal:#E07B39; --meal-soft:#FBEEDF; --snack:#C25E8A; --snack-soft:#F8E7EE;
+    --today:#3F6B4F; --note:#6E86C2; --note-soft:#E9EEF8;
+    --shadow:0 1px 2px rgba(46,37,28,.06), 0 8px 24px rgba(46,37,28,.06); --r:14px;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:
-      radial-gradient(circle at 1px 1px, rgba(120,100,70,.08) 1px, transparent 0) 0 0/22px 22px,
-      var(--paper);
-    color:var(--ink);
-    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,"Segoe UI",Roboto,sans-serif;
-    -webkit-font-smoothing:antialiased;
-    line-height:1.5;
-    padding:24px 16px 64px;
+    background:radial-gradient(circle at 1px 1px, rgba(120,100,70,.08) 1px, transparent 0) 0 0/22px 22px, var(--paper);
+    color:var(--ink);font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;padding:24px 16px 64px;
   }
   .wrap{max-width:960px;margin:0 auto;}
   .tnum{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
 
-  /* ---------- header ---------- */
   .brand{display:flex;align-items:center;gap:14px;margin:8px 4px 4px;}
-  .brand .logo{
-    width:52px;height:52px;border-radius:50%;
-    background:radial-gradient(circle at 35% 30%,#8a5a34,#5b3a20);
-    display:grid;place-items:center;font-size:26px;color:#fff;
-    box-shadow:var(--shadow);
-  }
+  .brand .logo{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8a5a34,#5b3a20);display:grid;place-items:center;font-size:26px;color:#fff;box-shadow:var(--shadow);}
   .brand h1{font-size:26px;margin:0;letter-spacing:1px;font-weight:800;}
   .brand .h1-edit{cursor:text;outline:none;border-radius:6px;padding:0 4px;}
   .brand .h1-edit:focus{background:#fff;box-shadow:0 0 0 2px var(--line-strong);}
   .brand .sub{font-size:11px;letter-spacing:3px;color:var(--ink-soft);text-transform:uppercase;margin-top:2px;}
 
-  .toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin:-40px 4px 18px;}
+  /* 可爱贴纸条 */
+  .stickers{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:6px 0 14px;}
+  .stickers svg{width:52px;height:52px;filter:drop-shadow(0 3px 4px rgba(46,37,28,.1));animation:bob 3s ease-in-out infinite;}
+  .stickers svg:nth-child(2){animation-delay:.4s;} .stickers svg:nth-child(3){animation-delay:.8s;}
+  .stickers svg:nth-child(4){animation-delay:1.2s;} .stickers svg:nth-child(5){animation-delay:1.6s;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-6px) rotate(2deg);}}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin:-40px 4px 8px;}
   @media(max-width:640px){.toolbar{justify-content:flex-start;margin-top:10px;}}
-  .btn{
-    border:1px solid var(--line-strong);background:var(--card);color:var(--ink);
-    padding:8px 14px;border-radius:999px;font-size:13px;cursor:pointer;font-weight:600;
-    transition:transform .08s ease, box-shadow .12s ease, background .12s;
-  }
+  .btn{border:1px solid var(--line-strong);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:13px;cursor:pointer;font-weight:600;transition:transform .08s, box-shadow .12s, background .12s;display:inline-flex;align-items:center;gap:6px;}
   .btn:hover{box-shadow:var(--shadow);}
   .btn:active{transform:translateY(1px);}
   .btn.ghost{background:transparent;}
 
-  /* ---------- month nav ---------- */
   .monthbar{text-align:center;position:relative;margin:6px 0 16px;}
   .monthbar .title{font-size:22px;font-weight:800;letter-spacing:1px;}
   .monthbar .today-link{display:inline-block;margin-top:2px;font-size:13px;color:var(--meal);cursor:pointer;border-bottom:1px solid transparent;}
   .monthbar .today-link:hover{border-color:var(--meal);}
-  .nav{
-    position:absolute;top:0;width:38px;height:38px;border-radius:50%;
-    border:1px solid var(--line-strong);background:var(--card);cursor:pointer;
-    font-size:18px;color:var(--ink-soft);display:grid;place-items:center;
-  }
+  .nav{position:absolute;top:0;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);background:var(--card);cursor:pointer;font-size:18px;color:var(--ink-soft);display:grid;place-items:center;}
   .nav:hover{color:var(--ink);box-shadow:var(--shadow);}
   .nav.prev{left:0;} .nav.next{right:0;}
 
-  /* ---------- members ---------- */
-  .members{
-    background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-    box-shadow:var(--shadow);padding:12px 14px;margin-bottom:18px;
-    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-  }
-  .chip{
-    display:flex;align-items:center;gap:8px;background:var(--paper);
-    border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 5px;font-size:14px;font-weight:600;
-  }
-  .avatar{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:14px;font-weight:700;flex:0 0 auto;}
+  .members{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 14px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .chip{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 5px;font-size:14px;font-weight:600;cursor:pointer;transition:box-shadow .12s;}
+  .chip:hover{box-shadow:var(--shadow);}
+  .avatar{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:14px;font-weight:700;flex:0 0 auto;background-size:cover;background-position:center;overflow:hidden;}
   .avatar.sm{width:20px;height:20px;font-size:11px;}
-  .avatar.lg{width:34px;height:34px;font-size:17px;}
-  .chip .del{cursor:pointer;color:var(--ink-soft);font-size:15px;margin-left:2px;line-height:1;}
-  .chip .del:hover{color:var(--snack);}
-  .add-member{
-    width:34px;height:34px;border-radius:50%;border:1.5px dashed var(--line-strong);
-    background:transparent;color:var(--ink-soft);font-size:20px;cursor:pointer;display:grid;place-items:center;
-  }
+  .avatar.lg{width:56px;height:56px;font-size:30px;}
+  .avatar.wig{animation:wiggle .5s ease;}
+  @keyframes wiggle{0%,100%{transform:rotate(0);}20%{transform:rotate(-14deg) scale(1.1);}40%{transform:rotate(12deg) scale(1.1);}60%{transform:rotate(-8deg);}80%{transform:rotate(6deg);}}
+  .add-member{width:34px;height:34px;border-radius:50%;border:1.5px dashed var(--line-strong);background:transparent;color:var(--ink-soft);font-size:20px;cursor:pointer;display:grid;place-items:center;}
   .add-member:hover{color:var(--ink);border-color:var(--ink-soft);}
   .members .empty{color:var(--ink-soft);font-size:13px;}
 
-  /* ---------- calendar ---------- */
   .cal{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:10px 10px 12px;}
   .weekrow{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:6px 0 10px;color:var(--ink-soft);font-size:13px;font-weight:600;border-bottom:1px solid var(--line);}
   .grid{display:grid;grid-template-columns:repeat(7,1fr);}
-  .cell{
-    min-height:92px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
-    padding:6px 7px;cursor:pointer;position:relative;transition:background .12s;
-  }
+  .cell{min-height:92px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 7px;cursor:pointer;position:relative;transition:background .12s;}
   .cell:nth-child(7n){border-right:none;}
   .cell.blank{cursor:default;background:repeating-linear-gradient(-45deg,transparent,transparent 7px,rgba(200,185,155,.06) 7px,rgba(200,185,155,.06) 14px);}
   .cell:not(.blank):hover{background:#FBF6EA;}
   .cell .d{font-size:14px;color:var(--ink-soft);font-weight:600;}
   .cell.today{box-shadow:inset 0 0 0 2px var(--today);border-radius:8px;}
   .cell.today .d{color:var(--today);font-weight:800;}
-  .cell .stack{display:flex;gap:-4px;margin-top:6px;flex-wrap:wrap;}
+  .cell .stack{display:flex;margin-top:6px;flex-wrap:wrap;}
   .cell .stack .avatar{margin-right:-6px;border:2px solid var(--card);}
-  .cell .more{font-size:11px;color:var(--ink-soft);align-self:center;margin-left:8px;}
+  .cell .more{font-size:11px;color:var(--ink-soft);align-self:center;margin-left:10px;}
   .cell .sum{position:absolute;right:7px;bottom:6px;font-weight:800;font-size:13px;}
   .cell .dots{position:absolute;left:7px;bottom:8px;display:flex;gap:3px;}
   .dot{width:6px;height:6px;border-radius:50%;}
-  @media(max-width:560px){
-    .cell{min-height:70px;padding:4px;}
-    .cell .avatar.sm{width:16px;height:16px;font-size:9px;}
-    .cell .sum{font-size:11px;}
-  }
+  .cell .msgmark{position:absolute;right:6px;top:5px;font-size:11px;}
+  @media(max-width:560px){.cell{min-height:70px;padding:4px;}.cell .avatar.sm{width:16px;height:16px;font-size:9px;}.cell .sum{font-size:11px;}}
 
-  /* ---------- summary ---------- */
   .summary{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px;}
-  .summary h3{margin:0 0 4px;font-size:15px;letter-spacing:1px;}
+  .summary h3, .wall h3{margin:0;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:7px;}
+  .sum-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
+  .scope{display:inline-flex;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:2px;}
+  .scope button{border:none;background:transparent;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:700;color:var(--ink-soft);cursor:pointer;}
+  .scope button.active{background:var(--card);color:var(--ink);box-shadow:var(--shadow);}
   .sum-top{display:flex;flex-wrap:wrap;gap:18px;align-items:baseline;margin-bottom:14px;}
   .sum-big{font-size:30px;font-weight:800;}
   .badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px;}
@@ -132,9 +97,47 @@
   .userbar .name{width:100px;flex:0 0 auto;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .track{flex:1;height:10px;background:var(--paper);border-radius:999px;overflow:hidden;}
   .track > i{display:block;height:100%;border-radius:999px;}
-  .userbar .amt{width:72px;text-align:right;font-weight:700;}
+  .userbar .amt{width:78px;text-align:right;font-weight:700;}
 
-  /* ---------- modal ---------- */
+  .wall{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px;}
+  .compose{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0 14px;}
+  .compose .line1{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;}
+  .compose select{padding:7px 10px;border:1px solid var(--line-strong);border-radius:9px;background:var(--card);font-family:inherit;font-size:13px;color:var(--ink);}
+  .clabel{font-size:13px;color:var(--ink-soft);font-weight:600;}
+  .moods{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
+  .moods button{font-size:18px;line-height:1;padding:4px 6px;border-radius:9px;border:1.5px solid transparent;background:var(--card);cursor:pointer;}
+  .moods button.active{border-color:var(--note);background:var(--note-soft);}
+  .ats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+  .ats button{font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line-strong);background:var(--card);cursor:pointer;color:var(--note);}
+  .ats button:hover{background:var(--note-soft);}
+  .compose .row{display:flex;gap:8px;}
+  .compose textarea{flex:1;resize:none;padding:10px 12px;border:1px solid var(--line-strong);border-radius:10px;font-size:15px;font-family:inherit;background:var(--card);color:var(--ink);min-height:44px;}
+  .compose textarea:focus{outline:none;border-color:var(--note);}
+  .send{background:var(--note);color:#fff;border:none;border-radius:10px;padding:0 16px;font-weight:800;cursor:pointer;font-size:14px;}
+  .send:active{transform:translateY(1px);}
+  .pat{background:var(--meal-soft);color:#a3521f;border:none;border-radius:10px;padding:0 14px;font-weight:800;cursor:pointer;font-size:14px;}
+  .pat:active{transform:translateY(1px);}
+
+  .feed{display:flex;flex-direction:column;gap:12px;}
+  .post{display:flex;gap:10px;align-items:flex-start;}
+  .post .bubble{background:var(--paper);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:9px 12px;flex:1;min-width:0;position:relative;}
+  .post .who{font-weight:700;font-size:13px;}
+  .post .to{color:var(--note);font-weight:700;}
+  .post .txt{font-size:15px;margin-top:2px;word-break:break-word;white-space:pre-wrap;}
+  .post .txt .at{color:var(--note);font-weight:700;}
+  .post .time{font-size:11px;color:var(--ink-soft);margin-top:4px;}
+  .post .mood{font-size:16px;margin-left:4px;}
+  .post .kill{position:absolute;top:6px;right:9px;cursor:pointer;color:var(--line-strong);font-size:14px;}
+  .post .kill:hover{color:var(--snack);}
+  .patline{text-align:center;font-size:13px;color:var(--ink-soft);padding:2px 0;position:relative;}
+  .patline b{color:var(--ink);}
+  .patline.new{animation:pop2 .5s ease;}
+  @keyframes pop2{0%{transform:scale(.7);opacity:0;}60%{transform:scale(1.12);}100%{transform:scale(1);opacity:1;}}
+  .patline .killp{cursor:pointer;color:transparent;margin-left:6px;}
+  .patline:hover .killp{color:var(--line-strong);}
+  .patline .killp:hover{color:var(--snack);}
+  .wall .empty{color:var(--ink-soft);font-size:13px;text-align:center;padding:10px 0;}
+
   .overlay{position:fixed;inset:0;background:rgba(46,37,28,.45);backdrop-filter:blur(2px);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto;}
   .overlay.show{display:flex;}
   .modal{background:var(--card);border-radius:18px;box-shadow:0 24px 60px rgba(46,37,28,.3);width:100%;max-width:460px;overflow:hidden;animation:pop .18s ease;}
@@ -144,7 +147,7 @@
   .modal .head .wd{font-size:13px;color:var(--ink-soft);}
   .modal .head .x{cursor:pointer;font-size:22px;color:var(--ink-soft);line-height:1;}
   .modal .head .x:hover{color:var(--ink);}
-  .modal .body{padding:14px 20px 20px;max-height:64vh;overflow:auto;}
+  .modal .body{padding:14px 20px 20px;max-height:66vh;overflow:auto;}
   .rec{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);}
   .rec:last-child{border-bottom:none;}
   .rec .info{flex:1;min-width:0;}
@@ -159,11 +162,9 @@
   .empty-day{color:var(--ink-soft);font-size:14px;text-align:center;padding:16px 0;}
 
   .form{margin-top:16px;padding-top:16px;border-top:1px dashed var(--line-strong);}
+  .form.notop{margin-top:0;padding-top:0;border:none;}
   .form label{display:block;font-size:12px;color:var(--ink-soft);font-weight:600;margin:10px 0 5px;}
-  .form input,.form select{
-    width:100%;padding:10px 12px;border:1px solid var(--line-strong);border-radius:10px;
-    font-size:15px;background:var(--paper);color:var(--ink);font-family:inherit;
-  }
+  .form input[type=text],.form input[type=number],.form select{width:100%;padding:10px 12px;border:1px solid var(--line-strong);border-radius:10px;font-size:15px;background:var(--paper);color:var(--ink);font-family:inherit;}
   .form input:focus,.form select:focus{outline:none;border-color:var(--meal);background:#fff;}
   .cat-pick{display:flex;gap:8px;}
   .cat-pick button{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--line-strong);background:var(--paper);cursor:pointer;font-weight:700;font-size:14px;color:var(--ink-soft);}
@@ -174,11 +175,23 @@
   .save{width:100%;margin-top:16px;background:var(--meal);color:#fff;border:none;padding:12px;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;}
   .save:hover{filter:brightness(1.04);}
   .save:active{transform:translateY(1px);}
+  .danger{width:100%;margin-top:10px;background:transparent;color:var(--snack);border:1px solid var(--snack-soft);padding:10px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;}
+  .danger:hover{background:var(--snack-soft);}
 
+  .preview-row{display:flex;align-items:center;gap:14px;margin-bottom:4px;}
+  .preview-row .who-txt{font-weight:700;font-size:15px;}
+  .photo-btns{display:flex;gap:8px;margin-top:6px;}
+  .photo-btns .pbtn{flex:1;text-align:center;padding:9px;border-radius:10px;border:1.5px solid var(--line-strong);background:var(--paper);cursor:pointer;font-size:13px;font-weight:700;color:var(--ink);}
+  .photo-btns .pbtn:hover{border-color:var(--note);}
+  .photo-btns .pbtn.rm{color:var(--snack);}
+  .emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;max-height:150px;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px;}
+  @media(max-width:460px){.emoji-grid{grid-template-columns:repeat(7,1fr);}}
+  .emoji-grid button{font-size:19px;line-height:1;padding:5px 0;border:1.5px solid transparent;border-radius:8px;background:transparent;cursor:pointer;}
+  .emoji-grid button:hover{background:var(--card);}
+  .emoji-grid button.active{border-color:var(--meal);background:var(--card);}
   .swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
   .swatches button{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;}
-  .swatches button.active{border-color:var(--ink);}
-  .hint{font-size:12px;color:var(--ink-soft);margin-top:14px;line-height:1.6;}
+  .swatches button.active{border-color:var(--ink);transform:scale(1.08);}
   .foot{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:22px;}
 </style>
 </head>
@@ -186,23 +199,32 @@
 <div class="wrap">
 
   <div class="toolbar">
-    <button class="btn ghost" id="btnExport">导出备份</button>
-    <button class="btn ghost" id="btnImport">导入备份</button>
+    <button class="btn ghost" id="btnExport">⬇️ 导出备份</button>
+    <button class="btn ghost" id="btnImport">⬆️ 导入备份</button>
     <input type="file" id="fileInput" accept="application/json" hidden>
   </div>
 
   <div class="brand">
-    <div class="logo">🍜</div>
+    <div class="logo">🍫</div>
     <div>
-      <h1><span class="h1-edit" id="titleEl" contenteditable="true" spellcheck="false">群吃饭零食打卡月历</span></h1>
-      <div class="sub">Shared Food Ledger</div>
+      <h1><span class="h1-edit" id="titleEl" contenteditable="true" spellcheck="false">好事发生！</span></h1>
+      <div class="sub">Life is a box of chocolate</div>
     </div>
+  </div>
+
+  <!-- 可爱手绘贴纸 -->
+  <div class="stickers">
+    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="66" rx="34" ry="22" fill="#F3D6B0"/><path d="M18 62 a32 20 0 0 0 64 0 z" fill="#fff"/><path d="M50 44 c-16 0 -30 6 -32 18 h64 c-2-12-16-18-32-18z" fill="#E8613C"/><circle cx="40" cy="70" r="3.2" fill="#3a2a1c"/><circle cx="60" cy="70" r="3.2" fill="#3a2a1c"/><path d="M45 76 q5 5 10 0" stroke="#3a2a1c" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="34" cy="72" r="3.5" fill="#F0A0A0" opacity=".7"/><circle cx="66" cy="72" r="3.5" fill="#F0A0A0" opacity=".7"/></svg>
+    <svg viewBox="0 0 100 100"><circle cx="50" cy="54" r="34" fill="#C99562"/><circle cx="50" cy="54" r="34" fill="none" stroke="#A9773F" stroke-width="3"/><circle cx="38" cy="42" r="4" fill="#5a3a1a"/><circle cx="64" cy="46" r="4.5" fill="#5a3a1a"/><circle cx="58" cy="66" r="3.5" fill="#5a3a1a"/><circle cx="34" cy="62" r="3" fill="#5a3a1a"/><circle cx="42" cy="56" r="3.2" fill="#3a2a1c"/><circle cx="58" cy="56" r="3.2" fill="#3a2a1c"/><path d="M44 63 q6 5 12 0" stroke="#3a2a1c" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="36" cy="60" r="3.5" fill="#E88" opacity=".6"/><circle cx="64" cy="60" r="3.5" fill="#E88" opacity=".6"/></svg>
+    <svg viewBox="0 0 100 100"><path d="M32 34 h36 l-4 46 a4 4 0 0 1 -4 4 h-20 a4 4 0 0 1 -4 -4 z" fill="#EBD9C0"/><rect x="30" y="30" width="40" height="8" rx="4" fill="#fff"/><rect x="46" y="14" width="8" height="18" rx="4" fill="#A9773F"/><circle cx="42" cy="55" r="3.2" fill="#3a2a1c"/><circle cx="58" cy="55" r="3.2" fill="#3a2a1c"/><path d="M45 62 q5 5 10 0" stroke="#3a2a1c" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="37" cy="60" r="3" fill="#E88" opacity=".6"/><circle cx="63" cy="60" r="3" fill="#E88" opacity=".6"/><circle cx="40" cy="70" r="3" fill="#7a5a3a"/><circle cx="55" cy="73" r="2.5" fill="#7a5a3a"/></svg>
+    <svg viewBox="0 0 100 100"><rect x="28" y="26" width="44" height="52" rx="6" fill="#6B4322"/><path d="M28 40 h44 M50 26 v52 M28 58 h44" stroke="#4a2c12" stroke-width="3"/><circle cx="40" cy="50" r="3.2" fill="#fff"/><circle cx="60" cy="50" r="3.2" fill="#fff"/><path d="M44 60 q6 5 12 0" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="35" cy="56" r="3" fill="#E88" opacity=".5"/><circle cx="65" cy="56" r="3" fill="#E88" opacity=".5"/></svg>
+    <svg viewBox="0 0 100 100"><path d="M34 40 h32 l-3 40 a5 5 0 0 1 -5 5 h-16 a5 5 0 0 1 -5 -5 z" fill="#F2E2C8"/><rect x="32" y="36" width="36" height="7" rx="3.5" fill="#D9C4A0"/><rect x="46" y="22" width="8" height="16" rx="4" fill="#B98" transform="rotate(12 50 30)"/><circle cx="43" cy="58" r="3" fill="#7a5a3a"/><circle cx="57" cy="58" r="3" fill="#7a5a3a"/><circle cx="42" cy="55" r="3.2" fill="#3a2a1c"/><circle cx="58" cy="55" r="3.2" fill="#3a2a1c"/><path d="M45 63 q5 4 10 0" stroke="#3a2a1c" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
   </div>
 
   <div class="monthbar">
     <button class="nav prev" id="prevM">‹</button>
     <div class="title" id="monthTitle">2026年7月</div>
-    <div class="today-link" id="todayLink">回到今天</div>
+    <div class="today-link" id="todayLink">↺ 回到今天</div>
     <button class="nav next" id="nextM">›</button>
   </div>
 
@@ -214,16 +236,42 @@
   </div>
 
   <div class="summary">
-    <h3>本月统计</h3>
+    <div class="sum-head">
+      <h3>📊 消费统计</h3>
+      <div class="scope">
+        <button data-scope="month" class="active">本月</button>
+        <button data-scope="all">累计</button>
+      </div>
+    </div>
     <div class="sum-top">
-      <div><div class="sum-big tnum" id="monthTotal">¥0</div></div>
-      <span class="badge meal">吃饭 <span class="tnum" id="mealTotal">¥0</span></span>
-      <span class="badge snack">零食 <span class="tnum" id="snackTotal">¥0</span></span>
+      <div class="sum-big tnum" id="monthTotal">¥0</div>
+      <span class="badge meal">🍚 吃饭 <span class="tnum" id="mealTotal">¥0</span></span>
+      <span class="badge snack">🍪 其他 <span class="tnum" id="snackTotal">¥0</span></span>
     </div>
     <div id="userBars"></div>
   </div>
 
-  <div class="foot">数据保存在你自己的浏览器里 · 记得用「导出备份」保存或分享给群里</div>
+  <div class="wall">
+    <h3>💬 留言 · 心情墙</h3>
+    <div class="compose">
+      <div class="line1">
+        <span class="clabel">我是</span>
+        <select id="mFrom"></select>
+        <span class="clabel">对</span>
+        <select id="mTo"><option value="">大家 👥</option></select>
+      </div>
+      <div class="moods" id="moodPick"></div>
+      <div class="ats" id="atRow"></div>
+      <div class="row">
+        <textarea id="mText" placeholder="今天吃了啥 / 想说的话 / 记录一下心情…" rows="1"></textarea>
+        <button class="pat" id="mPat" title="拍一拍对方">👋 拍一拍</button>
+        <button class="send" id="mSend">发送</button>
+      </div>
+    </div>
+    <div class="feed" id="feed"></div>
+  </div>
+
+  <div class="foot">数据存在你自己的浏览器里 · 记得用「导出备份」保存或分享 🍫</div>
 </div>
 
 <!-- 每日记录弹窗 -->
@@ -241,7 +289,7 @@
         <label>类型</label>
         <div class="cat-pick">
           <button type="button" data-cat="meal" class="active meal">🍚 吃饭</button>
-          <button type="button" data-cat="snack" class="snack">🍪 零食</button>
+          <button type="button" data-cat="snack" class="snack">🍪 其他</button>
         </div>
         <div class="row2">
           <div><label>金额 ¥</label><input id="fAmount" type="number" inputmode="decimal" min="0" step="0.5" placeholder="0"></div>
@@ -253,273 +301,341 @@
   </div>
 </div>
 
-<!-- 添加成员弹窗 -->
+<!-- 成员弹窗（添加/编辑） -->
 <div class="overlay" id="userOverlay">
   <div class="modal">
-    <div class="head"><div class="dt">添加成员</div><div class="x" data-close>×</div></div>
+    <div class="head"><div class="dt" id="userModalTitle">添加成员</div><div class="x" data-close>×</div></div>
     <div class="body">
-      <div class="form" style="border:none;padding-top:0;margin-top:0;">
+      <div class="form notop">
+        <div class="preview-row">
+          <span class="avatar lg" id="uPreview" style="background:#E07B39">🍫</span>
+          <div><div class="who-txt" id="uPreviewName">新成员</div><div style="font-size:12px;color:var(--ink-soft)">头像预览</div></div>
+        </div>
         <label>昵称</label>
-        <input id="uName" type="text" placeholder="比如 kawally" maxlength="12">
-        <label>头像（一个 emoji，可留空用首字）</label>
+        <input id="uName" type="text" placeholder="想叫什么就叫什么！" maxlength="12">
+        <label>用手机相册照片当头像</label>
+        <div class="photo-btns">
+          <label class="pbtn">📷 上传照片<input id="uPhoto" type="file" accept="image/*" hidden></label>
+          <div class="pbtn rm" id="uPhotoRemove" style="display:none">🗑 移除照片</div>
+        </div>
+        <label>或选个 emoji 头像</label>
+        <div class="emoji-grid" id="emojiGrid"></div>
+        <label>也可以自己打一个 emoji（可留空用名字首字）</label>
         <input id="uEmoji" type="text" placeholder="😺 🍔 ⭐️…" maxlength="2">
-        <label>颜色</label>
+        <label>底色（用照片时不显示）</label>
         <div class="swatches" id="swatches"></div>
-        <button class="save" id="saveUser" style="background:var(--today)">＋ 添加</button>
+        <button class="save" id="saveUser" style="background:var(--today)">保存</button>
+        <button class="danger" id="deleteUser" style="display:none">删除这个成员</button>
       </div>
-      <div class="hint">成员之后可以在上方一排里点 × 删除。</div>
     </div>
   </div>
 </div>
 
 <script>
 /* ============ 数据 ============ */
-const KEY = "group_food_ledger_v1";
-const COLORS = ["#E07B39","#C25E8A","#3F6B4F","#6E86C2","#B5892F","#8E5AA8","#4C9A8E","#C0503D"];
-const CAT = { meal:{label:"吃饭",emoji:"🍚",color:"#E07B39"}, snack:{label:"零食",emoji:"🍪",color:"#C25E8A"} };
+const KEY = "group_food_ledger_v2";
+const COLORS = ["#E07B39","#C25E8A","#3F6B4F","#6E86C2","#B5892F","#8E5AA8","#4C9A8E","#C0503D","#D98B5F","#5E7CA8"];
+const CAT = { meal:{label:"吃饭",emoji:"🍚",color:"#E07B39"}, snack:{label:"其他",emoji:"🍪",color:"#C25E8A"} };
 const WD = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+const AVATAR_EMOJIS = "😀 😄 😎 🥰 😊 🤓 😴 🥳 😺 🐶 🐱 🐰 🐻 🐼 🐨 🐯 🦊 🐹 🐷 🐸 🐧 🦄 🐙 🐳 🍔 🍟 🍕 🍜 🍚 🍙 🍩 🍪 🍰 🧁 🍦 🍓 🍑 🍉 🍀 ⭐️ 🌈 🔥 💖 🌸 ☕️ 🧋 🍫 👑".split(" ");
+const MOODS = [["😊","开心"],["😌","满足"],["🥰","幸福"],["😋","好吃"],["😴","困"],["😅","累"],["😢","难过"],["😤","气"],["🤑","剁手"],["🤔","纠结"]];
 
 let state = load();
-let view = { y: new Date().getFullYear(), m: new Date().getMonth() };
-let pickedCat = "meal";
-let pickedColor = COLORS[0];
-let openDate = null;
+let view = { y:new Date().getFullYear(), m:new Date().getMonth() };
+let pickedCat="meal", pickedColor=COLORS[0], pickedEmoji="", pickedPhoto=null, editingUserId=null, openDate=null, pickedMood="", summaryScope="month", justPattedId=null;
 
 function load(){
-  try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s && s.users) return s; }catch(e){}
-  return { title:"群吃饭零食打卡月历", users:[], records:[] };
+  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.users) return {messages:[],...s}; }catch(e){}
+  try{ const old=JSON.parse(localStorage.getItem("group_food_ledger_v1")); if(old&&old.users) return {messages:[],...old}; }catch(e){}
+  return { title:"好事发生！", users:[], records:[], messages:[] };
 }
-function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){ alert("保存失败：可能是头像照片太多、浏览器空间满了。可以少传几张照片，或用 emoji 头像。"); } }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 function userById(id){ return state.users.find(u=>u.id===id); }
 function fmt(n){ n=Math.round(n*100)/100; return "¥"+(n%1===0? n : n.toFixed(2)); }
 function dkey(y,m,d){ return y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0"); }
-function avatarHTML(u, cls){
-  const face = u.emoji || (u.name? u.name.trim()[0] : "?");
-  return `<span class="avatar ${cls||''}" style="background:${u.color}">${face}</span>`;
+function avatarHTML(u,cls,extra){
+  const c=(cls||"")+(extra||"");
+  if(u.photo) return `<span class="avatar ${c}" style="background-image:url('${u.photo}')"></span>`;
+  const face=u.emoji||(u.name?u.name.trim()[0]:"?");
+  return `<span class="avatar ${c}" style="background:${u.color}">${face}</span>`;
+}
+function escapeHTML(s){ return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function withAts(s){ return escapeHTML(s).replace(/@([^\s@]{1,12})/g,'<span class="at">@$1</span>'); }
+function relTime(ts){
+  const s=(Date.now()-ts)/1000;
+  if(s<60) return "刚刚";
+  if(s<3600) return Math.floor(s/60)+"分钟前";
+  if(s<86400) return Math.floor(s/3600)+"小时前";
+  if(s<172800) return "昨天";
+  const d=new Date(ts); return (d.getMonth()+1)+"月"+d.getDate()+"日";
 }
 
 /* ============ 渲染 ============ */
 function render(){
   document.getElementById("titleEl").textContent = state.title;
   document.getElementById("monthTitle").textContent = `${view.y}年${view.m+1}月`;
-  renderMembers();
-  renderGrid();
-  renderSummary();
+  renderMembers(); renderGrid(); renderSummary(); renderWallSelects(); renderAtRow(); renderFeed();
   save();
 }
 
 function renderMembers(){
-  const box = document.getElementById("members");
-  box.innerHTML = "";
-  if(state.users.length===0){
-    const e = document.createElement("span");
-    e.className="empty"; e.textContent="还没有成员，点右边 ＋ 添加 →";
-    box.appendChild(e);
-  }
+  const box=document.getElementById("members"); box.innerHTML="";
+  if(state.users.length===0){ const e=document.createElement("span"); e.className="empty"; e.textContent="还没有成员，点右边 ＋ 添加 →"; box.appendChild(e); }
   state.users.forEach(u=>{
-    const c = document.createElement("span");
-    c.className="chip";
-    c.innerHTML = avatarHTML(u) + `<span>${u.name}</span><span class="del" title="删除成员">×</span>`;
-    c.querySelector(".del").onclick = ()=>{
-      if(confirm(`删除成员「${u.name}」？TA 的历史记录也会一起删除。`)){
-        state.users = state.users.filter(x=>x.id!==u.id);
-        state.records = state.records.filter(r=>r.userId!==u.id);
-        render();
-      }
-    };
+    const c=document.createElement("span"); c.className="chip"; c.title="点击编辑";
+    c.innerHTML=avatarHTML(u,"", justPattedId===u.id?" wig":"")+`<span>${u.name}</span>`;
+    c.onclick=()=>openUserModal(u.id);
     box.appendChild(c);
   });
-  const add = document.createElement("button");
-  add.className="add-member"; add.textContent="＋"; add.title="添加成员";
-  add.onclick = openUserModal;
-  box.appendChild(add);
+  const add=document.createElement("button"); add.className="add-member"; add.textContent="＋"; add.title="添加成员"; add.onclick=()=>openUserModal(); box.appendChild(add);
+  justPattedId=null;
 }
 
 function renderGrid(){
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-  const first = new Date(view.y, view.m, 1);
-  let lead = (first.getDay()+6)%7; // 周一为一列
-  const days = new Date(view.y, view.m+1, 0).getDate();
-  const now = new Date();
+  const grid=document.getElementById("grid"); grid.innerHTML="";
+  const first=new Date(view.y,view.m,1); let lead=(first.getDay()+6)%7;
+  const days=new Date(view.y,view.m+1,0).getDate(); const now=new Date();
   for(let i=0;i<lead;i++){ const b=document.createElement("div"); b.className="cell blank"; grid.appendChild(b); }
-  for(let d=1; d<=days; d++){
-    const key = dkey(view.y, view.m, d);
-    const recs = state.records.filter(r=>r.date===key);
-    const cell = document.createElement("div");
-    cell.className = "cell";
-    if(now.getFullYear()===view.y && now.getMonth()===view.m && now.getDate()===d) cell.classList.add("today");
-    let html = `<div class="d">${d}</div>`;
+  for(let d=1;d<=days;d++){
+    const key=dkey(view.y,view.m,d);
+    const recs=state.records.filter(r=>r.date===key);
+    const msgs=state.messages.filter(m=>m.date===key);
+    const cell=document.createElement("div"); cell.className="cell";
+    if(now.getFullYear()===view.y&&now.getMonth()===view.m&&now.getDate()===d) cell.classList.add("today");
+    let html=`<div class="d">${d}</div>`;
+    if(msgs.length) html+=`<div class="msgmark">💬</div>`;
     if(recs.length){
-      const ids = [...new Set(recs.map(r=>r.userId))];
-      let stack = `<div class="stack">`;
+      const ids=[...new Set(recs.map(r=>r.userId))];
+      let stack=`<div class="stack">`;
       ids.slice(0,3).forEach(id=>{ const u=userById(id); if(u) stack+=avatarHTML(u,"sm"); });
-      if(ids.length>3) stack += `<span class="more">+${ids.length-3}</span>`;
-      stack += `</div>`;
-      const cats = [...new Set(recs.map(r=>r.category))];
-      let dots = `<div class="dots">` + cats.map(c=>`<span class="dot" style="background:${CAT[c].color}"></span>`).join("") + `</div>`;
-      const total = recs.reduce((s,r)=>s+r.amount,0);
-      html += stack + dots + `<div class="sum tnum">${fmt(total)}</div>`;
+      if(ids.length>3) stack+=`<span class="more">+${ids.length-3}</span>`;
+      stack+=`</div>`;
+      const cats=[...new Set(recs.map(r=>r.category))];
+      let dots=`<div class="dots">`+cats.map(c=>`<span class="dot" style="background:${CAT[c].color}"></span>`).join("")+`</div>`;
+      const total=recs.reduce((s,r)=>s+r.amount,0);
+      html+=stack+dots+`<div class="sum tnum">${fmt(total)}</div>`;
     }
-    cell.innerHTML = html;
-    cell.onclick = ()=>openDay(view.y, view.m, d);
+    cell.innerHTML=html;
+    cell.onclick=()=>openDay(view.y,view.m,d);
     grid.appendChild(cell);
   }
 }
 
 function renderSummary(){
-  const inMonth = state.records.filter(r=>{
-    const [y,m] = r.date.split("-").map(Number);
-    return y===view.y && (m-1)===view.m;
-  });
-  const total = inMonth.reduce((s,r)=>s+r.amount,0);
-  const meal = inMonth.filter(r=>r.category==="meal").reduce((s,r)=>s+r.amount,0);
-  const snack = inMonth.filter(r=>r.category==="snack").reduce((s,r)=>s+r.amount,0);
-  document.getElementById("monthTotal").textContent = fmt(total);
-  document.getElementById("mealTotal").textContent = fmt(meal);
-  document.getElementById("snackTotal").textContent = fmt(snack);
-
-  const bars = document.getElementById("userBars");
-  bars.innerHTML = "";
-  const perUser = state.users.map(u=>({
-    u, amt: inMonth.filter(r=>r.userId===u.id).reduce((s,r)=>s+r.amount,0)
-  })).filter(x=>x.amt>0).sort((a,b)=>b.amt-a.amt);
-  const max = perUser.length? perUser[0].amt : 1;
-  if(perUser.length===0){
-    bars.innerHTML = `<div style="color:var(--ink-soft);font-size:13px;">本月还没有记录。</div>`;
-    return;
-  }
+  document.querySelectorAll(".scope button").forEach(b=>b.classList.toggle("active",b.dataset.scope===summaryScope));
+  const scoped = summaryScope==="all" ? state.records
+    : state.records.filter(r=>{ const [y,m]=r.date.split("-").map(Number); return y===view.y&&(m-1)===view.m; });
+  const total=scoped.reduce((s,r)=>s+r.amount,0);
+  const meal=scoped.filter(r=>r.category==="meal").reduce((s,r)=>s+r.amount,0);
+  const snack=scoped.filter(r=>r.category==="snack").reduce((s,r)=>s+r.amount,0);
+  document.getElementById("monthTotal").textContent=fmt(total);
+  document.getElementById("mealTotal").textContent=fmt(meal);
+  document.getElementById("snackTotal").textContent=fmt(snack);
+  const bars=document.getElementById("userBars"); bars.innerHTML="";
+  const perUser=state.users.map(u=>({u,amt:scoped.filter(r=>r.userId===u.id).reduce((s,r)=>s+r.amount,0)})).filter(x=>x.amt>0).sort((a,b)=>b.amt-a.amt);
+  const max=perUser.length?perUser[0].amt:1;
+  if(perUser.length===0){ bars.innerHTML=`<div style="color:var(--ink-soft);font-size:13px;">${summaryScope==="all"?"还没有任何记录。":"本月还没有记录。"}</div>`; return; }
   perUser.forEach(({u,amt})=>{
-    const row = document.createElement("div");
-    row.className="userbar";
-    row.innerHTML = `${avatarHTML(u,"sm")}<span class="name">${u.name}</span>
-      <span class="track"><i style="width:${Math.max(6,amt/max*100)}%;background:${u.color}"></i></span>
-      <span class="amt tnum">${fmt(amt)}</span>`;
+    const row=document.createElement("div"); row.className="userbar";
+    row.innerHTML=`${avatarHTML(u,"sm")}<span class="name">${u.name}</span><span class="track"><i style="width:${Math.max(6,amt/max*100)}%;background:${u.color}"></i></span><span class="amt tnum">${fmt(amt)}</span>`;
     bars.appendChild(row);
   });
 }
+document.querySelectorAll(".scope button").forEach(b=>b.onclick=()=>{ summaryScope=b.dataset.scope; renderSummary(); });
+
+/* ============ 留言墙 ============ */
+function renderWallSelects(){
+  const from=document.getElementById("mFrom"), to=document.getElementById("mTo");
+  const pf=from.value, pt=to.value;
+  from.innerHTML=state.users.map(u=>`<option value="${u.id}">${u.emoji&&!u.photo?u.emoji+" ":""}${u.name}</option>`).join("");
+  to.innerHTML=`<option value="">大家 👥</option>`+state.users.map(u=>`<option value="${u.id}">${u.emoji&&!u.photo?u.emoji+" ":""}${u.name}</option>`).join("");
+  if(pf) from.value=pf; if(pt) to.value=pt;
+}
+function renderAtRow(){
+  const row=document.getElementById("atRow");
+  if(state.users.length===0){ row.innerHTML=""; return; }
+  row.innerHTML=`<span class="clabel" style="align-self:center">@提到：</span>`+state.users.map(u=>`<button data-at="${u.name}">@${u.name}</button>`).join("");
+  row.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    const t=document.getElementById("mText"); t.value=(t.value?t.value.replace(/\s*$/,' '):"")+"@"+b.dataset.at+" "; t.focus();
+  });
+}
+function renderMoodPick(){
+  const box=document.getElementById("moodPick");
+  box.innerHTML=MOODS.map(([e,l])=>`<button data-m="${e}" title="${l}">${e}</button>`).join("");
+  box.querySelectorAll("button").forEach(b=>{
+    b.classList.toggle("active",b.dataset.m===pickedMood);
+    b.onclick=()=>{ pickedMood=(pickedMood===b.dataset.m?"":b.dataset.m); renderMoodPick(); };
+  });
+}
+function renderFeed(){
+  const feed=document.getElementById("feed");
+  const list=[...state.messages].sort((a,b)=>b.ts-a.ts);
+  if(list.length===0){ feed.innerHTML=`<div class="empty">还没有留言，来发第一条吧～</div>`; return; }
+  feed.innerHTML=list.map(m=>{
+    const u=userById(m.userId); if(!u) return "";
+    if(m.type==="pat"){
+      const t=m.toUserId?userById(m.toUserId):null; const tn=t?t.name:"大家";
+      const isNew=m.id===lastPatId;
+      return `<div class="patline ${isNew?"new":""}">👋 <b>${u.name}</b> 拍了拍 <b>${tn}</b> · ${relTime(m.ts)}<span class="killp" data-mkill="${m.id}">✕</span></div>`;
+    }
+    const t=m.toUserId?userById(m.toUserId):null;
+    const toHTML=t?` <span class="to">→ @${t.name}</span>`:"";
+    const mood=m.mood?`<span class="mood">${m.mood}</span>`:"";
+    return `<div class="post">${avatarHTML(u)}<div class="bubble"><div class="who">${u.name}${toHTML}${mood}</div><div class="txt">${withAts(m.text)}</div><div class="time">${relTime(m.ts)}</div><span class="kill" data-mkill="${m.id}" title="删除">✕</span></div></div>`;
+  }).join("");
+  feed.querySelectorAll("[data-mkill]").forEach(el=>el.onclick=()=>{ state.messages=state.messages.filter(x=>x.id!==el.dataset.mkill); render(); });
+  lastPatId=null;
+}
+let lastPatId=null;
+
+document.getElementById("mSend").onclick=()=>{
+  if(state.users.length===0){ openUserModal(); return; }
+  const text=document.getElementById("mText").value.trim();
+  if(!text){ document.getElementById("mText").focus(); return; }
+  const now=new Date();
+  state.messages.push({ id:uid(), userId:document.getElementById("mFrom").value, toUserId:document.getElementById("mTo").value||null, mood:pickedMood, text, ts:Date.now(), date:dkey(now.getFullYear(),now.getMonth(),now.getDate()) });
+  document.getElementById("mText").value=""; pickedMood=""; renderMoodPick(); render();
+};
+document.getElementById("mPat").onclick=()=>{
+  if(state.users.length===0){ openUserModal(); return; }
+  const from=document.getElementById("mFrom").value;
+  const to=document.getElementById("mTo").value||null;
+  if(to && to===from){ alert("不能拍自己啦 😄 换一个「对」谁。"); return; }
+  const now=new Date(); const id=uid(); lastPatId=id; justPattedId=to;
+  state.messages.push({ id, type:"pat", userId:from, toUserId:to, ts:Date.now(), date:dkey(now.getFullYear(),now.getMonth(),now.getDate()) });
+  render();
+};
 
 /* ============ 每日弹窗 ============ */
 function openDay(y,m,d){
   if(state.users.length===0){ openUserModal(); return; }
-  openDate = dkey(y,m,d);
-  document.getElementById("dayTitle").textContent = `${m+1}月${d}日`;
-  document.getElementById("dayWeekday").textContent = WD[new Date(y,m,d).getDay()];
-  const sel = document.getElementById("fUser");
-  sel.innerHTML = state.users.map(u=>`<option value="${u.id}">${u.emoji||""} ${u.name}</option>`).join("");
-  document.getElementById("fAmount").value = "";
-  document.getElementById("fNote").value = "";
-  setCat("meal");
+  openDate=dkey(y,m,d);
+  document.getElementById("dayTitle").textContent=`${m+1}月${d}日`;
+  document.getElementById("dayWeekday").textContent=WD[new Date(y,m,d).getDay()];
+  document.getElementById("fUser").innerHTML=state.users.map(u=>`<option value="${u.id}">${u.emoji&&!u.photo?u.emoji+" ":""}${u.name}</option>`).join("");
+  document.getElementById("fAmount").value=""; document.getElementById("fNote").value=""; setCat("meal");
   renderDayRecords();
   document.getElementById("dayOverlay").classList.add("show");
 }
 function renderDayRecords(){
-  const box = document.getElementById("dayRecords");
-  const recs = state.records.filter(r=>r.date===openDate);
-  if(recs.length===0){ box.innerHTML = `<div class="empty-day">今天还没有记录，在下面加一条 ↓</div>`; return; }
-  const total = recs.reduce((s,r)=>s+r.amount,0);
-  box.innerHTML = recs.map(r=>{
-    const u = userById(r.userId); if(!u) return "";
-    const cat = CAT[r.category];
-    return `<div class="rec">
-      ${avatarHTML(u)}
-      <div class="info">
-        <div class="n">${u.name}</div>
-        <div class="meta"><span class="cat-tag ${r.category}">${cat.emoji}${cat.label}</span>${r.note?r.note:""}</div>
-      </div>
-      <div class="amt tnum">${fmt(r.amount)}</div>
-      <div class="kill" data-kill="${r.id}" title="删除">🗑</div>
-    </div>`;
-  }).join("") + `<div style="text-align:right;font-weight:800;margin-top:8px" class="tnum">合计 ${fmt(total)}</div>`;
-  box.querySelectorAll("[data-kill]").forEach(el=>{
-    el.onclick = ()=>{ state.records = state.records.filter(r=>r.id!==el.dataset.kill); render(); renderDayRecords(); };
-  });
+  const box=document.getElementById("dayRecords");
+  const recs=state.records.filter(r=>r.date===openDate);
+  if(recs.length===0){ box.innerHTML=`<div class="empty-day">今天还没有记录，在下面加一条 ↓</div>`; return; }
+  const total=recs.reduce((s,r)=>s+r.amount,0);
+  box.innerHTML=recs.map(r=>{
+    const u=userById(r.userId); if(!u) return ""; const cat=CAT[r.category];
+    return `<div class="rec">${avatarHTML(u)}<div class="info"><div class="n">${u.name}</div><div class="meta"><span class="cat-tag ${r.category}">${cat.emoji}${cat.label}</span>${r.note?escapeHTML(r.note):""}</div></div><div class="amt tnum">${fmt(r.amount)}</div><div class="kill" data-kill="${r.id}" title="删除">🗑</div></div>`;
+  }).join("")+`<div style="text-align:right;font-weight:800;margin-top:8px" class="tnum">合计 ${fmt(total)}</div>`;
+  box.querySelectorAll("[data-kill]").forEach(el=>el.onclick=()=>{ state.records=state.records.filter(r=>r.id!==el.dataset.kill); render(); renderDayRecords(); });
 }
-function setCat(c){
-  pickedCat = c;
-  document.querySelectorAll(".cat-pick button").forEach(b=>{
-    b.classList.toggle("active", b.dataset.cat===c);
-  });
-  document.querySelector(".save#addRecord").style.background = CAT[c].color;
-}
-document.querySelectorAll(".cat-pick button").forEach(b=> b.onclick = ()=>setCat(b.dataset.cat));
-
-document.getElementById("addRecord").onclick = ()=>{
-  const amt = parseFloat(document.getElementById("fAmount").value);
+function setCat(c){ pickedCat=c; document.querySelectorAll(".cat-pick button").forEach(b=>b.classList.toggle("active",b.dataset.cat===c)); document.getElementById("addRecord").style.background=CAT[c].color; }
+document.querySelectorAll(".cat-pick button").forEach(b=>b.onclick=()=>setCat(b.dataset.cat));
+document.getElementById("addRecord").onclick=()=>{
+  const amt=parseFloat(document.getElementById("fAmount").value);
   if(!(amt>0)){ alert("请输入大于 0 的金额"); return; }
-  state.records.push({
-    id: uid(),
-    userId: document.getElementById("fUser").value,
-    date: openDate,
-    category: pickedCat,
-    amount: Math.round(amt*100)/100,
-    note: document.getElementById("fNote").value.trim()
-  });
-  document.getElementById("fAmount").value = "";
-  document.getElementById("fNote").value = "";
+  state.records.push({ id:uid(), userId:document.getElementById("fUser").value, date:openDate, category:pickedCat, amount:Math.round(amt*100)/100, note:document.getElementById("fNote").value.trim() });
+  document.getElementById("fAmount").value=""; document.getElementById("fNote").value="";
   render(); renderDayRecords();
 };
 
-/* ============ 成员弹窗 ============ */
-function openUserModal(){
-  document.getElementById("uName").value="";
-  document.getElementById("uEmoji").value="";
-  pickedColor = COLORS[state.users.length % COLORS.length];
-  const sw = document.getElementById("swatches");
-  sw.innerHTML = COLORS.map(c=>`<button style="background:${c}" data-c="${c}"></button>`).join("");
-  sw.querySelectorAll("button").forEach(b=>{
-    b.classList.toggle("active", b.dataset.c===pickedColor);
-    b.onclick = ()=>{ pickedColor=b.dataset.c; sw.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b)); };
-  });
+/* ============ 成员弹窗（添加/编辑 + 头像） ============ */
+function refreshUserPreview(){
+  const name=document.getElementById("uName").value.trim();
+  const pv=document.getElementById("uPreview");
+  if(pickedPhoto){ pv.textContent=""; pv.style.backgroundImage=`url('${pickedPhoto}')`; pv.style.background=`center/cover url('${pickedPhoto}')`; }
+  else{ pv.style.backgroundImage="none"; const face=pickedEmoji||document.getElementById("uEmoji").value.trim()||(name?name[0]:"🍫"); pv.textContent=face; pv.style.background=pickedColor; }
+  document.getElementById("uPreviewName").textContent=name||"新成员";
+  document.getElementById("uPhotoRemove").style.display=pickedPhoto?"block":"none";
+}
+function buildEmojiGrid(){
+  const g=document.getElementById("emojiGrid");
+  g.innerHTML=AVATAR_EMOJIS.map(e=>`<button data-e="${e}">${e}</button>`).join("");
+  g.querySelectorAll("button").forEach(b=>{ b.classList.toggle("active",!pickedPhoto&&b.dataset.e===pickedEmoji);
+    b.onclick=()=>{ pickedPhoto=null; pickedEmoji=b.dataset.e; document.getElementById("uEmoji").value=""; buildEmojiGrid(); refreshUserPreview(); }; });
+}
+function buildSwatches(){
+  const sw=document.getElementById("swatches");
+  sw.innerHTML=COLORS.map(c=>`<button style="background:${c}" data-c="${c}"></button>`).join("");
+  sw.querySelectorAll("button").forEach(b=>{ b.classList.toggle("active",b.dataset.c===pickedColor);
+    b.onclick=()=>{ pickedColor=b.dataset.c; buildSwatches(); refreshUserPreview(); }; });
+}
+document.getElementById("uPhoto").onchange=(e)=>{
+  const f=e.target.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{ const img=new Image(); img.onload=()=>{
+    const size=160, c=document.createElement("canvas"); c.width=size; c.height=size;
+    const ctx=c.getContext("2d"); const min=Math.min(img.width,img.height);
+    ctx.drawImage(img,(img.width-min)/2,(img.height-min)/2,min,min,0,0,size,size);
+    pickedPhoto=c.toDataURL("image/jpeg",0.8); pickedEmoji=""; buildEmojiGrid(); refreshUserPreview();
+  }; img.src=rd.result; };
+  rd.readAsDataURL(f); e.target.value="";
+};
+document.getElementById("uPhotoRemove").onclick=()=>{ pickedPhoto=null; buildEmojiGrid(); refreshUserPreview(); };
+function openUserModal(id){
+  editingUserId=id||null;
+  const del=document.getElementById("deleteUser");
+  if(editingUserId){
+    const u=userById(editingUserId);
+    document.getElementById("userModalTitle").textContent="编辑成员";
+    document.getElementById("uName").value=u.name;
+    document.getElementById("uEmoji").value=(u.photo||AVATAR_EMOJIS.includes(u.emoji))?"":(u.emoji||"");
+    pickedPhoto=u.photo||null;
+    pickedEmoji=(!u.photo&&AVATAR_EMOJIS.includes(u.emoji))?u.emoji:"";
+    pickedColor=u.color; del.style.display="block";
+  }else{
+    document.getElementById("userModalTitle").textContent="添加成员";
+    document.getElementById("uName").value=""; document.getElementById("uEmoji").value="";
+    pickedPhoto=null; pickedEmoji=""; pickedColor=COLORS[state.users.length%COLORS.length]; del.style.display="none";
+  }
+  buildEmojiGrid(); buildSwatches(); refreshUserPreview();
   document.getElementById("userOverlay").classList.add("show");
 }
-document.getElementById("saveUser").onclick = ()=>{
-  const name = document.getElementById("uName").value.trim();
+document.getElementById("uName").oninput=refreshUserPreview;
+document.getElementById("uEmoji").oninput=()=>{ if(document.getElementById("uEmoji").value.trim()){ pickedPhoto=null; pickedEmoji=""; buildEmojiGrid(); } refreshUserPreview(); };
+document.getElementById("saveUser").onclick=()=>{
+  const name=document.getElementById("uName").value.trim();
   if(!name){ alert("请输入昵称"); return; }
-  state.users.push({ id:uid(), name, emoji:document.getElementById("uEmoji").value.trim(), color:pickedColor });
-  document.getElementById("userOverlay").classList.remove("show");
-  render();
+  const emoji=pickedEmoji||document.getElementById("uEmoji").value.trim();
+  if(editingUserId){ const u=userById(editingUserId); u.name=name; u.emoji=emoji; u.color=pickedColor; u.photo=pickedPhoto||null; }
+  else{ state.users.push({ id:uid(), name, emoji, color:pickedColor, photo:pickedPhoto||null }); }
+  document.getElementById("userOverlay").classList.remove("show"); render();
+};
+document.getElementById("deleteUser").onclick=()=>{
+  const u=userById(editingUserId); if(!u) return;
+  if(confirm(`删除成员「${u.name}」？TA 的消费记录和留言也会一起消失`)){
+    state.users=state.users.filter(x=>x.id!==editingUserId);
+    state.records=state.records.filter(r=>r.userId!==editingUserId);
+    state.messages=state.messages.filter(m=>m.userId!==editingUserId&&m.toUserId!==editingUserId);
+    document.getElementById("userOverlay").classList.remove("show"); render();
+  }
 };
 
 /* ============ 顶部 / 导航 ============ */
-document.getElementById("prevM").onclick = ()=>{ view.m--; if(view.m<0){view.m=11;view.y--;} render(); };
-document.getElementById("nextM").onclick = ()=>{ view.m++; if(view.m>11){view.m=0;view.y++;} render(); };
-document.getElementById("todayLink").onclick = ()=>{ const n=new Date(); view={y:n.getFullYear(),m:n.getMonth()}; render(); };
+document.getElementById("prevM").onclick=()=>{ view.m--; if(view.m<0){view.m=11;view.y--;} render(); };
+document.getElementById("nextM").onclick=()=>{ view.m++; if(view.m>11){view.m=0;view.y++;} render(); };
+document.getElementById("todayLink").onclick=()=>{ const n=new Date(); view={y:n.getFullYear(),m:n.getMonth()}; render(); };
+const titleEl=document.getElementById("titleEl");
+titleEl.onblur=()=>{ state.title=titleEl.textContent.trim()||"好事发生！"; titleEl.textContent=state.title; save(); };
+titleEl.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); titleEl.blur(); } };
 
-const titleEl = document.getElementById("titleEl");
-titleEl.onblur = ()=>{ state.title = titleEl.textContent.trim() || "群吃饭零食打卡月历"; titleEl.textContent = state.title; save(); };
-titleEl.onkeydown = (e)=>{ if(e.key==="Enter"){ e.preventDefault(); titleEl.blur(); } };
-
-/* 关闭弹窗 */
-document.querySelectorAll(".overlay").forEach(o=>{
-  o.addEventListener("click", e=>{ if(e.target===o || e.target.dataset.close!==undefined) o.classList.remove("show"); });
-});
-document.addEventListener("keydown", e=>{ if(e.key==="Escape") document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show")); });
+document.querySelectorAll(".overlay").forEach(o=>o.addEventListener("click",e=>{ if(e.target===o||e.target.dataset.close!==undefined) o.classList.remove("show"); }));
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show")); });
 
 /* ============ 导出 / 导入 ============ */
-document.getElementById("btnExport").onclick = ()=>{
-  const blob = new Blob([JSON.stringify(state,null,2)], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `食堂账本-${view.y}${String(view.m+1).padStart(2,"0")}.json`;
-  a.click();
+document.getElementById("btnExport").onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=`巧克力账本-${view.y}${String(view.m+1).padStart(2,"0")}.json`; a.click();
 };
-document.getElementById("btnImport").onclick = ()=> document.getElementById("fileInput").click();
-document.getElementById("fileInput").onchange = (e)=>{
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader();
-  r.onload = ()=>{
-    try{
-      const data = JSON.parse(r.result);
-      if(!data.users || !data.records) throw 0;
-      if(confirm("导入会覆盖当前数据，确定吗？")){ state = data; render(); }
-    }catch(err){ alert("文件格式不对，请选择本工具导出的备份。"); }
-    e.target.value = "";
-  };
+document.getElementById("btnImport").onclick=()=>document.getElementById("fileInput").click();
+document.getElementById("fileInput").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return; const r=new FileReader();
+  r.onload=()=>{ try{ const data=JSON.parse(r.result); if(!data.users) throw 0; if(confirm("导入会覆盖当前数据，确定吗？")){ state={messages:[],...data}; render(); } }catch(err){ alert("文件格式不对，请选择本工具导出的备份。"); } e.target.value=""; };
   r.readAsText(f);
 };
 
+renderMoodPick();
 render();
 </script>
 </body>
