@@ -190,7 +190,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <style>
 /* ---------- 可爱化 ---------- */
 :root{ --pink:#FFE3EC; --mint:#E3F6EF; --sky:#E4F0FB; --r:18px; }
-.receipt,.cal,.rev,.shout-form{border-radius:20px}
+.receipt,.cal,.rev,.shout-form,.plan{border-radius:20px}
 .cell{border-radius:14px}
 .cell:hover{transform:translateY(-3px) rotate(-1deg)}
 .btn{border-radius:14px;box-shadow:0 3px 0 var(--red-deep)}
@@ -198,12 +198,19 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .btn-alt{box-shadow:0 3px 0 var(--line)}
 
 /* ---------- 板块切换 ---------- */
-.tabs{display:flex;gap:4px;margin-top:14px;flex-wrap:wrap}
-.tab{color:rgba(255,255,255,.75);font-size:14px;padding:8px 14px;border-radius:12px 12px 0 0}
-.tab:hover{color:#fff;background:rgba(0,0,0,.12)}
+.tabs{display:flex;gap:4px;margin-top:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;padding-bottom:0}
+.tabs::-webkit-scrollbar{display:none}
+.tab{color:rgba(255,255,255,.75);font-size:14px;padding:9px 14px;border-radius:12px 12px 0 0;
+  white-space:nowrap;flex:none}
 .tab.on{color:var(--ink);background:var(--paper);font-weight:700}
 .view{display:none}
 .view.on{display:block}
+
+/* ---------- 头像 ---------- */
+.av{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;background:var(--paper-2)}
+.av-txt{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:15px;font-weight:700}
 
 /* ---------- 封面 ---------- */
 .cover{display:flex;gap:18px;align-items:center;background:#fff;border:2px solid var(--line);
@@ -220,25 +227,58 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .cover .badge{position:absolute;top:-10px;right:14px;background:var(--gold);color:var(--ink);
   font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;transform:rotate(4deg);
   box-shadow:0 2px 0 rgba(34,26,21,.15)}
-@media (max-width:520px){.cover{flex-direction:column;text-align:center}.cover .shot{width:150px;height:190px}}
 
 /* ---------- 喊话墙 ---------- */
 .shout-form{background:#fff;border:1px solid var(--line);padding:14px;margin-top:20px;box-shadow:0 4px 0 rgba(34,26,21,.06)}
 .shout-form textarea{width:100%;min-height:56px;padding:11px 13px;border:1px solid var(--line);
   border-radius:13px;background:var(--paper);resize:vertical}
 .shout-form .send{margin-top:10px;width:auto;padding:11px 24px;float:right}
-.wall{margin-top:20px;column-count:2;column-gap:12px}
-@media (max-width:560px){.wall{column-count:1}}
-.note{break-inside:avoid;background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:13px 15px;margin-bottom:12px;position:relative;box-shadow:0 3px 0 rgba(34,26,21,.05)}
+.wall{margin-top:20px}
+.note{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px 15px;
+  margin-bottom:12px;position:relative;box-shadow:0 3px 0 rgba(34,26,21,.05)}
 .note:nth-child(4n+1){background:#FFFBEE}
 .note:nth-child(4n+2){background:var(--mint)}
 .note:nth-child(4n+3){background:var(--pink)}
+.note .hd{display:flex;align-items:center;gap:9px}
 .note .nick{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:16px;color:var(--red)}
-.note .time{font-size:11px;color:var(--ink-soft);margin-left:8px}
-.note .txt{margin-top:6px;font-size:15px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
-.note .kill{position:absolute;top:9px;right:11px;font-size:12px;color:var(--ink-soft);opacity:.35}
-.note:hover .kill{opacity:1}
+.note .time{font-size:11px;color:var(--ink-soft)}
+.note .txt{margin-top:8px;font-size:15px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
+.note .kill{position:absolute;top:11px;right:13px;font-size:13px;color:var(--ink-soft);opacity:.4}
+.note .acts{margin-top:10px;display:flex;gap:14px;font-size:13px}
+.note .acts button{color:var(--ink-soft);text-decoration:underline}
+.replies{margin-top:10px;border-left:3px solid var(--line);padding-left:12px}
+.reply{padding:7px 0;font-size:14px;line-height:1.6}
+.reply .rn{font-weight:700;color:var(--red-deep);margin-right:6px}
+.reply .rt{font-size:11px;color:var(--ink-soft);margin-left:6px}
+.rbox{display:none;margin-top:10px;gap:8px}
+.rbox.on{display:flex}
+.rbox input{flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:11px;background:#fff}
+.rbox button{background:var(--red);color:#fff;border-radius:11px;padding:9px 16px;font-size:14px;flex:none}
+
+/* ---------- 约饭 ---------- */
+.plan{background:#fff;border:1px solid var(--line);padding:16px 18px;margin-top:14px;
+  box-shadow:0 4px 0 rgba(34,26,21,.06);position:relative}
+.plan.past{opacity:.55}
+.plan h3{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:22px;margin:0 0 8px;font-weight:400}
+.plan .meta{font-size:14px;color:var(--ink-soft);line-height:1.9}
+.plan .meta b{color:var(--ink);font-weight:500}
+.plan .joins{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:12px;
+  padding-top:12px;border-top:2px dashed var(--line)}
+.plan .joins .av,.plan .joins .av-txt{width:30px;height:30px;font-size:13px}
+.plan .go{margin-top:12px;width:100%;padding:12px}
+.plan .go.in{background:var(--jade);box-shadow:0 3px 0 #14503E}
+.plan .kill{position:absolute;top:14px;right:16px;font-size:13px;color:var(--ink-soft);opacity:.4}
+
+/* ---------- 食客 ---------- */
+.folks{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:20px}
+.folk{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;text-align:center;
+  box-shadow:0 3px 0 rgba(34,26,21,.05)}
+.folk .av,.folk .av-txt{width:64px;height:64px;font-size:26px;margin:0 auto 10px}
+.folk .fn{font-size:16px;font-weight:700}
+.folk .fs{font-size:12px;color:var(--ink-soft);margin-top:5px;line-height:1.7}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#C9C4BC;margin-right:5px}
+.dot.on{background:#2BB673}
+.me-tag{display:inline-block;background:var(--gold);font-size:11px;padding:2px 8px;border-radius:999px;margin-top:6px}
 
 /* ---------- 品鉴 ---------- */
 .rev-new{margin-top:20px;width:auto;padding:13px 26px}
@@ -251,8 +291,8 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .rev .verdict{font-family:"Noto Serif SC",serif;font-weight:600;font-size:19px;line-height:1.55;
   border-left:4px solid var(--gold);padding-left:14px;margin:16px 0;border-radius:0}
 .rev .body{font-size:15px;line-height:1.85;white-space:pre-wrap;word-break:break-word}
-.rev .foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;
-  padding-top:12px;border-top:2px dashed var(--line);font-size:12px;color:var(--ink-soft)}
+.rev .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-top:16px;padding-top:12px;border-top:2px dashed var(--line);font-size:12px;color:var(--ink-soft)}
 .rev .foot .p{font-size:17px;color:var(--jade)}
 
 /* ---------- 相册 ---------- */
@@ -260,6 +300,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .shot-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;
   box-shadow:0 3px 0 rgba(34,26,21,.05);cursor:pointer;transition:transform .14s}
 .shot-card:hover{transform:translateY(-3px) rotate(-1deg)}
+.shot-card.pickable{border:2px solid var(--gold)}
 .shot-card .ph{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:var(--paper-2)}
 .shot-card .cap{padding:9px 11px}
 .shot-card .cap .n{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -269,7 +310,60 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 
 .empty{text-align:center;color:var(--ink-soft);font-size:14px;padding:44px 20px;
   border:2px dashed var(--line);border-radius:20px;margin-top:20px;line-height:1.8}
-.nick-tag{cursor:pointer;text-decoration:underline dotted}
+.nick-tag{cursor:pointer}
+.av-edit{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.av-edit .av,.av-edit .av-txt{width:66px;height:66px;font-size:27px}
+
+/* ================= 手机端 ================= */
+@media (max-width:640px){
+  body{padding-bottom:30px}
+  .wrap{padding:0 12px}
+  .sign{padding:14px 0 0}
+  .brand h1{font-size:23px}
+  .brand .sub{display:none}
+  .sign-row{align-items:center}
+  .who{font-size:12px}
+  .tabs{margin:12px -12px 0;padding:0 12px}
+  .tab{font-size:13px;padding:10px 12px}
+  .cover{flex-direction:column;text-align:center;gap:12px;padding:14px}
+  .cover .shot{width:140px;height:180px}
+  .cover .badge{right:auto;left:50%;transform:translateX(-50%) rotate(-3deg)}
+  .stats{grid-template-columns:repeat(2,1fr);gap:6px}
+  .stat .v{font-size:19px}
+  .stat .k{font-size:10px}
+  .cal{padding:9px}
+  .grid,.dow{gap:4px}
+  .cell{border-radius:10px}
+  .cell .num{font-size:10px;top:3px;left:5px}
+  .cell .face{font-size:20px}
+  .cell .face img{width:26px;height:26px}
+  .cell .money{font-size:9px;bottom:2px}
+  .cell .cnt{font-size:9px;bottom:2px;right:4px}
+  .cell:hover{transform:none}
+  .album{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+  .shot-card:hover{transform:none}
+  .shot-card .cap{padding:7px 8px}
+  .shot-card .cap .n{font-size:12px}
+  .folks{grid-template-columns:repeat(2,1fr);gap:10px}
+  .sheet{max-height:94vh;padding:16px 14px 30px;border-radius:22px 22px 0 0}
+  .meal{flex-direction:row;gap:10px;padding:9px}
+  .meal .pic{width:64px;height:64px}
+  .note .kill{opacity:.75}
+  .rbox{flex-direction:column}
+  .rbox button{width:100%}
+  .rev .in{padding:15px 16px}
+  .rev h3{font-size:22px}
+  .rev .verdict{font-size:17px}
+  .tools{flex-direction:column}
+  .tools button{width:100%;padding:11px}
+  .btn{padding:14px 18px}
+  input,select,textarea{font-size:16px!important}
+  .rate-row span{width:78px;font-size:12px}
+}
+@media (max-width:380px){
+  .cell .face{font-size:17px}
+  .folks{grid-template-columns:1fr}
+}
 </style>
 </head>
 
@@ -286,10 +380,9 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     </div>
     <button id="enterBtn" class="btn">进店 🚪</button>
   </div>
-
   <div class="card hidden" id="gateStep2">
     <h1 class="display">先取个名 🏷️</h1>
-    <div class="tag">留言、记账、写品鉴都会署这个名。随时能改。</div>
+    <div class="tag">留言、约饭、写品鉴都会署这个名。随时能改。</div>
     <div class="field">
       <label>你的昵称</label>
       <input id="nickInput" type="text" maxlength="12" placeholder="例如：小明" />
@@ -307,20 +400,21 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
           <span class="sub">daily food log</span>
         </div>
         <div class="who">
-          <b id="userLabel" class="nick-tag" title="点一下改名">🙋 —</b>
+          <span id="meBox" class="nick-tag" style="display:flex;align-items:center;gap:7px"></span>
           <button id="logoutBtn" class="ghost">出店</button>
         </div>
       </div>
       <nav class="tabs">
-        <button class="tab on" data-view="cal">📅 打卡日历</button>
+        <button class="tab on" data-view="cal">📅 日历</button>
         <button class="tab" data-view="wall">📣 喊话墙</button>
-        <button class="tab" data-view="rev">✍️ 美食品鉴</button>
+        <button class="tab" data-view="plan">🍱 约饭</button>
+        <button class="tab" data-view="rev">✍️ 品鉴</button>
         <button class="tab" data-view="alb">📸 相册</button>
+        <button class="tab" data-view="folk">👥 食客</button>
       </nav>
     </div>
   </header>
 
-  <!-- ===== 日历 ===== -->
   <div id="v-cal" class="view on wrap">
     <div class="cover">
       <span class="badge">本店店主 👑</span>
@@ -335,7 +429,6 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         </div>
       </div>
     </div>
-
     <section class="receipt">
       <div class="receipt-top">
         <h2 id="monthTitle" class="display">—</h2>
@@ -352,7 +445,6 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         <div class="stat"><div class="k">💸 本月花费</div><div class="v" id="sMoney">0</div></div>
       </div>
     </section>
-
     <section class="cal">
       <div class="dow"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
       <div id="grid" class="grid"></div>
@@ -364,7 +456,6 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     </div>
   </div>
 
-  <!-- ===== 喊话墙 ===== -->
   <div id="v-wall" class="view wrap">
     <div class="shout-form">
       <textarea id="wText" maxlength="500" placeholder="喊一句 📣 比如：明天中午一起去吃那家牛肉火锅"></textarea>
@@ -375,28 +466,34 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div id="wallEmpty" class="empty hidden">墙上还是空的 🕸️<br>第一句话由你来喊。</div>
   </div>
 
-  <!-- ===== 品鉴 ===== -->
+  <div id="v-plan" class="view wrap">
+    <button id="planNew" class="btn rev-new">发起一次约饭 🍱</button>
+    <div id="planList"></div>
+    <div id="planEmpty" class="empty hidden">还没人约饭 🥢<br>发起一次，看谁举手。</div>
+  </div>
+
   <div id="v-rev" class="view wrap">
     <button id="revNew" class="btn rev-new">写一篇品鉴 ✍️</button>
     <div id="revList"></div>
     <div id="revEmpty" class="empty hidden">还没有品鉴 📖<br>吃到值得写的，就写一篇。</div>
   </div>
 
-  <!-- ===== 相册 ===== -->
   <div id="v-alb" class="view wrap">
-    <p class="hint" style="margin-top:20px">📸 日历和品鉴里传过的照片，都会自动收进这里。点开看大图。</p>
+    <p class="hint" style="margin-top:20px">📸 日历和品鉴里传过的照片都在这儿。点开看大图，也能直接拿来当头像。</p>
     <div id="album" class="album"></div>
     <div id="albEmpty" class="empty hidden">相册还是空的 📷<br>去日历里记一餐、传张照片试试。</div>
+  </div>
+
+  <div id="v-folk" class="view wrap">
+    <p class="hint" style="margin-top:20px">👥 所有进过店的人。绿点表示三分钟内还在线。</p>
+    <div id="folks" class="folks"></div>
   </div>
 </main>
 
 
 <div id="dayMask" class="mask">
   <div class="sheet">
-    <div class="sheet-head">
-      <h3 id="dayTitle" class="display">—</h3>
-      <button class="x" data-close>×</button>
-    </div>
+    <div class="sheet-head"><h3 id="dayTitle" class="display">—</h3><button class="x" data-close>×</button></div>
     <div id="mealList"></div>
     <div class="form">
       <div class="field"><label>吃了什么 🍚</label>
@@ -416,11 +513,26 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 </div>
 
+<div id="planMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head"><h3 class="display">🍱 发起约饭</h3><button class="x" data-close>×</button></div>
+    <div class="field"><label>吃什么 🍲</label>
+      <input id="pTitle" type="text" maxlength="30" placeholder="例如：潮汕牛肉火锅" /></div>
+    <div class="field"><label>在哪 📍</label>
+      <input id="pPlace" type="text" maxlength="40" placeholder="例如：陈记，地铁 B 口出来左转" /></div>
+    <div class="field"><label>什么时候 🕐</label>
+      <input id="pWhen" type="datetime-local" /></div>
+    <div class="field"><label>补充 💬（可选）</label>
+      <textarea id="pNote" placeholder="人均大概多少、要不要提前订位……"></textarea></div>
+    <button id="pSave" class="btn">发出去 📣</button>
+  </div>
+</div>
+
 <div id="setMask" class="mask">
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">💱 货币与汇率</h3><button class="x" data-close>×</button></div>
     <div class="field"><label>统计用的本位币</label><select id="baseCur"></select></div>
-    <p class="hint">下面是 1 单位外币折合多少本位币。汇率随时会变，按当天的填就行。</p>
+    <p class="hint">下面是 1 单位外币折合多少本位币，按当天的填就行。</p>
     <div id="rateList"></div>
     <button id="saveRates" class="btn">保存汇率 ✅</button>
   </div>
@@ -429,7 +541,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <div id="picMask" class="mask">
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">😆 换等级表情包</h3><button class="x" data-close>×</button></div>
-    <p class="hint">给每个等级传一张图，全站都会跟着换。不传就用默认 emoji。</p>
+    <p class="hint">给每个等级传一张图，全站都会跟着换。</p>
     <div id="picList"></div>
   </div>
 </div>
@@ -449,7 +561,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="field"><label>一句话结论 💡</label>
       <input id="rVerdict" type="text" maxlength="60" placeholder="吊龙三秒烫，为这一口值得打车过去" /></div>
     <div class="field"><label>正文 📝</label>
-      <textarea id="rBody" style="min-height:150px" placeholder="环境、服务、哪道菜必点、哪道避雷、下次还来不来……"></textarea></div>
+      <textarea id="rBody" style="min-height:150px" placeholder="环境、服务、哪道必点、哪道避雷……"></textarea></div>
     <div class="field"><label>配图 📷（可选）</label>
       <input id="rPhoto" type="file" accept="image/*" />
       <div id="rPrev" class="prev"><img alt="预览" /></div></div>
@@ -462,16 +574,22 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="sheet-head"><h3 id="boxTitle" class="display">—</h3><button class="x" data-close>×</button></div>
     <img id="boxImg" alt="" />
     <div id="boxInfo" class="info"></div>
+    <button id="useAsAvatar" class="btn" style="margin-top:14px">拿这张当我的头像 🖼️</button>
   </div>
 </div>
 
-<div id="nickMask" class="mask">
+<div id="meMask" class="mask">
   <div class="sheet">
-    <div class="sheet-head"><h3 class="display">🏷️ 改个昵称</h3><button class="x" data-close>×</button></div>
-    <div class="field"><label>你的昵称</label>
+    <div class="sheet-head"><h3 class="display">🙋 我的资料</h3><button class="x" data-close>×</button></div>
+    <div class="av-edit"><span id="meAvPrev"></span>
+      <div style="font-size:13px;color:var(--ink-soft);line-height:1.7">
+        换头像：去 📸 相册点开任意一张<br>照片，选「拿这张当我的头像」。<br>或者直接从相册挑 ↓
+      </div></div>
+    <button id="pickFromAlbum" class="btn btn-alt" style="margin-bottom:16px">从相册挑一张 🖼️</button>
+    <div class="field"><label>昵称</label>
       <input id="nickInput2" type="text" maxlength="12" placeholder="例如：小明" /></div>
-    <p class="hint">只改以后发的内容，之前发过的还是旧名字。</p>
-    <button id="nickSave" class="btn">改好了 ✅</button>
+    <p class="hint">改名只影响以后发的内容，之前发过的还是旧名字。</p>
+    <button id="nickSave" class="btn">保存 ✅</button>
   </div>
 </div>
 
@@ -479,7 +597,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInAnonymously, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, doc, addDoc, deleteDoc, setDoc, getDoc,
+import { getFirestore, collection, doc, addDoc, deleteDoc, setDoc, getDoc, updateDoc,
   onSnapshot, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -504,6 +622,9 @@ const C = {
   meals:   () => collection(db,'board','hcx','meals'),
   shouts:  () => collection(db,'board','hcx','shouts'),
   reviews: () => collection(db,'board','hcx','reviews'),
+  plans:   () => collection(db,'board','hcx','plans'),
+  folks:   () => collection(db,'board','hcx','folks'),
+  folk:    id => doc(db,'board','hcx','folks',id),
   photo:   id => doc(db,'board','hcx','photos',id),
   prefs:   () => doc(db,'board','hcx','meta','prefs')
 };
@@ -525,20 +646,23 @@ const CURRENCIES = [
 const CUR = Object.fromEntries(CURRENCIES.map(c=>[c[0],{name:c[1],sym:c[2]}]));
 const DEFAULT_RATES = { CNY:1, HKD:0.92, USD:7.15, TWD:0.225, MOP:0.89, JPY:0.047,
   KRW:0.0052, EUR:7.8, GBP:9.1, SGD:5.35, AUD:4.7, CAD:5.2, THB:0.2, MYR:1.55 };
+const ONLINE_MS = 3*60*1000;
 
-let meals=[], shouts=[], reviews=[];
+let meals=[], shouts=[], reviews=[], plans=[], folks=[];
+let folkMap = {};
 let prefs = { base:'CNY', rates:{...DEFAULT_RATES}, pics:{} };
 let cursor = new Date(); cursor.setDate(1);
 let openDate=null, pickedLevel='yb', pickedPhoto=null;
 let revLevel='rsr', revPhoto=null;
+let myAvatar='', pickingAvatar=false, boxKey='';
 const photoCache = {};
 const unsubs = [];
 
-/* ---- 昵称：优先存浏览器，存不了就只记这一次会话 ---- */
-let nick = '';
-function loadNick(){ try{ return localStorage.getItem('hcx_nick')||'' }catch{ return '' } }
-function saveNick(v){ nick=v; try{ localStorage.setItem('hcx_nick',v) }catch{} }
-nick = loadNick();
+/* ---- 身份：浏览器里存一个 id 和昵称 ---- */
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch{ return null } }
+let cid = ls('hcx_cid');
+if(!cid){ cid = 'c'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); ls('hcx_cid',cid); }
+let nick = ls('hcx_nick') || '';
 
 const $ = s => document.querySelector(s);
 const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -553,6 +677,21 @@ function ago(ms){
   if(d<86400000) return Math.floor(d/3600000)+' 小时前';
   if(d<604800000) return Math.floor(d/86400000)+' 天前';
   const t=new Date(ms); return `${t.getMonth()+1}月${t.getDate()}日`;
+}
+function whenText(iso){
+  if(!iso) return '时间待定';
+  const d=new Date(iso); if(isNaN(d)) return iso;
+  const wd=['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
+  return `${d.getMonth()+1}月${d.getDate()}日 ${wd} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+const AVC = ['#D6242C','#F2B705','#1E6F5C','#5E7A8A','#B4568F','#C4611B','#3C7A5A','#7A5BB5'];
+function avColor(s){ let h=0; for(const ch of (s||'?')) h=(h*31+ch.charCodeAt(0))>>>0; return AVC[h%AVC.length]; }
+function avatarHTML(id, name, cls){
+  const f = folkMap[id];
+  const src = f?.avatar || (id===cid ? myAvatar : '');
+  if(src) return `<img class="av ${cls||''}" src="${src}" alt="${esc(name)}">`;
+  const ch = (name||'?').trim().charAt(0) || '?';
+  return `<span class="av-txt ${cls||''}" style="background:${avColor(name||id)}">${esc(ch)}</span>`;
 }
 function faceHTML(id,size){
   const l=LV[id]; if(!l) return '';
@@ -572,6 +711,19 @@ function compress(file,maxSide=1000,q0=0.72){
       img.onerror=()=>rej(new Error('图片读不出来，换一张'));img.src=fr.result};
     fr.onerror=()=>rej(new Error('文件读取失败'));fr.readAsDataURL(file)});
 }
+/* 方形裁切，用于头像 */
+function squareCrop(dataURL, size=128){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{
+      const s=Math.min(img.width,img.height);
+      const cv=document.createElement('canvas'); cv.width=cv.height=size;
+      cv.getContext('2d').drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,size,size);
+      res(cv.toDataURL('image/jpeg',0.8));
+    };
+    img.src=dataURL;
+  });
+}
 
 /* ===================== 进店 ===================== */
 const gateErr = $('#gateErr');
@@ -586,8 +738,7 @@ async function enter(){
     const map={
       'auth/operation-not-allowed':'匿名登录还没打开：Firebase 控制台 Authentication → Sign-in method → 启用「匿名」',
       'auth/unauthorized-domain':'这个网址没在 Firebase 授权域名里，去 Authentication → Settings 添加',
-      'auth/network-request-failed':'连不上 Firebase，检查网络',
-      'auth/api-key-not-valid.-please-pass-a-valid-api-key.':'apiKey 不对，检查 firebaseConfig'
+      'auth/network-request-failed':'连不上 Firebase，检查网络'
     };
     gateErr.textContent = map[e.code] || e.message;
     gateErr.classList.add('on');
@@ -605,23 +756,34 @@ function askNick(){
 function confirmNick(){
   const v=$('#nickInput').value.trim();
   if(!v){ $('#nickInput').focus(); return; }
-  saveNick(v); openApp();
+  nick=v; ls('hcx_nick',v); openApp();
 }
 $('#nickBtn').onclick = confirmNick;
 $('#nickInput').addEventListener('keydown', e=>{ if(e.key==='Enter') confirmNick(); });
 
+function renderMe(){
+  $('#meBox').innerHTML = avatarHTML(cid, nick) +
+    `<b style="max-width:88px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nick)}</b>`;
+}
 async function openApp(){
   $('#gate').classList.add('hidden');
   $('#app').classList.remove('hidden');
-  $('#userLabel').textContent = '🙋 ' + nick;
+  renderMe();
   await loadPrefs();
   listenAll();
+  ping(); setInterval(ping, 60000);
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) ping(); });
+}
+async function ping(){
+  try{
+    await setDoc(C.folk(cid), { nick, avatar:myAvatar||null, lastSeen:Date.now() }, {merge:true});
+  }catch(e){ console.warn('签到失败',e); }
 }
 onAuthStateChanged(auth, user=>{
   if(user){ nick ? openApp() : askNick(); }
   else{
     while(unsubs.length) unsubs.pop()();
-    meals=[]; shouts=[]; reviews=[];
+    meals=[];shouts=[];reviews=[];plans=[];folks=[];
     $('#app').classList.add('hidden');
     $('#gate').classList.remove('hidden');
     $('#gateStep1').classList.remove('hidden');
@@ -629,10 +791,37 @@ onAuthStateChanged(auth, user=>{
     $('#pwd').value='';
   }
 });
-$('#userLabel').onclick = () => { $('#nickInput2').value=nick; $('#nickMask').classList.add('on'); };
-$('#nickSave').onclick = () => {
+
+/* 我的资料 */
+$('#meBox').onclick = ()=>{
+  $('#nickInput2').value = nick;
+  $('#meAvPrev').innerHTML = avatarHTML(cid, nick);
+  $('#meMask').classList.add('on');
+};
+$('#nickSave').onclick = async ()=>{
   const v=$('#nickInput2').value.trim(); if(!v) return;
-  saveNick(v); $('#userLabel').textContent='🙋 '+nick; $('#nickMask').classList.remove('on');
+  nick=v; ls('hcx_nick',v); renderMe(); await ping();
+  $('#meMask').classList.remove('on');
+};
+$('#pickFromAlbum').onclick = ()=>{
+  pickingAvatar = true;
+  $('#meMask').classList.remove('on');
+  document.querySelector('.tab[data-view="alb"]').click();
+  renderAlbum();
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+async function setAvatarFrom(src){
+  myAvatar = await squareCrop(src);
+  await setDoc(C.folk(cid), { nick, avatar:myAvatar, lastSeen:Date.now() }, {merge:true});
+  renderMe(); renderWall(); renderPlans(); renderFolks();
+  pickingAvatar=false; renderAlbum();
+}
+$('#useAsAvatar').onclick = async ()=>{
+  const src = photoCache[boxKey]; if(!src) return;
+  const b=$('#useAsAvatar'); b.disabled=true; b.textContent='换上了…';
+  try{ await setAvatarFrom(src); $('#boxMask').classList.remove('on'); }
+  catch(e){ alert('没换上：'+e.message) }
+  finally{ b.disabled=false; b.textContent='拿这张当我的头像 🖼️' }
 };
 
 /* ===================== 数据 ===================== */
@@ -654,15 +843,25 @@ function listenAll(){
   while(unsubs.length) unsubs.pop()();
   unsubs.push(onSnapshot(C.meals(), s=>{
     meals=s.docs.map(d=>({id:d.id,...d.data()}));
-    renderCal(); renderAlbum(); if(openDate) renderMealList();
+    renderCal(); renderAlbum(); renderFolks(); if(openDate) renderMealList();
   }, e=>console.error(e)));
   unsubs.push(onSnapshot(C.shouts(), s=>{
     shouts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0));
-    renderWall();
+    renderWall(); renderFolks();
   }, e=>console.error(e)));
   unsubs.push(onSnapshot(C.reviews(), s=>{
     reviews=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0));
     renderReviews(); renderAlbum();
+  }, e=>console.error(e)));
+  unsubs.push(onSnapshot(C.plans(), s=>{
+    plans=s.docs.map(d=>({id:d.id,...d.data()}));
+    renderPlans();
+  }, e=>console.error(e)));
+  unsubs.push(onSnapshot(C.folks(), s=>{
+    folks=s.docs.map(d=>({id:d.id,...d.data()}));
+    folkMap=Object.fromEntries(folks.map(f=>[f.id,f]));
+    if(folkMap[cid]?.avatar && !myAvatar) myAvatar=folkMap[cid].avatar;
+    renderMe(); renderFolks(); renderWall(); renderPlans();
   }, e=>console.error(e)));
 }
 async function getPhoto(id){
@@ -783,7 +982,7 @@ $('#saveMeal').onclick=async()=>{
     const ref=await addDoc(C.meals(),{
       date:openDate, name, level:pickedLevel,
       amount:parseFloat($('#fAmount').value)||0, currency:$('#fCur').value,
-      note:$('#fNote').value.trim(), hasPhoto:!!pickedPhoto, by:nick,
+      note:$('#fNote').value.trim(), hasPhoto:!!pickedPhoto, by:nick, cid,
       createdAtMs:Date.now(), createdAt:serverTimestamp()
     });
     if(pickedPhoto){ await setDoc(C.photo(ref.id),{data:pickedPhoto}); photoCache[ref.id]=pickedPhoto; }
@@ -802,33 +1001,157 @@ $('#nextM').onclick=()=>{cursor.setMonth(cursor.getMonth()+1);renderCal()};
 $('#todayBtn').onclick=()=>{cursor=new Date();cursor.setDate(1);renderCal()};
 
 
-/* ===================== 喊话墙 ===================== */
+/* ===================== 喊话墙（带回复） ===================== */
 function renderWall(){
+  if(!$('#wall')) return;
   $('#wallEmpty').classList.toggle('hidden', shouts.length>0);
-  $('#wall').innerHTML = shouts.map(s=>`
-    <div class="note">
+  $('#wall').innerHTML = shouts.map(s=>{
+    const reps = Array.isArray(s.replies)?s.replies:[];
+    return `<div class="note">
       <button class="kill" data-kill="${s.id}">✕</button>
-      <span class="nick">${esc(s.nick)||'匿名食客'}</span>
-      <span class="time mono">${ago(s.createdAtMs||0)}</span>
+      <div class="hd">
+        ${avatarHTML(s.cid, s.nick)}
+        <div><div class="nick">${esc(s.nick)||'匿名食客'}</div>
+        <div class="time">${ago(s.createdAtMs||0)}</div></div>
+      </div>
       <div class="txt">${esc(s.text)}</div>
-    </div>`).join('');
+      ${reps.length?`<div class="replies">${reps.map(r=>`
+        <div class="reply"><span class="rn">${esc(r.nick)}</span>${esc(r.text)}
+        <span class="rt">${ago(r.ms||0)}</span></div>`).join('')}</div>`:''}
+      <div class="acts">
+        <button data-rep="${s.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button>
+      </div>
+      <div class="rbox" id="rbox-${s.id}">
+        <input type="text" maxlength="200" placeholder="回一句…" data-rinp="${s.id}">
+        <button data-rsend="${s.id}">发送</button>
+      </div>
+    </div>`}).join('');
+
   $('#wall').querySelectorAll('[data-kill]').forEach(b=>b.onclick=async()=>{
     if(!confirm('把这条撕下来？')) return;
     await deleteDoc(doc(db,'board','hcx','shouts',b.dataset.kill));
   });
+  $('#wall').querySelectorAll('[data-rep]').forEach(b=>b.onclick=()=>{
+    const box=$('#rbox-'+b.dataset.rep);
+    box.classList.toggle('on');
+    if(box.classList.contains('on')) box.querySelector('input').focus();
+  });
+  $('#wall').querySelectorAll('[data-rsend]').forEach(b=>b.onclick=()=>sendReply(b.dataset.rsend));
+  $('#wall').querySelectorAll('[data-rinp]').forEach(i=>i.addEventListener('keydown',e=>{
+    if(e.key==='Enter') sendReply(i.dataset.rinp);
+  }));
+}
+async function sendReply(id){
+  const inp=document.querySelector(`[data-rinp="${id}"]`);
+  const text=inp.value.trim(); if(!text) return;
+  inp.disabled=true;
+  try{
+    const s=shouts.find(x=>x.id===id);
+    const reps=Array.isArray(s?.replies)?[...s.replies]:[];
+    reps.push({ nick, cid, text, ms:Date.now() });
+    await updateDoc(doc(db,'board','hcx','shouts',id), { replies:reps });
+    inp.value='';
+  }catch(e){ alert('回复没发出去：'+e.message) }
+  finally{ inp.disabled=false; inp.focus(); }
 }
 async function sendShout(){
   const btn=$('#wSend'), text=$('#wText').value.trim();
   if(!text){ $('#wText').focus(); return; }
   btn.disabled=true; btn.textContent='贴上去…';
   try{
-    await addDoc(C.shouts(),{ nick, text, createdAtMs:Date.now(), createdAt:serverTimestamp() });
+    await addDoc(C.shouts(),{ nick, cid, text, replies:[], createdAtMs:Date.now(), createdAt:serverTimestamp() });
     $('#wText').value='';
   }catch(e){ alert('没贴上：'+e.message) }
   finally{ btn.disabled=false; btn.textContent='贴上去 📌' }
 }
 $('#wSend').onclick=sendShout;
 $('#wText').addEventListener('keydown',e=>{ if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)) sendShout(); });
+
+/* ===================== 约饭 ===================== */
+function renderPlans(){
+  if(!$('#planList')) return;
+  const now=Date.now();
+  const sorted=[...plans].sort((a,b)=>{
+    const ta=a.when?new Date(a.when).getTime():0, tb=b.when?new Date(b.when).getTime():0;
+    const pa=ta<now, pb=tb<now;
+    if(pa!==pb) return pa?1:-1;
+    return pa ? tb-ta : ta-tb;
+  });
+  $('#planEmpty').classList.toggle('hidden', sorted.length>0);
+  $('#planList').innerHTML = sorted.map(p=>{
+    const joins=Array.isArray(p.joins)?p.joins:[];
+    const iam=joins.some(j=>j.cid===cid);
+    const past=p.when && new Date(p.when).getTime()<now;
+    return `<div class="plan ${past?'past':''}">
+      <button class="kill" data-pkill="${p.id}">✕</button>
+      <h3>🍱 ${esc(p.title)}</h3>
+      <div class="meta">
+        📍 <b>${esc(p.place)||'地点待定'}</b><br>
+        🕐 <b>${whenText(p.when)}</b>${past?' <span style="color:var(--red)">（已过）</span>':''}<br>
+        ${p.note?'💬 '+esc(p.note)+'<br>':''}
+        <span style="font-size:12px">由 ${esc(p.by)||'某人'} 发起 · ${ago(p.createdAtMs||0)}</span>
+      </div>
+      <div class="joins">
+        <span style="font-size:13px;color:var(--ink-soft)">${joins.length?`已有 ${joins.length} 人：`:'还没人举手'}</span>
+        ${joins.map(j=>avatarHTML(j.cid,j.nick)).join('')}
+      </div>
+      <button class="btn go ${iam?'in':''}" data-pgo="${p.id}">${iam?'我去 ✋ （点一下取消）':'我要去 🙋'}</button>
+    </div>`}).join('');
+
+  $('#planList').querySelectorAll('[data-pgo]').forEach(b=>b.onclick=()=>toggleJoin(b.dataset.pgo));
+  $('#planList').querySelectorAll('[data-pkill]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('取消这次约饭？')) return;
+    await deleteDoc(doc(db,'board','hcx','plans',b.dataset.pkill));
+  });
+}
+async function toggleJoin(id){
+  const p=plans.find(x=>x.id===id); if(!p) return;
+  const joins=Array.isArray(p.joins)?[...p.joins]:[];
+  const i=joins.findIndex(j=>j.cid===cid);
+  if(i>=0) joins.splice(i,1); else joins.push({cid,nick,ms:Date.now()});
+  try{ await updateDoc(doc(db,'board','hcx','plans',id),{joins}); }
+  catch(e){ alert('没报上名：'+e.message) }
+}
+$('#planNew').onclick=()=>{
+  ['#pTitle','#pPlace','#pNote'].forEach(s=>$(s).value='');
+  const d=new Date(); d.setDate(d.getDate()+1); d.setHours(12,0,0,0);
+  $('#pWhen').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T12:00`;
+  $('#planMask').classList.add('on');
+};
+$('#pSave').onclick=async()=>{
+  const btn=$('#pSave'), title=$('#pTitle').value.trim();
+  if(!title){ $('#pTitle').focus(); return; }
+  btn.disabled=true; btn.textContent='发出去…';
+  try{
+    await addDoc(C.plans(),{
+      title, place:$('#pPlace').value.trim(), when:$('#pWhen').value,
+      note:$('#pNote').value.trim(), by:nick, cid,
+      joins:[{cid,nick,ms:Date.now()}],
+      createdAtMs:Date.now(), createdAt:serverTimestamp()
+    });
+    $('#planMask').classList.remove('on');
+  }catch(e){ alert('没发出去：'+e.message) }
+  finally{ btn.disabled=false; btn.textContent='发出去 📣' }
+};
+
+/* ===================== 食客 ===================== */
+function renderFolks(){
+  if(!$('#folks')) return;
+  const now=Date.now();
+  const sorted=[...folks].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
+  $('#folks').innerHTML = sorted.map(f=>{
+    const on=(now-(f.lastSeen||0))<ONLINE_MS;
+    const said=shouts.filter(s=>s.cid===f.id).length;
+    const ate=meals.filter(m=>m.cid?m.cid===f.id:m.by===f.nick).length;
+    return `<div class="folk">
+      ${avatarHTML(f.id, f.nick)}
+      <div class="fn">${esc(f.nick)||'无名氏'}</div>
+      <div class="fs"><span class="dot ${on?'on':''}"></span>${on?'在线':ago(f.lastSeen||0)}<br>
+        📣 ${said} 条 · 🍚 ${ate} 餐</div>
+      ${f.id===cid?'<span class="me-tag">这是你</span>':''}
+    </div>`}).join('');
+}
+setInterval(()=>{ if(!document.hidden) renderFolks(); }, 60000);
 
 /* ===================== 品鉴 ===================== */
 function renderRevLevels(){
@@ -838,6 +1161,7 @@ function renderRevLevels(){
   $('#rLevels').querySelectorAll('[data-rlv]').forEach(b=>b.onclick=()=>{revLevel=b.dataset.rlv;renderRevLevels()});
 }
 async function renderReviews(){
+  if(!$('#revList')) return;
   $('#revEmpty').classList.toggle('hidden', reviews.length>0);
   $('#revList').innerHTML = reviews.map(r=>{
     const l=LV[r.level]||LV.yb;
@@ -888,7 +1212,7 @@ $('#rSave').onclick=async()=>{
       place, dish:$('#rDish').value.trim(), level:revLevel,
       price:parseFloat($('#rPrice').value)||0, currency:$('#rCur').value,
       verdict:$('#rVerdict').value.trim(), body:$('#rBody').value.trim(),
-      author:nick, hasPhoto:!!revPhoto,
+      author:nick, cid, hasPhoto:!!revPhoto,
       createdAtMs:Date.now(), createdAt:serverTimestamp()
     });
     if(revPhoto){ await setDoc(C.photo('rev_'+ref.id),{data:revPhoto}); photoCache['rev_'+ref.id]=revPhoto; }
@@ -910,19 +1234,22 @@ function albumItems(){
   return [...a,...b].sort((x,y)=>y.ms-x.ms);
 }
 async function renderAlbum(){
+  if(!$('#album')) return;
   const items=albumItems();
   $('#albEmpty').classList.toggle('hidden', items.length>0);
   $('#album').innerHTML = items.map(it=>`
-    <div class="shot-card" data-key="${it.key}">
+    <div class="shot-card ${pickingAvatar?'pickable':''}" data-key="${it.key}">
       <img class="ph" data-apic="${it.key}" alt="${esc(it.title)}">
       <div class="cap">
         <div class="n">${faceHTML(it.level,13)} ${esc(it.title)||'没写名字'}</div>
         <div class="m"><span>${esc(it.sub)}</span><span>${esc(it.by)||''}</span></div>
       </div>
     </div>`).join('');
-  $('#album').querySelectorAll('.shot-card').forEach(card=>card.onclick=()=>{
+  $('#album').querySelectorAll('.shot-card').forEach(card=>card.onclick=async()=>{
     const it=items.find(x=>x.key===card.dataset.key); if(!it) return;
     const src=photoCache[it.key]; if(!src) return;
+    if(pickingAvatar){ await setAvatarFrom(src); alert('头像换好了 🎉'); return; }
+    boxKey=it.key;
     $('#boxTitle').textContent=it.title||'照片';
     $('#boxImg').src=src;
     $('#boxInfo').innerHTML=`${faceHTML(it.level,18)} ${esc(LV[it.level]?.name||'')} · ${esc(it.sub)}
