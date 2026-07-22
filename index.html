@@ -6,7 +6,8 @@
 <title>黄程锡美食平台</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --red:#D6242C;
@@ -186,15 +187,51 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .setup{background:var(--gold);color:var(--ink);padding:12px 16px;font-size:13px;line-height:1.6}
 .setup code{background:rgba(0,0,0,.08);padding:1px 5px;border-radius:4px}
 </style>
+<style>
+/* ---------- 板块切换 ---------- */
+.tabs{display:flex;gap:4px;margin-top:14px;flex-wrap:wrap}
+.tab{color:rgba(255,255,255,.72);font-size:14px;padding:7px 14px;border-radius:8px 8px 0 0;position:relative}
+.tab:hover{color:#fff;background:rgba(0,0,0,.12)}
+.tab.on{color:var(--ink);background:var(--paper);font-weight:700}
+.view{display:none}
+.view.on{display:block}
+
+/* ---------- 喊话墙 ---------- */
+.shout-form{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-top:20px;box-shadow:0 4px 0 rgba(34,26,21,.06)}
+.shout-form .row{display:flex;gap:10px;align-items:flex-start}
+.shout-form input[type=text]{width:132px;flex:none;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--paper)}
+.shout-form textarea{flex:1;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--paper);resize:vertical}
+.shout-form .send{margin-top:10px;width:auto;padding:10px 22px;float:right}
+.wall{margin-top:20px;column-count:2;column-gap:12px}
+@media (max-width:560px){.wall{column-count:1}.shout-form .row{flex-wrap:wrap}.shout-form input[type=text]{width:100%}}
+.note{break-inside:avoid;background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin-bottom:12px;position:relative;box-shadow:0 3px 0 rgba(34,26,21,.05)}
+.note:nth-child(3n){background:#FFFBEE}
+.note:nth-child(3n+2){background:#F4FAF6}
+.note .nick{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:16px;color:var(--red)}
+.note .time{font-size:11px;color:var(--ink-soft);margin-left:8px}
+.note .txt{margin-top:6px;font-size:15px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
+.note .kill{position:absolute;top:8px;right:10px;font-size:12px;color:var(--ink-soft);opacity:0;transition:opacity .15s}
+.note:hover .kill,.note:focus-within .kill{opacity:1}
+
+/* ---------- 品鉴 ---------- */
+.rev-new{margin-top:20px;width:auto;padding:12px 24px}
+.rev{background:#fff;border:1px solid var(--line);border-radius:var(--r);margin-top:16px;overflow:hidden;box-shadow:0 4px 0 rgba(34,26,21,.06)}
+.rev .hero{width:100%;max-height:300px;object-fit:cover;display:block;background:var(--paper-2)}
+.rev .in{padding:18px 20px}
+.rev .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.rev h3{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:26px;margin:0;font-weight:400}
+.rev .dish{font-size:13px;color:var(--ink-soft);margin-top:2px}
+.rev .verdict{font-family:"Noto Serif SC",serif;font-weight:600;font-size:19px;line-height:1.55;
+  border-left:4px solid var(--gold);padding-left:14px;margin:16px 0;border-radius:0}
+.rev .body{font-size:15px;line-height:1.85;white-space:pre-wrap;word-break:break-word}
+.rev .foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:2px dashed var(--line);font-size:12px;color:var(--ink-soft)}
+.rev .foot .p{font-size:17px;color:var(--jade)}
+.empty{text-align:center;color:var(--ink-soft);font-size:14px;padding:44px 20px;border:2px dashed var(--line);border-radius:var(--r);margin-top:20px}
+</style>
 </head>
+
 <body>
 
-<!-- ① 没填 Firebase 配置时的提示 -->
-<div id="setupBanner" class="setup hidden">
-  还没填 Firebase 配置：打开 <code>index.html</code>，把底部 <code>firebaseConfig</code> 换成你自己项目的那一份。
-</div>
-
-<!-- ② 登录页 -->
 <section id="gate" class="gate">
   <div class="card">
     <h1 class="display">黄程锡美食平台</h1>
@@ -204,26 +241,33 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
       <label>口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" />
     </div>
-    <button id="mainAuthBtn" class="btn">进店</button>
+    <button id="enterBtn" class="btn">进店</button>
   </div>
 </section>
 
-<!-- ③ 主体 -->
 <main id="app" class="hidden">
   <header class="sign">
-    <div class="wrap sign-row">
-      <div class="brand">
-        <h1 class="display">黄程锡美食平台</h1>
-        <span class="sub">daily food log</span>
+    <div class="wrap">
+      <div class="sign-row">
+        <div class="brand">
+          <h1 class="display">黄程锡美食平台</h1>
+          <span class="sub">daily food log</span>
+        </div>
+        <div class="who">
+          <b id="userLabel">已进店</b>
+          <button id="logoutBtn" class="ghost">出店</button>
+        </div>
       </div>
-      <div class="who">
-        <b id="userLabel"></b>
-        <button id="logoutBtn" class="ghost">退出</button>
-      </div>
+      <nav class="tabs">
+        <button class="tab on" data-view="cal">打卡日历</button>
+        <button class="tab" data-view="wall">喊话墙</button>
+        <button class="tab" data-view="rev">美食品鉴</button>
+      </nav>
     </div>
   </header>
 
-  <div class="wrap">
+  <!-- ===== 日历 ===== -->
+  <div id="v-cal" class="view on wrap">
     <section class="receipt">
       <div class="receipt-top">
         <h2 id="monthTitle" class="display">—</h2>
@@ -236,26 +280,44 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
       <div class="stats">
         <div class="stat"><div class="k">打卡天数</div><div class="v" id="sDays">0</div></div>
         <div class="stat"><div class="k">连续打卡</div><div class="v" id="sStreak">0</div></div>
-        <div class="stat"><div class="k">本月吃饭</div><div class="v" id="sMeals">0<small> 餐</small></div></div>
+        <div class="stat"><div class="k">本月吃饭</div><div class="v" id="sMeals">0</div></div>
         <div class="stat"><div class="k">本月花费</div><div class="v" id="sMoney">0</div></div>
       </div>
     </section>
-
     <section class="cal">
       <div class="dow"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
       <div id="grid" class="grid"></div>
     </section>
-
     <div id="legend" class="legend"></div>
-
     <div class="tools">
       <button id="settingsBtn">货币与汇率</button>
       <button id="picsBtn">换等级表情包</button>
     </div>
   </div>
+
+  <!-- ===== 喊话墙 ===== -->
+  <div id="v-wall" class="view wrap">
+    <div class="shout-form">
+      <div class="row">
+        <input id="wNick" type="text" maxlength="12" placeholder="你是谁" />
+        <textarea id="wText" maxlength="500" placeholder="喊一句，比如：明天中午一起去吃那家牛肉火锅"></textarea>
+      </div>
+      <button id="wSend" class="btn send">贴上去</button>
+      <div style="clear:both"></div>
+    </div>
+    <div id="wall" class="wall"></div>
+    <div id="wallEmpty" class="empty hidden">墙上还是空的。第一句话由你来喊。</div>
+  </div>
+
+  <!-- ===== 品鉴 ===== -->
+  <div id="v-rev" class="view wrap">
+    <button id="revNew" class="btn rev-new">写一篇品鉴</button>
+    <div id="revList"></div>
+    <div id="revEmpty" class="empty hidden">还没有品鉴。吃到值得写的，就写一篇。</div>
+  </div>
 </main>
 
-<!-- ④ 某一天的弹窗 -->
+
 <div id="dayMask" class="mask">
   <div class="sheet">
     <div class="sheet-head">
@@ -264,80 +326,76 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     </div>
     <div id="mealList"></div>
     <div class="form">
-      <div class="field">
-        <label>吃了什么</label>
-        <input id="fName" type="text" placeholder="例如：楼下猪脚饭" />
-      </div>
-      <div class="field">
-        <label>评级</label>
-        <div id="fLevels" class="picker"></div>
-      </div>
+      <div class="field"><label>吃了什么</label>
+        <input id="fName" type="text" placeholder="例如：楼下猪脚饭" /></div>
+      <div class="field"><label>评级</label><div id="fLevels" class="picker"></div></div>
       <div class="field row2">
-        <div>
-          <label>金额</label>
-          <input id="fAmount" type="number" step="0.01" min="0" placeholder="0.00" />
-        </div>
-        <div>
-          <label>货币</label>
-          <select id="fCur"></select>
-        </div>
+        <div><label>金额</label><input id="fAmount" type="number" step="0.01" min="0" placeholder="0.00" /></div>
+        <div><label>货币</label><select id="fCur"></select></div>
       </div>
-      <div class="field">
-        <label>照片（可选）</label>
+      <div class="field"><label>照片（可选）</label>
         <input id="fPhoto" type="file" accept="image/*" />
-        <div id="fPrev" class="prev"><img alt="预览" /></div>
-      </div>
-      <div class="field">
-        <label>备注（可选）</label>
-        <textarea id="fNote" placeholder="辣、量大、老板娘凶……"></textarea>
-      </div>
+        <div id="fPrev" class="prev"><img alt="预览" /></div></div>
+      <div class="field"><label>备注（可选）</label>
+        <textarea id="fNote" placeholder="辣、量大、老板娘凶……"></textarea></div>
       <button id="saveMeal" class="btn">记这一餐</button>
     </div>
   </div>
 </div>
 
-<!-- ⑤ 汇率设置 -->
 <div id="setMask" class="mask">
   <div class="sheet">
-    <div class="sheet-head">
-      <h3 class="display">货币与汇率</h3>
-      <button class="x" data-close>×</button>
-    </div>
-    <div class="field">
-      <label>统计用的本位币</label>
-      <select id="baseCur"></select>
-    </div>
+    <div class="sheet-head"><h3 class="display">货币与汇率</h3><button class="x" data-close>×</button></div>
+    <div class="field"><label>统计用的本位币</label><select id="baseCur"></select></div>
     <p class="hint">下面是 1 单位外币折合多少本位币。汇率随时会变，自己按当天的填就行。</p>
     <div id="rateList"></div>
     <button id="saveRates" class="btn">保存汇率</button>
   </div>
 </div>
 
-<!-- ⑥ 等级表情包 -->
 <div id="picMask" class="mask">
   <div class="sheet">
-    <div class="sheet-head">
-      <h3 class="display">换等级表情包</h3>
-      <button class="x" data-close>×</button>
-    </div>
-    <p class="hint">给每个等级传一张图，日历和记录里就会显示它，不传就用默认的 emoji。</p>
+    <div class="sheet-head"><h3 class="display">换等级表情包</h3><button class="x" data-close>×</button></div>
+    <p class="hint">给每个等级传一张图，全站都会跟着换。不传就用默认 emoji。</p>
     <div id="picList"></div>
+  </div>
+</div>
+
+<div id="revMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head"><h3 class="display">写一篇品鉴</h3><button class="x" data-close>×</button></div>
+    <div class="field"><label>店名</label>
+      <input id="rPlace" type="text" placeholder="例如：陈记潮汕牛肉火锅" /></div>
+    <div class="field"><label>吃的什么</label>
+      <input id="rDish" type="text" placeholder="例如：吊龙 + 匙柄 + 手打牛肉丸" /></div>
+    <div class="field"><label>评级</label><div id="rLevels" class="picker"></div></div>
+    <div class="field row2">
+      <div><label>人均</label><input id="rPrice" type="number" step="0.01" min="0" placeholder="0.00" /></div>
+      <div><label>货币</label><select id="rCur"></select></div>
+    </div>
+    <div class="field"><label>一句话结论</label>
+      <input id="rVerdict" type="text" maxlength="60" placeholder="吊龙三秒烫，为这一口值得打车过去" /></div>
+    <div class="field"><label>正文</label>
+      <textarea id="rBody" style="min-height:150px" placeholder="环境、服务、哪道菜必点、哪道避雷、下次还来不来……"></textarea></div>
+    <div class="field"><label>配图（可选）</label>
+      <input id="rPhoto" type="file" accept="image/*" />
+      <div id="rPrev" class="prev"><img alt="预览" /></div></div>
+    <div class="field"><label>署名</label>
+      <input id="rAuthor" type="text" maxlength="12" placeholder="黄程锡" /></div>
+    <button id="rSave" class="btn">发表品鉴</button>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth, signInWithEmailAndPassword, signOut,
-  onAuthStateChanged, setPersistence, browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-  getFirestore, collection, doc, addDoc, deleteDoc, setDoc, getDoc,
-  onSnapshot, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInAnonymously, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, deleteDoc, setDoc, getDoc,
+  onSnapshot, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ===================================================================
-   第 1 步：把下面这块换成你自己 Firebase 项目里的配置
+   ① 换成你自己 Firebase 项目的配置
    =================================================================== */
 const firebaseConfig = {
   apiKey: "PASTE_YOUR_API_KEY",
@@ -347,17 +405,24 @@ const firebaseConfig = {
   messagingSenderId: "PASTE",
   appId: "PASTE"
 };
-/* =================================================================== */
 
-const NOT_SET = firebaseConfig.apiKey.startsWith("PASTE");
-if (NOT_SET) document.getElementById('setupBanner').classList.remove('hidden');
+/* ② 进店口令。想换直接改这一行。 */
+const GATE = "hcx0130";
+/* =================================================================== */
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-setPersistence(auth, browserLocalPersistence).catch(()=>{});
 
-/* ---------- 常量 ---------- */
+/* 共享空间：所有人读写同一份数据 */
+const C = {
+  meals:   () => collection(db,'board','hcx','meals'),
+  shouts:  () => collection(db,'board','hcx','shouts'),
+  reviews: () => collection(db,'board','hcx','reviews'),
+  photo:   id => doc(db,'board','hcx','photos',id),
+  prefs:   () => doc(db,'board','hcx','meta','prefs')
+};
+
 const LEVELS = [
   { id:'hb',  name:'夯爆了', emoji:'🤯', color:'#D6242C', rank:5 },
   { id:'rsr', name:'人上人', emoji:'😎', color:'#F2B705', rank:4 },
@@ -366,7 +431,6 @@ const LEVELS = [
   { id:'lwl', name:'拉完了', emoji:'💩', color:'#6B4A2F', rank:1 },
 ];
 const LV = Object.fromEntries(LEVELS.map(l=>[l.id,l]));
-
 const CURRENCIES = [
   ['CNY','人民币','¥'], ['HKD','港币','HK$'], ['USD','美元','$'], ['TWD','新台币','NT$'],
   ['MOP','澳门元','MOP$'], ['JPY','日元','¥'], ['KRW','韩元','₩'], ['EUR','欧元','€'],
@@ -374,399 +438,412 @@ const CURRENCIES = [
   ['THB','泰铢','฿'], ['MYR','马来西亚林吉特','RM']
 ];
 const CUR = Object.fromEntries(CURRENCIES.map(c=>[c[0],{name:c[1],sym:c[2]}]));
-// 默认：1 单位外币 = 多少人民币
-const DEFAULT_RATES = {
-  CNY:1, HKD:0.92, USD:7.15, TWD:0.225, MOP:0.89, JPY:0.047, KRW:0.0052,
-  EUR:7.8, GBP:9.1, SGD:5.35, AUD:4.7, CAD:5.2, THB:0.2, MYR:1.55
-};
+const DEFAULT_RATES = { CNY:1, HKD:0.92, USD:7.15, TWD:0.225, MOP:0.89, JPY:0.047,
+  KRW:0.0052, EUR:7.8, GBP:9.1, SGD:5.35, AUD:4.7, CAD:5.2, THB:0.2, MYR:1.55 };
 
-/* ---------- 状态 ---------- */
-let uid = null;
-let meals = [];                       // 全部记录
+let meals=[], shouts=[], reviews=[];
 let prefs = { base:'CNY', rates:{...DEFAULT_RATES}, pics:{} };
 let cursor = new Date(); cursor.setDate(1);
-let openDate = null;
-let pickedLevel = 'yb';
-let pickedPhoto = null;               // 压缩后的 dataURL
+let openDate=null, pickedLevel='yb', pickedPhoto=null;
+let revLevel='rsr', revPhoto=null;
 const photoCache = {};
-let unsubMeals = null;
+const unsubs = [];
 
-/* ---------- 小工具 ---------- */
 const $ = s => document.querySelector(s);
 const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const todayStr = () => ymd(new Date());
-const money = (n, cur) => (CUR[cur]?.sym || '') + n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
-const toBase = (amount, cur) => amount * (prefs.rates[cur] ?? 1) / (prefs.rates[prefs.base] ?? 1);
-const esc = s => (s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-
-function faceHTML(levelId, size){
-  const l = LV[levelId]; if(!l) return '';
-  const pic = prefs.pics[levelId];
-  return pic ? `<img src="${pic}" alt="${l.name}" style="width:${size}px;height:${size}px">`
+const money = (n,cur) => (CUR[cur]?.sym||'') + n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const toBase = (a,c) => a * (prefs.rates[c] ?? 1) / (prefs.rates[prefs.base] ?? 1);
+const esc = s => (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function ago(ms){
+  const d = Date.now()-ms;
+  if(d<60000) return '刚刚';
+  if(d<3600000) return Math.floor(d/60000)+' 分钟前';
+  if(d<86400000) return Math.floor(d/3600000)+' 小时前';
+  if(d<604800000) return Math.floor(d/86400000)+' 天前';
+  const t = new Date(ms);
+  return `${t.getMonth()+1}月${t.getDate()}日`;
+}
+function faceHTML(id,size){
+  const l=LV[id]; if(!l) return '';
+  const pic=prefs.pics[id];
+  return pic ? `<img src="${pic}" alt="${l.name}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover">`
              : `<span style="font-size:${size}px">${l.emoji}</span>`;
 }
-
-/* 压缩图片，避免 Firestore 单文档 1MB 上限 */
-function compress(file, maxSide=1000, quality=0.72){
-  return new Promise((res, rej)=>{
-    const fr = new FileReader();
-    fr.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        let {width:w, height:h} = img;
-        const scale = Math.min(1, maxSide/Math.max(w,h));
-        w = Math.round(w*scale); h = Math.round(h*scale);
-        const cv = document.createElement('canvas');
-        cv.width = w; cv.height = h;
-        cv.getContext('2d').drawImage(img,0,0,w,h);
-        let q = quality, out = cv.toDataURL('image/jpeg', q);
-        while(out.length > 700000 && q > 0.3){ q -= 0.12; out = cv.toDataURL('image/jpeg', q); }
-        res(out);
-      };
-      img.onerror = () => rej(new Error('图片读不出来，换一张试试'));
-      img.src = fr.result;
-    };
-    fr.onerror = () => rej(new Error('文件读取失败'));
-    fr.readAsDataURL(file);
-  });
+function compress(file,maxSide=1000,q0=0.72){
+  return new Promise((res,rej)=>{
+    const fr=new FileReader();
+    fr.onload=()=>{const img=new Image();
+      img.onload=()=>{let{width:w,height:h}=img;const s=Math.min(1,maxSide/Math.max(w,h));
+        w=Math.round(w*s);h=Math.round(h*s);const cv=document.createElement('canvas');
+        cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);
+        let q=q0,out=cv.toDataURL('image/jpeg',q);
+        while(out.length>700000&&q>0.3){q-=0.12;out=cv.toDataURL('image/jpeg',q)}res(out)};
+      img.onerror=()=>rej(new Error('图片读不出来，换一张'));img.src=fr.result};
+    fr.onerror=()=>rej(new Error('文件读取失败'));fr.readAsDataURL(file)});
 }
 
-/* ===================== 登录 ===================== */
-/* 全站只有一个账号。页面只问口令，邮箱写死在这里。
-   口令由 Firebase 在服务器上校验，所以源码里不出现密码本身。 */
-const ACCOUNT_EMAIL = "hcx@food.app";
-
+/* ===================== 进店 ===================== */
 const gateErr = $('#gateErr');
-function showErr(e){
-  const map = {
-    'auth/invalid-credential':'口令不对',
-    'auth/wrong-password':'口令不对',
-    'auth/missing-password':'把口令填上',
-    'auth/user-not-found':'Firebase 里还没建这个账号',
-    'auth/too-many-requests':'试太多次被暂时锁了，等几分钟再来',
-    'auth/network-request-failed':'连不上 Firebase，检查网络',
-    'auth/unauthorized-domain':'这个网址没在 Firebase 授权域名里，去控制台 Authentication → Settings 添加',
-    'auth/operation-not-allowed':'邮箱/密码登录方式还没在 Firebase 控制台打开'
-  };
-  gateErr.textContent = map[e?.code] || e?.message || String(e);
-  gateErr.classList.add('on');
-}
-
 async function enter(){
   gateErr.classList.remove('on');
-  const btn = $('#mainAuthBtn'), pwd = $('#pwd').value;
-  if(!pwd){ $('#pwd').focus(); return; }
-  btn.disabled = true; btn.textContent = '正在开门…';
+  const btn=$('#enterBtn'), v=$('#pwd').value.trim();
+  if(!v){ $('#pwd').focus(); return; }
+  if(v !== GATE){
+    gateErr.textContent='口令不对。';
+    gateErr.classList.add('on');
+    $('#pwd').select();
+    return;
+  }
+  btn.disabled=true; btn.textContent='正在开门…';
   try{
-    await signInWithEmailAndPassword(auth, ACCOUNT_EMAIL, pwd);
-  }catch(err){
-    showErr(err);
+    await signInAnonymously(auth);
+  }catch(e){
+    const map={
+      'auth/operation-not-allowed':'匿名登录还没打开：Firebase 控制台 Authentication → Sign-in method → 启用「匿名」',
+      'auth/unauthorized-domain':'这个网址没在 Firebase 授权域名里，去 Authentication → Settings 添加',
+      'auth/network-request-failed':'连不上 Firebase，检查网络',
+      'auth/configuration-not-found':'Firebase 配置不对，检查 firebaseConfig'
+    };
+    gateErr.textContent = map[e.code] || e.message;
+    gateErr.classList.add('on');
   }finally{
-    btn.disabled = false; btn.textContent = '进店';
+    btn.disabled=false; btn.textContent='进店';
   }
 }
-$('#mainAuthBtn').onclick = enter;
-$('#pwd').addEventListener('keydown', e => { if(e.key === 'Enter') enter(); });
+$('#enterBtn').onclick = enter;
+$('#pwd').addEventListener('keydown', e=>{ if(e.key==='Enter') enter(); });
 $('#logoutBtn').onclick = () => signOut(auth);
 
-onAuthStateChanged(auth, async user => {
+onAuthStateChanged(auth, async user=>{
   if(user){
-    uid = user.uid;
     $('#gate').classList.add('hidden');
     $('#app').classList.remove('hidden');
-    $('#userLabel').textContent = '黄程锡';
     await loadPrefs();
-    listenMeals();
+    listenAll();
   }else{
-    uid = null;
-    if(unsubMeals){ unsubMeals(); unsubMeals = null; }
-    meals = [];
+    while(unsubs.length) unsubs.pop()();
+    meals=[]; shouts=[]; reviews=[];
     $('#app').classList.add('hidden');
     $('#gate').classList.remove('hidden');
+    $('#pwd').value='';
   }
 });
 
 /* ===================== 数据 ===================== */
 async function loadPrefs(){
   try{
-    const snap = await getDoc(doc(db,'users',uid,'meta','prefs'));
-    if(snap.exists()){
-      const d = snap.data();
-      prefs.base = d.base || 'CNY';
-      prefs.rates = { ...DEFAULT_RATES, ...(d.rates||{}) };
-      prefs.pics = d.pics || {};
+    const s = await getDoc(C.prefs());
+    if(s.exists()){
+      const d=s.data();
+      prefs.base=d.base||'CNY';
+      prefs.rates={...DEFAULT_RATES,...(d.rates||{})};
+      prefs.pics=d.pics||{};
     }
-  }catch(e){ console.warn('读取设置失败', e); }
-  buildCurrencySelects();
-  renderLegend();
-  renderLevelPicker();
+  }catch(e){ console.warn('设置读取失败',e); }
+  buildCurrencySelects(); renderLevelPicker(); renderRevLevels();
 }
-const savePrefs = () => setDoc(doc(db,'users',uid,'meta','prefs'), prefs, { merge:true });
+const savePrefs = () => setDoc(C.prefs(), prefs, {merge:true});
 
-function listenMeals(){
-  if(unsubMeals) unsubMeals();
-  unsubMeals = onSnapshot(collection(db,'users',uid,'meals'), snap => {
-    meals = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-    render();
-    if(openDate) renderMealList();
-  }, err => console.error(err));
+function listenAll(){
+  while(unsubs.length) unsubs.pop()();
+  unsubs.push(onSnapshot(C.meals(), s=>{
+    meals=s.docs.map(d=>({id:d.id,...d.data()}));
+    renderCal(); if(openDate) renderMealList();
+  }, e=>console.error(e)));
+  unsubs.push(onSnapshot(C.shouts(), s=>{
+    shouts=s.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0));
+    renderWall();
+  }, e=>console.error(e)));
+  unsubs.push(onSnapshot(C.reviews(), s=>{
+    reviews=s.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0));
+    renderReviews();
+  }, e=>console.error(e)));
 }
-
 async function getPhoto(id){
-  if(photoCache[id] !== undefined) return photoCache[id];
-  try{
-    const s = await getDoc(doc(db,'users',uid,'photos',id));
-    photoCache[id] = s.exists() ? s.data().data : null;
-  }catch{ photoCache[id] = null; }
+  if(photoCache[id]!==undefined) return photoCache[id];
+  try{ const s=await getDoc(C.photo(id)); photoCache[id]=s.exists()?s.data().data:null; }
+  catch{ photoCache[id]=null; }
   return photoCache[id];
 }
 
-/* ===================== 渲染 ===================== */
-function render(){ renderMonth(); renderStats(); renderLegend(); }
+/* ===================== 板块切换 ===================== */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+t.dataset.view));
+});
+
+
+/* ===================== 日历 ===================== */
+function renderCal(){ renderMonth(); renderStats(); renderLegend(); }
 
 function renderMonth(){
-  const y = cursor.getFullYear(), m = cursor.getMonth();
-  $('#monthTitle').textContent = `${y} 年 ${m+1} 月`;
-  const first = new Date(y,m,1).getDay();
-  const days = new Date(y,m+1,0).getDate();
-  const byDay = {};
-  meals.forEach(x => (byDay[x.date] ||= []).push(x));
-
-  let html = '';
-  for(let i=0;i<first;i++) html += '<div class="cell blank"></div>';
-  for(let d=1; d<=days; d++){
-    const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const list = byDay[ds] || [];
-    const isToday = ds === todayStr();
-    let inner = '';
+  const y=cursor.getFullYear(), m=cursor.getMonth();
+  $('#monthTitle').textContent=`${y} 年 ${m+1} 月`;
+  const first=new Date(y,m,1).getDay(), days=new Date(y,m+1,0).getDate();
+  const byDay={}; meals.forEach(x=>(byDay[x.date]||=[]).push(x));
+  let html='';
+  for(let i=0;i<first;i++) html+='<div class="cell blank"></div>';
+  for(let d=1;d<=days;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const list=byDay[ds]||[], isToday=ds===todayStr();
+    let inner='';
     if(list.length){
-      const best = list.reduce((a,b)=> (LV[b.level]?.rank||0) > (LV[a.level]?.rank||0) ? b : a);
-      const sum = list.reduce((s,x)=> s + toBase(x.amount||0, x.currency||prefs.base), 0);
-      inner = `<div class="face">${faceHTML(best.level,26)}</div>
-               ${list.length>1?`<div class="cnt">×${list.length}</div>`:''}
-               ${sum>0?`<div class="money mono">${CUR[prefs.base].sym}${Math.round(sum)}</div>`:''}`;
+      const best=list.reduce((a,b)=>(LV[b.level]?.rank||0)>(LV[a.level]?.rank||0)?b:a);
+      const sum=list.reduce((s,x)=>s+toBase(x.amount||0,x.currency||prefs.base),0);
+      inner=`<div class="face">${faceHTML(best.level,26)}</div>
+             ${list.length>1?`<div class="cnt">×${list.length}</div>`:''}
+             ${sum>0?`<div class="money mono">${CUR[prefs.base].sym}${Math.round(sum)}</div>`:''}`;
     }
-    html += `<button class="cell ${list.length?'has':''} ${isToday?'today':''}" data-date="${ds}">
-               <span class="num mono">${d}</span>${inner}
-             </button>`;
+    html+=`<button class="cell ${list.length?'has':''} ${isToday?'today':''}" data-date="${ds}">
+             <span class="num mono">${d}</span>${inner}</button>`;
   }
-  $('#grid').innerHTML = html;
-  $('#grid').querySelectorAll('.cell[data-date]').forEach(el => {
-    el.onclick = () => openDay(el.dataset.date);
-  });
+  $('#grid').innerHTML=html;
+  $('#grid').querySelectorAll('.cell[data-date]').forEach(el=>el.onclick=()=>openDay(el.dataset.date));
 }
-
 function renderStats(){
-  const y = cursor.getFullYear(), m = cursor.getMonth();
-  const pre = `${y}-${String(m+1).padStart(2,'0')}`;
-  const inMonth = meals.filter(x => (x.date||'').startsWith(pre));
-  const dayset = new Set(inMonth.map(x=>x.date));
-  const total = inMonth.reduce((s,x)=> s + toBase(x.amount||0, x.currency||prefs.base), 0);
-  $('#sDays').innerHTML = `${dayset.size}<small> 天</small>`;
-  $('#sMeals').innerHTML = `${inMonth.length}<small> 餐</small>`;
-  $('#sMoney').innerHTML = `<span class="mono">${money(total, prefs.base)}</span>`;
-
-  const all = new Set(meals.map(x=>x.date));
-  let streak = 0;
-  const cur = new Date();
-  if(!all.has(ymd(cur))) cur.setDate(cur.getDate()-1);   // 今天还没吃就从昨天算
-  while(all.has(ymd(cur))){ streak++; cur.setDate(cur.getDate()-1); }
-  $('#sStreak').innerHTML = `${streak}<small> 天</small>`;
+  const pre=`${cursor.getFullYear()}-${String(cursor.getMonth()+1).padStart(2,'0')}`;
+  const inM=meals.filter(x=>(x.date||'').startsWith(pre));
+  const total=inM.reduce((s,x)=>s+toBase(x.amount||0,x.currency||prefs.base),0);
+  $('#sDays').innerHTML=`${new Set(inM.map(x=>x.date)).size}<small> 天</small>`;
+  $('#sMeals').innerHTML=`${inM.length}<small> 餐</small>`;
+  $('#sMoney').innerHTML=`<span class="mono">${money(total,prefs.base)}</span>`;
+  const all=new Set(meals.map(x=>x.date)); let streak=0; const c=new Date();
+  if(!all.has(ymd(c))) c.setDate(c.getDate()-1);
+  while(all.has(ymd(c))){streak++;c.setDate(c.getDate()-1)}
+  $('#sStreak').innerHTML=`${streak}<small> 天</small>`;
 }
-
 function renderLegend(){
-  $('#legend').innerHTML = LEVELS.map(l => {
-    const n = meals.filter(x=>x.level===l.id).length;
+  $('#legend').innerHTML=LEVELS.map(l=>{
+    const n=meals.filter(x=>x.level===l.id).length;
     return `<div class="lv"><span class="em">${faceHTML(l.id,20)}</span>
       <span style="color:${l.color};font-weight:700">${l.name}</span>
-      <span class="mono" style="color:var(--ink-soft)">${n}</span></div>`;
-  }).join('');
+      <span class="mono" style="color:var(--ink-soft)">${n}</span></div>`}).join('');
 }
-
-/* ===================== 某天 ===================== */
 function openDay(ds){
-  openDate = ds;
-  const d = new Date(ds+'T00:00:00');
-  const wd = ['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
-  $('#dayTitle').textContent = `${d.getMonth()+1} 月 ${d.getDate()} 日 ${wd}`;
-  resetForm();
-  renderMealList();
-  $('#dayMask').classList.add('on');
+  openDate=ds;
+  const d=new Date(ds+'T00:00:00');
+  const wd=['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
+  $('#dayTitle').textContent=`${d.getMonth()+1} 月 ${d.getDate()} 日 ${wd}`;
+  resetMealForm(); renderMealList(); $('#dayMask').classList.add('on');
 }
-
 async function renderMealList(){
-  const list = meals.filter(x => x.date === openDate)
-                    .sort((a,b)=> (a.createdAtMs||0)-(b.createdAtMs||0));
-  const box = $('#mealList');
-  if(!list.length){
-    box.innerHTML = `<p class="hint" style="margin:0 0 14px">这天还是空的。下面记第一餐。</p>`;
-    return;
-  }
-  box.innerHTML = list.map(x => {
-    const l = LV[x.level] || LV.yb;
-    return `<div class="meal" data-id="${x.id}">
-      ${x.hasPhoto ? `<img class="pic" data-pic="${x.id}" alt="${esc(x.name)}">` : `<div class="pic" style="display:flex;align-items:center;justify-content:center;font-size:30px">${faceHTML(x.level,30)}</div>`}
-      <div class="body">
-        <div class="t">
-          <div class="name">${esc(x.name)||'没写名字'}</div>
-          <div class="price mono">${x.amount ? money(x.amount, x.currency) : '<small>免费</small>'}</div>
-        </div>
+  const list=meals.filter(x=>x.date===openDate).sort((a,b)=>(a.createdAtMs||0)-(b.createdAtMs||0));
+  const box=$('#mealList');
+  if(!list.length){ box.innerHTML=`<p class="hint" style="margin:0 0 14px">这天还是空的。下面记第一餐。</p>`; return; }
+  box.innerHTML=list.map(x=>{
+    const l=LV[x.level]||LV.yb;
+    return `<div class="meal">
+      ${x.hasPhoto?`<img class="pic" data-pic="${x.id}" alt="${esc(x.name)}">`
+        :`<div class="pic" style="display:flex;align-items:center;justify-content:center">${faceHTML(x.level,34)}</div>`}
+      <div class="body"><div class="t">
+        <div class="name">${esc(x.name)||'没写名字'}</div>
+        <div class="price mono">${x.amount?money(x.amount,x.currency):'<small>免费</small>'}</div></div>
         <div style="margin-top:6px"><span class="stamp" style="color:${l.color}">${l.name}</span></div>
-        ${x.note ? `<div class="note">${esc(x.note)}</div>` : ''}
-        ${x.currency !== prefs.base && x.amount ? `<div class="note mono">≈ ${money(toBase(x.amount,x.currency), prefs.base)}</div>` : ''}
+        ${x.note?`<div class="note">${esc(x.note)}</div>`:''}
+        ${x.currency!==prefs.base&&x.amount?`<div class="note mono">≈ ${money(toBase(x.amount,x.currency),prefs.base)}</div>`:''}
         <button class="del" data-del="${x.id}">删掉</button>
-      </div>
-    </div>`;
-  }).join('');
-
-  box.querySelectorAll('[data-del]').forEach(b => b.onclick = () => removeMeal(b.dataset.del));
+      </div></div>`}).join('');
+  box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>removeMeal(b.dataset.del));
   for(const img of box.querySelectorAll('[data-pic]')){
-    const src = await getPhoto(img.dataset.pic);
-    if(src) img.src = src;
+    const src=await getPhoto(img.dataset.pic); if(src) img.src=src;
   }
 }
-
 function renderLevelPicker(){
-  $('#fLevels').innerHTML = LEVELS.map(l =>
+  $('#fLevels').innerHTML=LEVELS.map(l=>
     `<button class="pick ${l.id===pickedLevel?'on':''}" data-lv="${l.id}"
-      style="${l.id===pickedLevel?`background:${l.color}`:''}">
-      ${faceHTML(l.id,18)} ${l.name}</button>`
-  ).join('');
-  $('#fLevels').querySelectorAll('[data-lv]').forEach(b => b.onclick = () => {
-    pickedLevel = b.dataset.lv; renderLevelPicker();
-  });
+      style="${l.id===pickedLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${l.name}</button>`).join('');
+  $('#fLevels').querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>{pickedLevel=b.dataset.lv;renderLevelPicker()});
 }
-
 function buildCurrencySelects(){
-  const opts = CURRENCIES.map(([c,n]) => `<option value="${c}">${c} · ${n}</option>`).join('');
-  $('#fCur').innerHTML = opts; $('#fCur').value = prefs.base;
-  $('#baseCur').innerHTML = opts; $('#baseCur').value = prefs.base;
+  const o=CURRENCIES.map(([c,n])=>`<option value="${c}">${c} · ${n}</option>`).join('');
+  ['#fCur','#rCur','#baseCur'].forEach(sel=>{ $(sel).innerHTML=o; $(sel).value=prefs.base; });
 }
-
-function resetForm(){
-  $('#fName').value = ''; $('#fAmount').value = ''; $('#fNote').value = '';
-  $('#fPhoto').value = ''; $('#fPrev').style.display = 'none';
-  pickedPhoto = null; pickedLevel = 'yb';
-  $('#fCur').value = prefs.base;
-  renderLevelPicker();
+function resetMealForm(){
+  $('#fName').value='';$('#fAmount').value='';$('#fNote').value='';
+  $('#fPhoto').value='';$('#fPrev').style.display='none';
+  pickedPhoto=null;pickedLevel='yb';$('#fCur').value=prefs.base;renderLevelPicker();
 }
-
-$('#fPhoto').onchange = async e => {
-  const f = e.target.files[0]; if(!f) return;
-  try{
-    pickedPhoto = await compress(f);
-    $('#fPrev').querySelector('img').src = pickedPhoto;
-    $('#fPrev').style.display = 'block';
-  }catch(err){ alert(err.message); }
+$('#fPhoto').onchange=async e=>{
+  const f=e.target.files[0]; if(!f)return;
+  try{ pickedPhoto=await compress(f);
+    $('#fPrev').querySelector('img').src=pickedPhoto; $('#fPrev').style.display='block';
+  }catch(err){ alert(err.message) }
 };
-
-$('#saveMeal').onclick = async () => {
-  const btn = $('#saveMeal');
-  const name = $('#fName').value.trim();
+$('#saveMeal').onclick=async()=>{
+  const btn=$('#saveMeal'), name=$('#fName').value.trim();
   if(!name){ $('#fName').focus(); return; }
-  btn.disabled = true; btn.textContent = '正在保存…';
+  btn.disabled=true; btn.textContent='正在保存…';
   try{
-    const ref = await addDoc(collection(db,'users',uid,'meals'), {
-      date: openDate,
-      name,
-      level: pickedLevel,
-      amount: parseFloat($('#fAmount').value) || 0,
-      currency: $('#fCur').value,
-      note: $('#fNote').value.trim(),
-      hasPhoto: !!pickedPhoto,
-      createdAtMs: Date.now(),
-      createdAt: serverTimestamp()
+    const ref=await addDoc(C.meals(),{
+      date:openDate, name, level:pickedLevel,
+      amount:parseFloat($('#fAmount').value)||0, currency:$('#fCur').value,
+      note:$('#fNote').value.trim(), hasPhoto:!!pickedPhoto,
+      createdAtMs:Date.now(), createdAt:serverTimestamp()
     });
-    if(pickedPhoto){
-      await setDoc(doc(db,'users',uid,'photos',ref.id), { data: pickedPhoto });
-      photoCache[ref.id] = pickedPhoto;
-    }
-    resetForm();
-  }catch(e){
-    alert('没存上：' + e.message);
-  }finally{
-    btn.disabled = false; btn.textContent = '记这一餐';
-  }
+    if(pickedPhoto){ await setDoc(C.photo(ref.id),{data:pickedPhoto}); photoCache[ref.id]=pickedPhoto; }
+    resetMealForm();
+  }catch(e){ alert('没存上：'+e.message) }
+  finally{ btn.disabled=false; btn.textContent='记这一餐' }
 };
-
 async function removeMeal(id){
   if(!confirm('删掉这一餐？')) return;
-  await deleteDoc(doc(db,'users',uid,'meals',id));
-  deleteDoc(doc(db,'users',uid,'photos',id)).catch(()=>{});
+  await deleteDoc(doc(db,'board','hcx','meals',id));
+  deleteDoc(C.photo(id)).catch(()=>{});
   delete photoCache[id];
 }
+$('#prevM').onclick=()=>{cursor.setMonth(cursor.getMonth()-1);renderCal()};
+$('#nextM').onclick=()=>{cursor.setMonth(cursor.getMonth()+1);renderCal()};
+$('#todayBtn').onclick=()=>{cursor=new Date();cursor.setDate(1);renderCal()};
 
-/* ===================== 月份切换 ===================== */
-$('#prevM').onclick = () => { cursor.setMonth(cursor.getMonth()-1); render(); };
-$('#nextM').onclick = () => { cursor.setMonth(cursor.getMonth()+1); render(); };
-$('#todayBtn').onclick = () => { cursor = new Date(); cursor.setDate(1); render(); };
 
-/* ===================== 汇率设置 ===================== */
-$('#settingsBtn').onclick = () => {
-  $('#baseCur').value = prefs.base;
-  drawRates();
-  $('#setMask').classList.add('on');
-};
-function drawRates(){
-  const base = $('#baseCur').value;
-  $('#rateList').innerHTML = CURRENCIES.filter(([c])=>c!==base).map(([c,n]) => {
-    const v = (prefs.rates[c] / prefs.rates[base]);
-    return `<div class="rate-row"><span>1 ${c} ${n}</span>
-      <input class="mono" type="number" step="0.0001" data-rate="${c}" value="${(+v.toFixed(4))}"></div>`;
-  }).join('');
-}
-$('#baseCur').onchange = drawRates;
-$('#saveRates').onclick = async () => {
-  const base = $('#baseCur').value;
-  const next = { [base]: 1 };
-  $('#rateList').querySelectorAll('[data-rate]').forEach(i => {
-    next[i.dataset.rate] = parseFloat(i.value) || prefs.rates[i.dataset.rate];
+/* ===================== 喊话墙 ===================== */
+function renderWall(){
+  $('#wallEmpty').classList.toggle('hidden', shouts.length>0);
+  $('#wall').innerHTML = shouts.map(s=>`
+    <div class="note">
+      <button class="kill" data-kill="${s.id}">删</button>
+      <span class="nick">${esc(s.nick)||'匿名食客'}</span>
+      <span class="time mono">${ago(s.createdAtMs||0)}</span>
+      <div class="txt">${esc(s.text)}</div>
+    </div>`).join('');
+  $('#wall').querySelectorAll('[data-kill]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('把这条撕下来？')) return;
+    await deleteDoc(doc(db,'board','hcx','shouts',b.dataset.kill));
   });
-  prefs.base = base; prefs.rates = next;
-  await savePrefs();
-  buildCurrencySelects(); render();
+}
+async function sendShout(){
+  const btn=$('#wSend'), text=$('#wText').value.trim();
+  if(!text){ $('#wText').focus(); return; }
+  btn.disabled=true; btn.textContent='贴上去…';
+  try{
+    await addDoc(C.shouts(),{
+      nick:$('#wNick').value.trim()||'匿名食客',
+      text, createdAtMs:Date.now(), createdAt:serverTimestamp()
+    });
+    $('#wText').value='';
+  }catch(e){ alert('没贴上：'+e.message) }
+  finally{ btn.disabled=false; btn.textContent='贴上去' }
+}
+$('#wSend').onclick=sendShout;
+$('#wText').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)) sendShout();
+});
+
+/* ===================== 美食品鉴 ===================== */
+function renderRevLevels(){
+  $('#rLevels').innerHTML=LEVELS.map(l=>
+    `<button class="pick ${l.id===revLevel?'on':''}" data-rlv="${l.id}"
+      style="${l.id===revLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${l.name}</button>`).join('');
+  $('#rLevels').querySelectorAll('[data-rlv]').forEach(b=>b.onclick=()=>{revLevel=b.dataset.rlv;renderRevLevels()});
+}
+async function renderReviews(){
+  $('#revEmpty').classList.toggle('hidden', reviews.length>0);
+  $('#revList').innerHTML = reviews.map(r=>{
+    const l=LV[r.level]||LV.yb;
+    return `<article class="rev">
+      ${r.hasPhoto?`<img class="hero" data-rpic="${r.id}" alt="${esc(r.place)}">`:''}
+      <div class="in">
+        <div class="top">
+          <div><h3>${esc(r.place)||'无名小店'}</h3>
+            ${r.dish?`<div class="dish">${esc(r.dish)}</div>`:''}</div>
+          <span class="stamp" style="color:${l.color}">${l.name}</span>
+        </div>
+        ${r.verdict?`<p class="verdict">${esc(r.verdict)}</p>`:''}
+        ${r.body?`<div class="body">${esc(r.body)}</div>`:''}
+        <div class="foot">
+          <span>${esc(r.author)||'黄程锡'} · ${ago(r.createdAtMs||0)}
+            <button class="del" data-rdel="${r.id}" style="margin-left:10px">删掉</button></span>
+          ${r.price?`<span class="p mono">人均 ${money(r.price,r.currency)}</span>`:''}
+        </div>
+      </div></article>`}).join('');
+  $('#revList').querySelectorAll('[data-rdel]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('删掉这篇品鉴？')) return;
+    await deleteDoc(doc(db,'board','hcx','reviews',b.dataset.rdel));
+    deleteDoc(C.photo('rev_'+b.dataset.rdel)).catch(()=>{});
+  });
+  for(const img of $('#revList').querySelectorAll('[data-rpic]')){
+    const src=await getPhoto('rev_'+img.dataset.rpic);
+    if(src) img.src=src; else img.remove();
+  }
+}
+$('#revNew').onclick=()=>{
+  ['#rPlace','#rDish','#rPrice','#rVerdict','#rBody'].forEach(s=>$(s).value='');
+  $('#rPhoto').value=''; $('#rPrev').style.display='none';
+  revPhoto=null; revLevel='rsr'; $('#rCur').value=prefs.base;
+  renderRevLevels(); $('#revMask').classList.add('on');
+};
+$('#rPhoto').onchange=async e=>{
+  const f=e.target.files[0]; if(!f)return;
+  try{ revPhoto=await compress(f,1200,0.72);
+    $('#rPrev').querySelector('img').src=revPhoto; $('#rPrev').style.display='block';
+  }catch(err){ alert(err.message) }
+};
+$('#rSave').onclick=async()=>{
+  const btn=$('#rSave'), place=$('#rPlace').value.trim();
+  if(!place){ $('#rPlace').focus(); return; }
+  btn.disabled=true; btn.textContent='发表中…';
+  try{
+    const ref=await addDoc(C.reviews(),{
+      place, dish:$('#rDish').value.trim(), level:revLevel,
+      price:parseFloat($('#rPrice').value)||0, currency:$('#rCur').value,
+      verdict:$('#rVerdict').value.trim(), body:$('#rBody').value.trim(),
+      author:$('#rAuthor').value.trim()||'黄程锡',
+      hasPhoto:!!revPhoto, createdAtMs:Date.now(), createdAt:serverTimestamp()
+    });
+    if(revPhoto){ await setDoc(C.photo('rev_'+ref.id),{data:revPhoto}); photoCache['rev_'+ref.id]=revPhoto; }
+    $('#revMask').classList.remove('on');
+  }catch(e){ alert('没发出去：'+e.message) }
+  finally{ btn.disabled=false; btn.textContent='发表品鉴' }
+};
+
+/* ===================== 汇率 / 表情包 ===================== */
+$('#settingsBtn').onclick=()=>{ $('#baseCur').value=prefs.base; drawRates(); $('#setMask').classList.add('on') };
+function drawRates(){
+  const base=$('#baseCur').value;
+  $('#rateList').innerHTML=CURRENCIES.filter(([c])=>c!==base).map(([c,n])=>{
+    const v=prefs.rates[c]/prefs.rates[base];
+    return `<div class="rate-row"><span>1 ${c} ${n}</span>
+      <input class="mono" type="number" step="0.0001" data-rate="${c}" value="${+v.toFixed(4)}"></div>`}).join('');
+}
+$('#baseCur').onchange=drawRates;
+$('#saveRates').onclick=async()=>{
+  const base=$('#baseCur').value, next={[base]:1};
+  $('#rateList').querySelectorAll('[data-rate]').forEach(i=>{
+    next[i.dataset.rate]=parseFloat(i.value)||prefs.rates[i.dataset.rate]});
+  prefs.base=base; prefs.rates=next;
+  await savePrefs(); buildCurrencySelects(); renderCal(); renderReviews();
   $('#setMask').classList.remove('on');
 };
-
-/* ===================== 等级表情包 ===================== */
-$('#picsBtn').onclick = () => { drawPics(); $('#picMask').classList.add('on'); };
+$('#picsBtn').onclick=()=>{ drawPics(); $('#picMask').classList.add('on') };
 function drawPics(){
-  $('#picList').innerHTML = LEVELS.map(l => `
+  $('#picList').innerHTML=LEVELS.map(l=>`
     <div class="meal">
-      <div class="pic" style="display:flex;align-items:center;justify-content:center;font-size:32px">${faceHTML(l.id,44)}</div>
-      <div class="body">
-        <div class="name" style="color:${l.color}">${l.name}</div>
-        <input type="file" accept="image/*" data-pic-lv="${l.id}" style="margin-top:8px;font-size:12px">
-        ${prefs.pics[l.id] ? `<button class="del" data-pic-clear="${l.id}">恢复默认表情</button>` : ''}
-      </div>
-    </div>`).join('');
-  $('#picList').querySelectorAll('[data-pic-lv]').forEach(inp => inp.onchange = async e => {
-    const f = e.target.files[0]; if(!f) return;
-    prefs.pics[inp.dataset.picLv] = await compress(f, 200, 0.8);
-    await savePrefs(); drawPics(); render(); renderLegend(); renderLevelPicker();
+      <div class="pic" style="display:flex;align-items:center;justify-content:center">${faceHTML(l.id,44)}</div>
+      <div class="body"><div class="name" style="color:${l.color}">${l.name}</div>
+      <input type="file" accept="image/*" data-pic-lv="${l.id}" style="margin-top:8px;font-size:12px">
+      ${prefs.pics[l.id]?`<button class="del" data-pic-clear="${l.id}">恢复默认表情</button>`:''}
+      </div></div>`).join('');
+  $('#picList').querySelectorAll('[data-pic-lv]').forEach(inp=>inp.onchange=async e=>{
+    const f=e.target.files[0]; if(!f)return;
+    prefs.pics[inp.dataset.picLv]=await compress(f,200,0.8);
+    await savePrefs(); drawPics(); renderCal(); renderLevelPicker(); renderRevLevels(); renderReviews();
   });
-  $('#picList').querySelectorAll('[data-pic-clear]').forEach(b => b.onclick = async () => {
+  $('#picList').querySelectorAll('[data-pic-clear]').forEach(b=>b.onclick=async()=>{
     delete prefs.pics[b.dataset.picClear];
-    await setDoc(doc(db,'users',uid,'meta','prefs'), { pics: prefs.pics }, { merge:true });
-    drawPics(); render(); renderLegend(); renderLevelPicker();
+    await setDoc(C.prefs(),{pics:prefs.pics},{merge:true});
+    drawPics(); renderCal(); renderLevelPicker(); renderRevLevels(); renderReviews();
   });
 }
 
-/* ===================== 弹窗关闭 ===================== */
-document.querySelectorAll('.mask').forEach(m => {
-  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('on'); });
-});
-document.querySelectorAll('[data-close]').forEach(b => {
-  b.onclick = () => b.closest('.mask').classList.remove('on');
-});
-document.addEventListener('keydown', e => {
-  if(e.key === 'Escape') document.querySelectorAll('.mask.on').forEach(m=>m.classList.remove('on'));
-});
+/* ===================== 弹窗 ===================== */
+document.querySelectorAll('.mask').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.mask').classList.remove('on'));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.mask.on').forEach(m=>m.classList.remove('on'))});
 
-/* 初始 */
-buildCurrencySelects();
-renderLevelPicker();
-
+buildCurrencySelects(); renderLevelPicker(); renderRevLevels();
 </script>
 </body>
 </html>
