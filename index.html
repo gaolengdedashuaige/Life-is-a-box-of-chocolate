@@ -314,6 +314,38 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .av-edit{display:flex;align-items:center;gap:14px;margin-bottom:16px}
 .av-edit .av,.av-edit .av-txt{width:66px;height:66px;font-size:27px}
 
+
+/* ---------- 用户列表 ---------- */
+.ul-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  margin-top:32px;padding-bottom:10px;border-bottom:2px dashed var(--line)}
+.ul-head h3{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:21px;margin:0;font-weight:400}
+.ul-head .sum{font-size:12px;color:var(--ink-soft)}
+.ulist{background:#fff;border:1px solid var(--line);border-radius:18px;margin-top:12px;
+  overflow:hidden;box-shadow:0 3px 0 rgba(34,26,21,.05)}
+.urow{display:flex;align-items:center;gap:11px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.urow:last-child{border-bottom:none}
+.urow:nth-child(even){background:var(--paper)}
+.urow .rk{width:20px;font-size:12px;color:var(--ink-soft);flex:none;text-align:right}
+.urow .av,.urow .av-txt{width:38px;height:38px;font-size:16px}
+.urow .who2{flex:1;min-width:0}
+.urow .who2 .n2{font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.urow .who2 .s2{font-size:11px;color:var(--ink-soft);margin-top:2px}
+.urow .nums{display:flex;gap:12px;flex:none;text-align:center}
+.urow .nums div{min-width:34px}
+.urow .nums .nv{font-size:15px;font-weight:700;line-height:1.2}
+.urow .nums .nk{font-size:10px;color:var(--ink-soft);margin-top:1px}
+.urow .drop{flex:none;font-size:12px;color:var(--ink-soft);opacity:.4;padding:4px 6px}
+.urow:hover .drop{opacity:1}
+@media (max-width:640px){
+  .urow{padding:11px 11px;gap:9px}
+  .urow .rk{display:none}
+  .urow .av,.urow .av-txt{width:34px;height:34px;font-size:15px}
+  .urow .nums{gap:8px}
+  .urow .nums div{min-width:28px}
+  .urow .nums .nv{font-size:14px}
+  .urow .drop{opacity:.75}
+}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   body{padding-bottom:30px}
@@ -363,6 +395,39 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 @media (max-width:380px){
   .cell .face{font-size:17px}
   .folks{grid-template-columns:1fr}
+}
+
+/* ---------- 表情包 ---------- */
+.stk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-top:14px}
+.stk{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:6px;cursor:pointer;transition:transform .12s}
+.stk:hover{transform:scale(1.06)}
+.stk img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block}
+.stk .rm{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;
+  background:var(--red);color:#fff;font-size:12px;line-height:22px;text-align:center;
+  box-shadow:0 2px 0 var(--red-deep)}
+.stk-bar{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.stk-bar button{border:1px solid var(--line);background:#fff;border-radius:11px;padding:8px 14px;font-size:13px}
+.stk-bar button:hover{background:var(--paper-2)}
+.stk-pend{display:none;align-items:center;gap:10px;margin-top:10px;background:var(--paper);
+  border:1px dashed var(--line);border-radius:12px;padding:8px 10px}
+.stk-pend.on{display:flex}
+.stk-pend img{width:52px;height:52px;object-fit:contain}
+.stk-pend button{margin-left:auto;font-size:12px;color:var(--ink-soft);text-decoration:underline}
+.msg-stk{max-width:150px;max-height:150px;object-fit:contain;display:block;margin-top:9px;border-radius:10px}
+.reply .msg-stk{max-width:110px;max-height:110px}
+.upload-bar{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.upload-bar .btn{width:auto;padding:12px 22px}
+.av-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;margin-top:14px}
+.av-pick{border:2px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;background:var(--paper-2)}
+.av-pick:hover{border-color:var(--gold)}
+.av-pick img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+@media (max-width:640px){
+  .stk-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
+  .av-grid{grid-template-columns:repeat(3,1fr)}
+  .upload-bar{flex-direction:column}
+  .upload-bar .btn{width:100%}
+  .stk:hover{transform:none}
 }
 </style>
 </head>
@@ -459,6 +524,15 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   <div id="v-wall" class="view wrap">
     <div class="shout-form">
       <textarea id="wText" maxlength="500" placeholder="喊一句 📣 比如：明天中午一起去吃那家牛肉火锅"></textarea>
+      <div class="stk-bar">
+        <button id="wStk">😆 加表情包</button>
+        <button id="stkManage">🗂️ 管理表情包</button>
+      </div>
+      <div id="wStkPend" class="stk-pend">
+        <img id="wStkImg" alt="已选表情包">
+        <span style="font-size:13px;color:var(--ink-soft)">这张会跟着一起发</span>
+        <button id="wStkClear">不要了</button>
+      </div>
       <button id="wSend" class="btn send">贴上去 📌</button>
       <div style="clear:both"></div>
     </div>
@@ -479,14 +553,24 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div id="v-alb" class="view wrap">
-    <p class="hint" style="margin-top:20px">📸 日历和品鉴里传过的照片都在这儿。点开看大图，也能直接拿来当头像。</p>
+    <div class="upload-bar">
+      <button id="albUpload" class="btn">上传照片 📤</button>
+      <input id="albFile" type="file" accept="image/*" multiple class="hidden">
+    </div>
+    <p class="hint" style="margin-top:14px">📸 这里有你直接上传的照片，加上日历和品鉴里配过的图。点开看大图。</p>
     <div id="album" class="album"></div>
-    <div id="albEmpty" class="empty hidden">相册还是空的 📷<br>去日历里记一餐、传张照片试试。</div>
+    <div id="albEmpty" class="empty hidden">相册还是空的 📷<br>点上面的「上传照片」传第一张。</div>
   </div>
 
   <div id="v-folk" class="view wrap">
     <p class="hint" style="margin-top:20px">👥 所有进过店的人。绿点表示三分钟内还在线。</p>
     <div id="folks" class="folks"></div>
+
+    <div class="ul-head">
+      <h3>📋 用户列表</h3>
+      <span class="sum" id="ulSum"></span>
+    </div>
+    <div id="ulist" class="ulist"></div>
   </div>
 </main>
 
@@ -574,7 +658,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="sheet-head"><h3 id="boxTitle" class="display">—</h3><button class="x" data-close>×</button></div>
     <img id="boxImg" alt="" />
     <div id="boxInfo" class="info"></div>
-    <button id="useAsAvatar" class="btn" style="margin-top:14px">拿这张当我的头像 🖼️</button>
+    <button id="boxDel" class="btn btn-alt" style="margin-top:14px">删掉这张 🗑️</button>
   </div>
 </div>
 
@@ -583,13 +667,46 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="sheet-head"><h3 class="display">🙋 我的资料</h3><button class="x" data-close>×</button></div>
     <div class="av-edit"><span id="meAvPrev"></span>
       <div style="font-size:13px;color:var(--ink-soft);line-height:1.7">
-        换头像：去 📸 相册点开任意一张<br>照片，选「拿这张当我的头像」。<br>或者直接从相册挑 ↓
+        这是你现在的头像。<br>点下面换一张。
       </div></div>
-    <button id="pickFromAlbum" class="btn btn-alt" style="margin-bottom:16px">从相册挑一张 🖼️</button>
+    <button id="openAvatar" class="btn btn-alt" style="margin-bottom:16px">换头像 🖼️</button>
     <div class="field"><label>昵称</label>
       <input id="nickInput2" type="text" maxlength="12" placeholder="例如：小明" /></div>
     <p class="hint">改名只影响以后发的内容，之前发过的还是旧名字。</p>
     <button id="nickSave" class="btn">保存 ✅</button>
+  </div>
+</div>
+
+<div id="avMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head"><h3 class="display">🖼️ 换头像</h3><button class="x" data-close>×</button></div>
+    <button id="avUpload" class="btn">从手机/电脑传一张 📤</button>
+    <input id="avFile" type="file" accept="image/*" class="hidden">
+    <p class="hint" style="margin-top:16px">或者从相册里挑一张现成的：</p>
+    <div id="avGrid" class="av-grid"></div>
+    <div id="avEmpty" class="hint hidden" style="margin-top:12px">相册还没有照片。</div>
+  </div>
+</div>
+
+<div id="stkMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head"><h3 id="stkTitle" class="display">😆 表情包</h3><button class="x" data-close>×</button></div>
+    <button id="stkUpload" class="btn">传新表情包 📤</button>
+    <input id="stkFile" type="file" accept="image/*" multiple class="hidden">
+    <p class="hint" style="margin-top:14px">大家共用一套。点一张就贴到正在写的那条上，点右上角红叉删掉。</p>
+    <div id="stkGrid" class="stk-grid"></div>
+    <div id="stkEmpty" class="empty hidden">还没有表情包 🫥<br>传几张进来。</div>
+  </div>
+</div>
+
+<div id="upMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head"><h3 class="display">📤 上传到相册</h3><button class="x" data-close>×</button></div>
+    <div id="upPrev" class="album" style="margin-top:0"></div>
+    <div class="field" style="margin-top:14px"><label>说明 💬（可选）</label>
+      <input id="upCap" type="text" maxlength="40" placeholder="例如：这碗面真的绝" /></div>
+    <div class="field"><label>顺便评个级 ⭐</label><div id="upLevels" class="picker"></div></div>
+    <button id="upSave" class="btn">传上去 🚀</button>
   </div>
 </div>
 
@@ -623,6 +740,8 @@ const C = {
   shouts:  () => collection(db,'board','hcx','shouts'),
   reviews: () => collection(db,'board','hcx','reviews'),
   plans:   () => collection(db,'board','hcx','plans'),
+  shots:   () => collection(db,'board','hcx','shots'),
+  stickers:() => collection(db,'board','hcx','stickers'),
   folks:   () => collection(db,'board','hcx','folks'),
   folk:    id => doc(db,'board','hcx','folks',id),
   photo:   id => doc(db,'board','hcx','photos',id),
@@ -648,13 +767,15 @@ const DEFAULT_RATES = { CNY:1, HKD:0.92, USD:7.15, TWD:0.225, MOP:0.89, JPY:0.04
   KRW:0.0052, EUR:7.8, GBP:9.1, SGD:5.35, AUD:4.7, CAD:5.2, THB:0.2, MYR:1.55 };
 const ONLINE_MS = 3*60*1000;
 
-let meals=[], shouts=[], reviews=[], plans=[], folks=[];
+let meals=[], shouts=[], reviews=[], plans=[], folks=[], shots=[], stickers=[];
 let folkMap = {};
 let prefs = { base:'CNY', rates:{...DEFAULT_RATES}, pics:{} };
 let cursor = new Date(); cursor.setDate(1);
 let openDate=null, pickedLevel='yb', pickedPhoto=null;
 let revLevel='rsr', revPhoto=null;
-let myAvatar='', pickingAvatar=false, boxKey='';
+let myAvatar='', boxKey='', boxKind='';
+let stkTarget=null, pendShoutStk='', pendReplyStk={};
+let upQueue=[], upLevel='yb';
 const photoCache = {};
 const unsubs = [];
 
@@ -776,7 +897,9 @@ async function openApp(){
 }
 async function ping(){
   try{
-    await setDoc(C.folk(cid), { nick, avatar:myAvatar||null, lastSeen:Date.now() }, {merge:true});
+    const patch = { nick, avatar:myAvatar||null, lastSeen:Date.now() };
+    if(!folkMap[cid]?.joinedAt) patch.joinedAt = Date.now();
+    await setDoc(C.folk(cid), patch, {merge:true});
   }catch(e){ console.warn('签到失败',e); }
 }
 onAuthStateChanged(auth, user=>{
@@ -803,26 +926,25 @@ $('#nickSave').onclick = async ()=>{
   nick=v; ls('hcx_nick',v); renderMe(); await ping();
   $('#meMask').classList.remove('on');
 };
-$('#pickFromAlbum').onclick = ()=>{
-  pickingAvatar = true;
+$('#openAvatar').onclick = ()=>{
   $('#meMask').classList.remove('on');
-  document.querySelector('.tab[data-view="alb"]').click();
-  renderAlbum();
-  window.scrollTo({top:0,behavior:'smooth'});
+  renderAvatarGrid();
+  $('#avMask').classList.add('on');
+};
+$('#avUpload').onclick = ()=> $('#avFile').click();
+$('#avFile').onchange = async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{
+    await setAvatarFrom(await compress(f,600,0.8));
+    $('#avMask').classList.remove('on');
+  }catch(err){ alert(err.message) }
+  finally{ e.target.value=''; }
 };
 async function setAvatarFrom(src){
   myAvatar = await squareCrop(src);
   await setDoc(C.folk(cid), { nick, avatar:myAvatar, lastSeen:Date.now() }, {merge:true});
   renderMe(); renderWall(); renderPlans(); renderFolks();
-  pickingAvatar=false; renderAlbum();
 }
-$('#useAsAvatar').onclick = async ()=>{
-  const src = photoCache[boxKey]; if(!src) return;
-  const b=$('#useAsAvatar'); b.disabled=true; b.textContent='换上了…';
-  try{ await setAvatarFrom(src); $('#boxMask').classList.remove('on'); }
-  catch(e){ alert('没换上：'+e.message) }
-  finally{ b.disabled=false; b.textContent='拿这张当我的头像 🖼️' }
-};
 
 /* ===================== 数据 ===================== */
 async function loadPrefs(){
@@ -852,6 +974,14 @@ function listenAll(){
   unsubs.push(onSnapshot(C.reviews(), s=>{
     reviews=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0));
     renderReviews(); renderAlbum();
+  }, e=>console.error(e)));
+  unsubs.push(onSnapshot(C.shots(), s=>{
+    shots=s.docs.map(d=>({id:d.id,...d.data()}));
+    renderAlbum();
+  }, e=>console.error(e)));
+  unsubs.push(onSnapshot(C.stickers(), s=>{
+    stickers=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0));
+    preloadStickers();
   }, e=>console.error(e)));
   unsubs.push(onSnapshot(C.plans(), s=>{
     plans=s.docs.map(d=>({id:d.id,...d.data()}));
@@ -982,7 +1112,7 @@ $('#saveMeal').onclick=async()=>{
     const ref=await addDoc(C.meals(),{
       date:openDate, name, level:pickedLevel,
       amount:parseFloat($('#fAmount').value)||0, currency:$('#fCur').value,
-      note:$('#fNote').value.trim(), hasPhoto:!!pickedPhoto, by:nick, cid,
+      note:$('#fNote').value.trim(), hasPhoto:!!pickedPhoto, by:nick,
       createdAtMs:Date.now(), createdAt:serverTimestamp()
     });
     if(pickedPhoto){ await setDoc(C.photo(ref.id),{data:pickedPhoto}); photoCache[ref.id]=pickedPhoto; }
@@ -1014,17 +1144,23 @@ function renderWall(){
         <div><div class="nick">${esc(s.nick)||'匿名食客'}</div>
         <div class="time">${ago(s.createdAtMs||0)}</div></div>
       </div>
-      <div class="txt">${esc(s.text)}</div>
+      ${s.text?`<div class="txt">${esc(s.text)}</div>`:''}
+      ${s.stk?`<img class="msg-stk" data-stk="${s.stk}" alt="表情包">`:''}
       ${reps.length?`<div class="replies">${reps.map(r=>`
         <div class="reply"><span class="rn">${esc(r.nick)}</span>${esc(r.text)}
-        <span class="rt">${ago(r.ms||0)}</span></div>`).join('')}</div>`:''}
+        <span class="rt">${ago(r.ms||0)}</span>
+        ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="表情包">`:''}</div>`).join('')}</div>`:''}
       <div class="acts">
         <button data-rep="${s.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button>
       </div>
       <div class="rbox" id="rbox-${s.id}">
         <input type="text" maxlength="200" placeholder="回一句…" data-rinp="${s.id}">
+        <button data-rstk="${s.id}" style="background:#fff;border:1px solid var(--line);color:var(--ink)">😆</button>
         <button data-rsend="${s.id}">发送</button>
       </div>
+      ${pendReplyStk[s.id]?`<div class="stk-pend on"><img data-stk="${pendReplyStk[s.id]}" alt="">
+        <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张</span>
+        <button data-rstkclear="${s.id}">不要了</button></div>`:''}
     </div>`}).join('');
 
   $('#wall').querySelectorAll('[data-kill]').forEach(b=>b.onclick=async()=>{
@@ -1037,30 +1173,37 @@ function renderWall(){
     if(box.classList.contains('on')) box.querySelector('input').focus();
   });
   $('#wall').querySelectorAll('[data-rsend]').forEach(b=>b.onclick=()=>sendReply(b.dataset.rsend));
+  $('#wall').querySelectorAll('[data-rstk]').forEach(b=>b.onclick=()=>openStickers({type:'reply',id:b.dataset.rstk}));
+  $('#wall').querySelectorAll('[data-rstkclear]').forEach(b=>b.onclick=()=>{
+    delete pendReplyStk[b.dataset.rstkclear]; renderWall();
+  });
+  paintStickerImgs($('#wall'));
   $('#wall').querySelectorAll('[data-rinp]').forEach(i=>i.addEventListener('keydown',e=>{
     if(e.key==='Enter') sendReply(i.dataset.rinp);
   }));
 }
 async function sendReply(id){
   const inp=document.querySelector(`[data-rinp="${id}"]`);
-  const text=inp.value.trim(); if(!text) return;
+  const text=inp.value.trim(), stk=pendReplyStk[id]||'';
+  if(!text && !stk) return;
   inp.disabled=true;
   try{
     const s=shouts.find(x=>x.id===id);
     const reps=Array.isArray(s?.replies)?[...s.replies]:[];
-    reps.push({ nick, cid, text, ms:Date.now() });
+    reps.push({ nick, cid, text, stk, ms:Date.now() });
     await updateDoc(doc(db,'board','hcx','shouts',id), { replies:reps });
-    inp.value='';
+    inp.value=''; delete pendReplyStk[id];
   }catch(e){ alert('回复没发出去：'+e.message) }
   finally{ inp.disabled=false; inp.focus(); }
 }
 async function sendShout(){
   const btn=$('#wSend'), text=$('#wText').value.trim();
-  if(!text){ $('#wText').focus(); return; }
+  if(!text && !pendShoutStk){ $('#wText').focus(); return; }
   btn.disabled=true; btn.textContent='贴上去…';
   try{
-    await addDoc(C.shouts(),{ nick, cid, text, replies:[], createdAtMs:Date.now(), createdAt:serverTimestamp() });
-    $('#wText').value='';
+    await addDoc(C.shouts(),{ nick, cid, text, stk:pendShoutStk, replies:[],
+      createdAtMs:Date.now(), createdAt:serverTimestamp() });
+    $('#wText').value=''; clearShoutStk();
   }catch(e){ alert('没贴上：'+e.message) }
   finally{ btn.disabled=false; btn.textContent='贴上去 📌' }
 }
@@ -1142,7 +1285,7 @@ function renderFolks(){
   $('#folks').innerHTML = sorted.map(f=>{
     const on=(now-(f.lastSeen||0))<ONLINE_MS;
     const said=shouts.filter(s=>s.cid===f.id).length;
-    const ate=meals.filter(m=>m.cid?m.cid===f.id:m.by===f.nick).length;
+    const ate=meals.filter(m=>m.by===f.nick).length;
     return `<div class="folk">
       ${avatarHTML(f.id, f.nick)}
       <div class="fn">${esc(f.nick)||'无名氏'}</div>
@@ -1150,8 +1293,47 @@ function renderFolks(){
         📣 ${said} 条 · 🍚 ${ate} 餐</div>
       ${f.id===cid?'<span class="me-tag">这是你</span>':''}
     </div>`}).join('');
+  renderUserList();
 }
-setInterval(()=>{ if(!document.hidden) renderFolks(); }, 60000);
+function folkStats(f){
+  const said = shouts.filter(x=>x.cid===f.id).length
+    + shouts.reduce((n,x)=>n+((x.replies||[]).filter(r=>r.cid===f.id).length),0);
+  const ate  = meals.filter(m=>m.cid?m.cid===f.id:m.by===f.nick).length;
+  const wrote= reviews.filter(r=>r.cid?r.cid===f.id:r.author===f.nick).length;
+  const went = plans.filter(p=>(p.joins||[]).some(j=>j.cid===f.id)).length;
+  const shot = shots.filter(x=>x.cid===f.id).length;
+  return { said, ate, wrote, went, shot, total: said+ate+wrote+went+shot };
+}
+function renderUserList(){
+  if(!$('#ulist')) return;
+  const now=Date.now();
+  const rows=folks.map(f=>({f, st:folkStats(f), on:(now-(f.lastSeen||0))<ONLINE_MS}))
+    .sort((a,b)=> b.st.total-a.st.total || (b.f.lastSeen||0)-(a.f.lastSeen||0));
+  $('#ulSum').textContent = `共 ${rows.length} 位 · ${rows.filter(r=>r.on).length} 位在线`;
+  $('#ulist').innerHTML = rows.map((r,i)=>`
+    <div class="urow">
+      <span class="rk mono">${i+1}</span>
+      ${avatarHTML(r.f.id, r.f.nick)}
+      <div class="who2">
+        <div class="n2">${esc(r.f.nick)||'无名氏'}${r.f.id===cid?' <span class="me-tag" style="margin:0">你</span>':''}</div>
+        <div class="s2"><span class="dot ${r.on?'on':''}"></span>${r.on?'在线':'最后出现 '+ago(r.f.lastSeen||0)}
+          ${r.f.joinedAt?' · 加入于 '+ago(r.f.joinedAt):''}</div>
+      </div>
+      <div class="nums">
+        <div><div class="nv">${r.st.said}</div><div class="nk">发言</div></div>
+        <div><div class="nv">${r.st.ate}</div><div class="nk">记账</div></div>
+        <div><div class="nv">${r.st.wrote}</div><div class="nk">品鉴</div></div>
+        <div><div class="nv">${r.st.went}</div><div class="nk">约饭</div></div>
+        <div><div class="nv">${r.st.shot}</div><div class="nk">照片</div></div>
+      </div>
+      ${r.f.id!==cid?`<button class="drop" data-drop="${r.f.id}" title="从列表移除">✕</button>`:''}
+    </div>`).join('');
+  $('#ulist').querySelectorAll('[data-drop]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('把这个人从列表里移除？他下次进店会重新出现。')) return;
+    await deleteDoc(C.folk(b.dataset.drop));
+  });
+}
+setInterval(()=>{ if(!document.hidden){ renderFolks(); renderUserList(); } }, 60000);
 
 /* ===================== 品鉴 ===================== */
 function renderRevLevels(){
@@ -1231,14 +1413,18 @@ function albumItems(){
     key:'rev_'+r.id, title:r.place, sub:'品鉴', by:r.author, level:r.level, ms:r.createdAtMs||0,
     extra:r.verdict||''
   }));
-  return [...a,...b].sort((x,y)=>y.ms-x.ms);
+  const c2 = shots.map(s=>({
+    key:'shot_'+s.id, id:s.id, title:s.caption||'照片', sub:'相册', by:s.by, level:s.level,
+    ms:s.createdAtMs||0, extra:'', own:true
+  }));
+  return [...a,...b,...c2].sort((x,y)=>y.ms-x.ms);
 }
 async function renderAlbum(){
   if(!$('#album')) return;
   const items=albumItems();
   $('#albEmpty').classList.toggle('hidden', items.length>0);
   $('#album').innerHTML = items.map(it=>`
-    <div class="shot-card ${pickingAvatar?'pickable':''}" data-key="${it.key}">
+    <div class="shot-card" data-key="${it.key}">
       <img class="ph" data-apic="${it.key}" alt="${esc(it.title)}">
       <div class="cap">
         <div class="n">${faceHTML(it.level,13)} ${esc(it.title)||'没写名字'}</div>
@@ -1248,8 +1434,8 @@ async function renderAlbum(){
   $('#album').querySelectorAll('.shot-card').forEach(card=>card.onclick=async()=>{
     const it=items.find(x=>x.key===card.dataset.key); if(!it) return;
     const src=photoCache[it.key]; if(!src) return;
-    if(pickingAvatar){ await setAvatarFrom(src); alert('头像换好了 🎉'); return; }
-    boxKey=it.key;
+    boxKey=it.key; boxKind=it.own?'shot':''; window.boxShotId=it.id||'';
+    $('#boxDel').style.display = it.own ? 'block' : 'none';
     $('#boxTitle').textContent=it.title||'照片';
     $('#boxImg').src=src;
     $('#boxInfo').innerHTML=`${faceHTML(it.level,18)} ${esc(LV[it.level]?.name||'')} · ${esc(it.sub)}
@@ -1299,6 +1485,138 @@ function drawPics(){
     await setDoc(C.prefs(),{pics:prefs.pics},{merge:true});
     drawPics(); renderCal(); renderLevelPicker(); renderRevLevels(); renderReviews(); renderAlbum();
   });
+}
+
+
+/* ===================== 表情包 ===================== */
+async function preloadStickers(){
+  for(const s of stickers) await getPhoto('stk_'+s.id);
+  paintStickerImgs(document);
+  if($('#stkMask').classList.contains('on')) renderStickers();
+}
+function paintStickerImgs(root){
+  root.querySelectorAll('[data-stk]').forEach(img=>{
+    const src=photoCache['stk_'+img.dataset.stk];
+    if(src) img.src=src; else img.style.display='none';
+  });
+}
+function openStickers(target){
+  stkTarget = target;
+  $('#stkTitle').textContent = target ? '😆 挑一张贴上去' : '🗂️ 管理表情包';
+  renderStickers();
+  $('#stkMask').classList.add('on');
+}
+function renderStickers(){
+  $('#stkEmpty').classList.toggle('hidden', stickers.length>0);
+  $('#stkGrid').innerHTML = stickers.map(s=>`
+    <div class="stk" data-pick="${s.id}">
+      <span class="rm" data-sdel="${s.id}">✕</span>
+      <img data-stk="${s.id}" alt="表情包">
+    </div>`).join('');
+  paintStickerImgs($('#stkGrid'));
+  $('#stkGrid').querySelectorAll('[data-pick]').forEach(el=>el.onclick=e=>{
+    if(e.target.dataset.sdel) return;
+    const id=el.dataset.pick;
+    if(!stkTarget){ return; }
+    if(stkTarget.type==='shout'){
+      pendShoutStk=id;
+      $('#wStkImg').src=photoCache['stk_'+id]||'';
+      $('#wStkPend').classList.add('on');
+    }else{
+      pendReplyStk[stkTarget.id]=id;
+      renderWall();
+      const box=$('#rbox-'+stkTarget.id); if(box) box.classList.add('on');
+    }
+    $('#stkMask').classList.remove('on');
+  });
+  $('#stkGrid').querySelectorAll('[data-sdel]').forEach(b=>b.onclick=async ev=>{
+    ev.stopPropagation();
+    if(!confirm('删掉这个表情包？')) return;
+    await deleteDoc(doc(db,'board','hcx','stickers',b.dataset.sdel));
+    deleteDoc(C.photo('stk_'+b.dataset.sdel)).catch(()=>{});
+  });
+}
+function clearShoutStk(){ pendShoutStk=''; $('#wStkPend').classList.remove('on'); }
+$('#wStk').onclick = ()=> openStickers({type:'shout'});
+$('#stkManage').onclick = ()=> openStickers(null);
+$('#wStkClear').onclick = clearShoutStk;
+$('#stkUpload').onclick = ()=> $('#stkFile').click();
+$('#stkFile').onchange = async e=>{
+  const files=[...e.target.files]; if(!files.length) return;
+  const btn=$('#stkUpload'); btn.disabled=true; btn.textContent='上传中…';
+  try{
+    for(const f of files){
+      const data = await compress(f, 260, 0.82);
+      const ref = await addDoc(C.stickers(), { by:nick, cid, createdAtMs:Date.now() });
+      await setDoc(C.photo('stk_'+ref.id), { data });
+      photoCache['stk_'+ref.id]=data;
+    }
+  }catch(err){ alert('传不上去：'+err.message) }
+  finally{ btn.disabled=false; btn.textContent='传新表情包 📤'; e.target.value=''; }
+};
+
+/* ===================== 相册直传 ===================== */
+$('#albUpload').onclick = ()=> $('#albFile').click();
+$('#albFile').onchange = async e=>{
+  const files=[...e.target.files].slice(0,9); if(!files.length) return;
+  upQueue=[]; upLevel='yb';
+  $('#upPrev').innerHTML='<p class="hint">正在压缩…</p>';
+  $('#upCap').value=''; renderUpLevels();
+  $('#upMask').classList.add('on');
+  try{
+    for(const f of files) upQueue.push(await compress(f,1200,0.74));
+    $('#upPrev').innerHTML = upQueue.map(d=>`<div class="shot-card"><img class="ph" src="${d}" alt=""></div>`).join('');
+  }catch(err){ alert(err.message); $('#upMask').classList.remove('on'); }
+  finally{ e.target.value=''; }
+};
+function renderUpLevels(){
+  $('#upLevels').innerHTML = LEVELS.map(l=>
+    `<button class="pick ${l.id===upLevel?'on':''}" data-ulv="${l.id}"
+      style="${l.id===upLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${l.name}</button>`).join('');
+  $('#upLevels').querySelectorAll('[data-ulv]').forEach(b=>b.onclick=()=>{upLevel=b.dataset.ulv;renderUpLevels()});
+}
+$('#upSave').onclick = async ()=>{
+  if(!upQueue.length) return;
+  const btn=$('#upSave'); btn.disabled=true; btn.textContent='上传中…';
+  try{
+    const cap=$('#upCap').value.trim();
+    for(const data of upQueue){
+      const ref = await addDoc(C.shots(), {
+        caption:cap, level:upLevel, by:nick, cid,
+        createdAtMs:Date.now(), createdAt:serverTimestamp()
+      });
+      await setDoc(C.photo('shot_'+ref.id), { data });
+      photoCache['shot_'+ref.id]=data;
+    }
+    upQueue=[]; $('#upMask').classList.remove('on');
+  }catch(e){ alert('传不上去：'+e.message) }
+  finally{ btn.disabled=false; btn.textContent='传上去 🚀' }
+};
+$('#boxDel').onclick = async ()=>{
+  if(!window.boxShotId) return;
+  if(!confirm('删掉这张照片？')) return;
+  await deleteDoc(doc(db,'board','hcx','shots',window.boxShotId));
+  deleteDoc(C.photo(boxKey)).catch(()=>{});
+  delete photoCache[boxKey];
+  $('#boxMask').classList.remove('on');
+};
+
+/* ===================== 头像选择 ===================== */
+async function renderAvatarGrid(){
+  const items = albumItems();
+  $('#avEmpty').classList.toggle('hidden', items.length>0);
+  $('#avGrid').innerHTML = items.map(it=>
+    `<div class="av-pick" data-avk="${it.key}"><img data-apic2="${it.key}" alt="${esc(it.title)}"></div>`).join('');
+  $('#avGrid').querySelectorAll('[data-avk]').forEach(el=>el.onclick=async()=>{
+    const src=photoCache[el.dataset.avk]; if(!src) return;
+    el.style.borderColor='var(--gold)';
+    await setAvatarFrom(src);
+    $('#avMask').classList.remove('on');
+  });
+  for(const img of $('#avGrid').querySelectorAll('[data-apic2]')){
+    const src=await getPhoto(img.dataset.apic2);
+    if(src) img.src=src; else img.closest('.av-pick')?.remove();
+  }
 }
 
 document.querySelectorAll('.mask').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
