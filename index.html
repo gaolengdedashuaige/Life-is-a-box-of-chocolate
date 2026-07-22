@@ -1,642 +1,772 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>好事发生！</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>黄程锡美食平台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper:#F6F0E3; --card:#FFFDF8; --ink:#2E251C; --ink-soft:#7A6B58;
-    --line:#E7DCC8; --line-strong:#D8C9AC;
-    --meal:#E07B39; --meal-soft:#FBEEDF; --snack:#C25E8A; --snack-soft:#F8E7EE;
-    --today:#3F6B4F; --note:#6E86C2; --note-soft:#E9EEF8;
-    --shadow:0 1px 2px rgba(46,37,28,.06), 0 8px 24px rgba(46,37,28,.06); --r:14px;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:radial-gradient(circle at 1px 1px, rgba(120,100,70,.08) 1px, transparent 0) 0 0/22px 22px, var(--paper);
-    color:var(--ink);font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,"Segoe UI",Roboto,sans-serif;
-    -webkit-font-smoothing:antialiased;line-height:1.5;padding:24px 16px 64px;
-  }
-  .wrap{max-width:960px;margin:0 auto;}
-  .tnum{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
+:root{
+  --red:#D6242C;
+  --red-deep:#9E1017;
+  --gold:#F2B705;
+  --paper:#FCF7EC;
+  --paper-2:#F4EAD7;
+  --ink:#221A15;
+  --ink-soft:#6B5D51;
+  --line:#E0D2BA;
+  --jade:#1E6F5C;
+  --shadow:0 2px 0 var(--line);
+  --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(34,26,21,.06) 1px, transparent 0);
+  background-size:22px 22px;
+  color:var(--ink);
+  font-family:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:60px;
+}
+.display{font-family:"ZCOOL QingKe HuangYou","Noto Sans SC",sans-serif;font-weight:400;letter-spacing:.02em}
+.mono{font-family:"Space Mono",ui-monospace,monospace}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 
-  .brand{display:flex;align-items:center;gap:14px;margin:8px 4px 4px;}
-  .brand .logo{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8a5a34,#5b3a20);display:grid;place-items:center;font-size:26px;color:#fff;box-shadow:var(--shadow);}
-  .brand h1{font-size:26px;margin:0;letter-spacing:1px;font-weight:800;}
-  .brand .h1-edit{cursor:text;outline:none;border-radius:6px;padding:0 4px;}
-  .brand .h1-edit:focus{background:#fff;box-shadow:0 0 0 2px var(--line-strong);}
-  .brand .sub{font-size:11px;letter-spacing:3px;color:var(--ink-soft);text-transform:uppercase;margin-top:2px;}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
 
-  /* 可爱贴纸条 */
-  .stickers{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:6px 0 14px;}
-  .stickers svg{width:52px;height:52px;filter:drop-shadow(0 3px 4px rgba(46,37,28,.1));animation:bob 3s ease-in-out infinite;}
-  .stickers svg:nth-child(2){animation-delay:.4s;} .stickers svg:nth-child(3){animation-delay:.8s;}
-  .stickers svg:nth-child(4){animation-delay:1.2s;} .stickers svg:nth-child(5){animation-delay:1.6s;}
-  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-6px) rotate(2deg);}}
+/* ---------- 顶部招牌 ---------- */
+.sign{
+  background:var(--red);
+  color:#fff;
+  border-bottom:5px solid var(--gold);
+  padding:18px 0 16px;
+  position:relative;
+  overflow:hidden;
+}
+.sign::after{
+  content:"";position:absolute;left:0;right:0;bottom:-5px;height:5px;
+  background:repeating-linear-gradient(90deg,var(--gold) 0 14px,var(--red-deep) 14px 28px);
+}
+.sign-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand h1{font-size:30px;margin:0;line-height:1}
+.brand .sub{font-size:11px;letter-spacing:.35em;opacity:.75;text-transform:uppercase}
+.who{display:flex;align-items:center;gap:10px;font-size:13px}
+.who b{font-weight:500;opacity:.9;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ghost{border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:5px 12px;font-size:12px;color:#fff}
+.ghost:hover{background:rgba(255,255,255,.15)}
 
-  .toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin:-40px 4px 8px;}
-  @media(max-width:640px){.toolbar{justify-content:flex-start;margin-top:10px;}}
-  .btn{border:1px solid var(--line-strong);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:13px;cursor:pointer;font-weight:600;transition:transform .08s, box-shadow .12s, background .12s;display:inline-flex;align-items:center;gap:6px;}
-  .btn:hover{box-shadow:var(--shadow);}
-  .btn:active{transform:translateY(1px);}
-  .btn.ghost{background:transparent;}
+/* ---------- 小票统计 ---------- */
+.receipt{
+  background:#fff;border:1px solid var(--line);border-radius:var(--r);
+  margin-top:20px;padding:16px 18px;
+  box-shadow:0 4px 0 rgba(34,26,21,.06);
+}
+.receipt-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed var(--line);padding-bottom:10px;margin-bottom:12px}
+.receipt-top h2{font-size:20px;margin:0}
+.nav-btns{display:flex;gap:6px;align-items:center}
+.nav-btns button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);font-size:16px;line-height:1}
+.nav-btns button:hover{background:var(--paper-2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{padding:6px 0}
+.stat .k{font-size:11px;color:var(--ink-soft);letter-spacing:.1em}
+.stat .v{font-size:22px;font-weight:700;line-height:1.2;margin-top:2px}
+.stat .v small{font-size:12px;font-weight:400;color:var(--ink-soft)}
 
-  .monthbar{text-align:center;position:relative;margin:6px 0 16px;}
-  .monthbar .title{font-size:22px;font-weight:800;letter-spacing:1px;}
-  .monthbar .today-link{display:inline-block;margin-top:2px;font-size:13px;color:var(--meal);cursor:pointer;border-bottom:1px solid transparent;}
-  .monthbar .today-link:hover{border-color:var(--meal);}
-  .nav{position:absolute;top:0;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);background:var(--card);cursor:pointer;font-size:18px;color:var(--ink-soft);display:grid;place-items:center;}
-  .nav:hover{color:var(--ink);box-shadow:var(--shadow);}
-  .nav.prev{left:0;} .nav.next{right:0;}
+/* ---------- 日历 ---------- */
+.cal{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:0 4px 0 rgba(34,26,21,.06)}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+.dow span{text-align:center;font-size:11px;color:var(--ink-soft);letter-spacing:.1em}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cell{
+  position:relative;aspect-ratio:1/1;border:1px solid var(--line);border-radius:10px;
+  background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.cell:hover{transform:translateY(-2px);box-shadow:0 4px 0 var(--line)}
+.cell.blank{border:none;background:none;pointer-events:none}
+.cell .num{position:absolute;top:5px;left:7px;font-size:11px;color:var(--ink-soft)}
+.cell.today{border-color:var(--red);border-width:2px}
+.cell.today .num{color:var(--red);font-weight:700}
+.cell .face{font-size:26px;line-height:1}
+.cell .face img{width:34px;height:34px;object-fit:cover;border-radius:50%}
+.cell .cnt{position:absolute;bottom:5px;right:7px;font-size:10px;color:var(--ink-soft)}
+.cell .money{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:10px;color:var(--jade)}
+.cell.has{background:#fff}
 
-  .members{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 14px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-  .chip{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 5px;font-size:14px;font-weight:600;cursor:pointer;transition:box-shadow .12s;}
-  .chip:hover{box-shadow:var(--shadow);}
-  .avatar{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:14px;font-weight:700;flex:0 0 auto;background-size:cover;background-position:center;overflow:hidden;}
-  .avatar.sm{width:20px;height:20px;font-size:11px;}
-  .avatar.lg{width:56px;height:56px;font-size:30px;}
-  .avatar.wig{animation:wiggle .5s ease;}
-  @keyframes wiggle{0%,100%{transform:rotate(0);}20%{transform:rotate(-14deg) scale(1.1);}40%{transform:rotate(12deg) scale(1.1);}60%{transform:rotate(-8deg);}80%{transform:rotate(6deg);}}
-  .add-member{width:34px;height:34px;border-radius:50%;border:1.5px dashed var(--line-strong);background:transparent;color:var(--ink-soft);font-size:20px;cursor:pointer;display:grid;place-items:center;}
-  .add-member:hover{color:var(--ink);border-color:var(--ink-soft);}
-  .members .empty{color:var(--ink-soft);font-size:13px;}
+/* ---------- 印章 ---------- */
+.stamp{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:2px solid currentColor;border-radius:6px;padding:2px 8px;
+  font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:13px;
+  transform:rotate(-6deg);opacity:.92;white-space:nowrap;
+}
 
-  .cal{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:10px 10px 12px;}
-  .weekrow{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:6px 0 10px;color:var(--ink-soft);font-size:13px;font-weight:600;border-bottom:1px solid var(--line);}
-  .grid{display:grid;grid-template-columns:repeat(7,1fr);}
-  .cell{min-height:92px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 7px;cursor:pointer;position:relative;transition:background .12s;}
-  .cell:nth-child(7n){border-right:none;}
-  .cell.blank{cursor:default;background:repeating-linear-gradient(-45deg,transparent,transparent 7px,rgba(200,185,155,.06) 7px,rgba(200,185,155,.06) 14px);}
-  .cell:not(.blank):hover{background:#FBF6EA;}
-  .cell .d{font-size:14px;color:var(--ink-soft);font-weight:600;}
-  .cell.today{box-shadow:inset 0 0 0 2px var(--today);border-radius:8px;}
-  .cell.today .d{color:var(--today);font-weight:800;}
-  .cell .stack{display:flex;margin-top:6px;flex-wrap:wrap;}
-  .cell .stack .avatar{margin-right:-6px;border:2px solid var(--card);}
-  .cell .more{font-size:11px;color:var(--ink-soft);align-self:center;margin-left:10px;}
-  .cell .sum{position:absolute;right:7px;bottom:6px;font-weight:800;font-size:13px;}
-  .cell .dots{position:absolute;left:7px;bottom:8px;display:flex;gap:3px;}
-  .dot{width:6px;height:6px;border-radius:50%;}
-  .cell .msgmark{position:absolute;right:6px;top:5px;font-size:11px;}
-  @media(max-width:560px){.cell{min-height:70px;padding:4px;}.cell .avatar.sm{width:16px;height:16px;font-size:9px;}.cell .sum{font-size:11px;}}
+/* ---------- 图例 ---------- */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.legend .lv{display:flex;align-items:center;gap:6px;font-size:12px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 10px 4px 5px}
+.legend .lv .em{font-size:16px}
+.legend .lv img{width:22px;height:22px;border-radius:50%;object-fit:cover}
+.legend .bar{height:4px;border-radius:2px;min-width:4px}
 
-  .summary{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px;}
-  .summary h3, .wall h3{margin:0;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:7px;}
-  .sum-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
-  .scope{display:inline-flex;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:2px;}
-  .scope button{border:none;background:transparent;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:700;color:var(--ink-soft);cursor:pointer;}
-  .scope button.active{background:var(--card);color:var(--ink);box-shadow:var(--shadow);}
-  .sum-top{display:flex;flex-wrap:wrap;gap:18px;align-items:baseline;margin-bottom:14px;}
-  .sum-big{font-size:30px;font-weight:800;}
-  .badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px;}
-  .badge.meal{background:var(--meal-soft);color:#a3521f;}
-  .badge.snack{background:var(--snack-soft);color:#963f66;}
-  .userbar{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:14px;}
-  .userbar .name{width:100px;flex:0 0 auto;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .track{flex:1;height:10px;background:var(--paper);border-radius:999px;overflow:hidden;}
-  .track > i{display:block;height:100%;border-radius:999px;}
-  .userbar .amt{width:78px;text-align:right;font-weight:700;}
+/* ---------- 弹窗 ---------- */
+.mask{position:fixed;inset:0;background:rgba(34,26,21,.55);display:none;z-index:50;align-items:flex-end;justify-content:center}
+.mask.on{display:flex}
+.sheet{
+  background:var(--paper);width:100%;max-width:620px;max-height:92vh;overflow:auto;
+  border-radius:18px 18px 0 0;padding:18px;
+  animation:up .22s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@media (min-width:640px){.mask{align-items:center}.sheet{border-radius:18px}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}.cell{transition:none}}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.sheet-head h3{margin:0;font-size:22px}
+.x{font-size:22px;width:34px;height:34px;border-radius:50%;line-height:1}
+.x:hover{background:var(--paper-2)}
 
-  .wall{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px;}
-  .compose{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0 14px;}
-  .compose .line1{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;}
-  .compose select{padding:7px 10px;border:1px solid var(--line-strong);border-radius:9px;background:var(--card);font-family:inherit;font-size:13px;color:var(--ink);}
-  .clabel{font-size:13px;color:var(--ink-soft);font-weight:600;}
-  .moods{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
-  .moods button{font-size:18px;line-height:1;padding:4px 6px;border-radius:9px;border:1.5px solid transparent;background:var(--card);cursor:pointer;}
-  .moods button.active{border-color:var(--note);background:var(--note-soft);}
-  .ats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
-  .ats button{font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line-strong);background:var(--card);cursor:pointer;color:var(--note);}
-  .ats button:hover{background:var(--note-soft);}
-  .compose .row{display:flex;gap:8px;}
-  .compose textarea{flex:1;resize:none;padding:10px 12px;border:1px solid var(--line-strong);border-radius:10px;font-size:15px;font-family:inherit;background:var(--card);color:var(--ink);min-height:44px;}
-  .compose textarea:focus{outline:none;border-color:var(--note);}
-  .send{background:var(--note);color:#fff;border:none;border-radius:10px;padding:0 16px;font-weight:800;cursor:pointer;font-size:14px;}
-  .send:active{transform:translateY(1px);}
-  .pat{background:var(--meal-soft);color:#a3521f;border:none;border-radius:10px;padding:0 14px;font-weight:800;cursor:pointer;font-size:14px;}
-  .pat:active{transform:translateY(1px);}
+.meal{display:flex;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
+.meal .pic{width:76px;height:76px;border-radius:8px;object-fit:cover;background:var(--paper-2);flex:none}
+.meal .body{flex:1;min-width:0}
+.meal .t{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.meal .name{font-weight:700;font-size:15px}
+.meal .price{font-size:15px;color:var(--jade)}
+.meal .price small{color:var(--ink-soft)}
+.meal .note{font-size:13px;color:var(--ink-soft);margin-top:4px;word-break:break-word}
+.meal .del{font-size:12px;color:var(--ink-soft);margin-top:6px;text-decoration:underline}
 
-  .feed{display:flex;flex-direction:column;gap:12px;}
-  .post{display:flex;gap:10px;align-items:flex-start;}
-  .post .bubble{background:var(--paper);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:9px 12px;flex:1;min-width:0;position:relative;}
-  .post .who{font-weight:700;font-size:13px;}
-  .post .to{color:var(--note);font-weight:700;}
-  .post .txt{font-size:15px;margin-top:2px;word-break:break-word;white-space:pre-wrap;}
-  .post .txt .at{color:var(--note);font-weight:700;}
-  .post .time{font-size:11px;color:var(--ink-soft);margin-top:4px;}
-  .post .mood{font-size:16px;margin-left:4px;}
-  .post .kill{position:absolute;top:6px;right:9px;cursor:pointer;color:var(--line-strong);font-size:14px;}
-  .post .kill:hover{color:var(--snack);}
-  .patline{text-align:center;font-size:13px;color:var(--ink-soft);padding:2px 0;position:relative;}
-  .patline b{color:var(--ink);}
-  .patline.new{animation:pop2 .5s ease;}
-  @keyframes pop2{0%{transform:scale(.7);opacity:0;}60%{transform:scale(1.12);}100%{transform:scale(1);opacity:1;}}
-  .patline .killp{cursor:pointer;color:transparent;margin-left:6px;}
-  .patline:hover .killp{color:var(--line-strong);}
-  .patline .killp:hover{color:var(--snack);}
-  .wall .empty{color:var(--ink-soft);font-size:13px;text-align:center;padding:10px 0;}
+.form{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:6px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--ink-soft);letter-spacing:.08em;margin-bottom:5px}
+.field input[type=text],.field input[type=number],.field textarea,.field select,.field input[type=email],.field input[type=password]{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--paper);
+}
+.field textarea{resize:vertical;min-height:56px}
+.row2{display:flex;gap:10px}
+.row2>div{flex:1}
+.picker{display:flex;flex-wrap:wrap;gap:6px}
+.pick{border:1px solid var(--line);border-radius:10px;padding:7px 10px;display:flex;align-items:center;gap:6px;font-size:13px;background:var(--paper)}
+.pick img{width:20px;height:20px;border-radius:50%;object-fit:cover}
+.pick.on{color:#fff;border-color:transparent;font-weight:700}
+.btn{background:var(--red);color:#fff;border-radius:10px;padding:12px 18px;font-size:15px;font-weight:700;width:100%}
+.btn:hover{background:var(--red-deep)}
+.btn[disabled]{opacity:.5;cursor:default}
+.btn-alt{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.btn-alt:hover{background:var(--paper-2)}
+.prev{margin-top:8px;display:none}
+.prev img{max-width:120px;border-radius:8px;display:block}
 
-  .overlay{position:fixed;inset:0;background:rgba(46,37,28,.45);backdrop-filter:blur(2px);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto;}
-  .overlay.show{display:flex;}
-  .modal{background:var(--card);border-radius:18px;box-shadow:0 24px 60px rgba(46,37,28,.3);width:100%;max-width:460px;overflow:hidden;animation:pop .18s ease;}
-  @keyframes pop{from{transform:translateY(8px) scale(.98);opacity:0;}to{transform:none;opacity:1;}}
-  .modal .head{padding:18px 20px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
-  .modal .head .dt{font-size:18px;font-weight:800;}
-  .modal .head .wd{font-size:13px;color:var(--ink-soft);}
-  .modal .head .x{cursor:pointer;font-size:22px;color:var(--ink-soft);line-height:1;}
-  .modal .head .x:hover{color:var(--ink);}
-  .modal .body{padding:14px 20px 20px;max-height:66vh;overflow:auto;}
-  .rec{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);}
-  .rec:last-child{border-bottom:none;}
-  .rec .info{flex:1;min-width:0;}
-  .rec .info .n{font-weight:600;font-size:14px;}
-  .rec .info .meta{font-size:12px;color:var(--ink-soft);}
-  .rec .amt{font-weight:800;font-size:15px;}
-  .rec .kill{cursor:pointer;color:var(--ink-soft);font-size:16px;}
-  .rec .kill:hover{color:var(--snack);}
-  .cat-tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;margin-right:4px;}
-  .cat-tag.meal{background:var(--meal-soft);color:#a3521f;}
-  .cat-tag.snack{background:var(--snack-soft);color:#963f66;}
-  .empty-day{color:var(--ink-soft);font-size:14px;text-align:center;padding:16px 0;}
+/* ---------- 登录 ---------- */
+.gate{max-width:400px;margin:8vh auto;padding:0 16px}
+.gate .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:0 6px 0 rgba(34,26,21,.08)}
+.gate h1{font-size:32px;margin:0 0 4px}
+.gate .tag{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.gate .swap{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:14px}
+.gate .swap button{color:var(--red);text-decoration:underline}
+.err{background:#FDE8E8;border:1px solid #F5C2C2;color:#9E1017;font-size:13px;padding:9px 12px;border-radius:9px;margin-bottom:12px;display:none}
+.err.on{display:block}
+.hr{display:flex;align-items:center;gap:10px;color:var(--ink-soft);font-size:12px;margin:14px 0}
+.hr::before,.hr::after{content:"";flex:1;height:1px;background:var(--line)}
 
-  .form{margin-top:16px;padding-top:16px;border-top:1px dashed var(--line-strong);}
-  .form.notop{margin-top:0;padding-top:0;border:none;}
-  .form label{display:block;font-size:12px;color:var(--ink-soft);font-weight:600;margin:10px 0 5px;}
-  .form input[type=text],.form input[type=number],.form select{width:100%;padding:10px 12px;border:1px solid var(--line-strong);border-radius:10px;font-size:15px;background:var(--paper);color:var(--ink);font-family:inherit;}
-  .form input:focus,.form select:focus{outline:none;border-color:var(--meal);background:#fff;}
-  .cat-pick{display:flex;gap:8px;}
-  .cat-pick button{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--line-strong);background:var(--paper);cursor:pointer;font-weight:700;font-size:14px;color:var(--ink-soft);}
-  .cat-pick button.active.meal{background:var(--meal-soft);border-color:var(--meal);color:#a3521f;}
-  .cat-pick button.active.snack{background:var(--snack-soft);border-color:var(--snack);color:#963f66;}
-  .row2{display:flex;gap:10px;}
-  .row2 > *{flex:1;}
-  .save{width:100%;margin-top:16px;background:var(--meal);color:#fff;border:none;padding:12px;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;}
-  .save:hover{filter:brightness(1.04);}
-  .save:active{transform:translateY(1px);}
-  .danger{width:100%;margin-top:10px;background:transparent;color:var(--snack);border:1px solid var(--snack-soft);padding:10px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;}
-  .danger:hover{background:var(--snack-soft);}
-
-  .preview-row{display:flex;align-items:center;gap:14px;margin-bottom:4px;}
-  .preview-row .who-txt{font-weight:700;font-size:15px;}
-  .photo-btns{display:flex;gap:8px;margin-top:6px;}
-  .photo-btns .pbtn{flex:1;text-align:center;padding:9px;border-radius:10px;border:1.5px solid var(--line-strong);background:var(--paper);cursor:pointer;font-size:13px;font-weight:700;color:var(--ink);}
-  .photo-btns .pbtn:hover{border-color:var(--note);}
-  .photo-btns .pbtn.rm{color:var(--snack);}
-  .emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;max-height:150px;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px;}
-  @media(max-width:460px){.emoji-grid{grid-template-columns:repeat(7,1fr);}}
-  .emoji-grid button{font-size:19px;line-height:1;padding:5px 0;border:1.5px solid transparent;border-radius:8px;background:transparent;cursor:pointer;}
-  .emoji-grid button:hover{background:var(--card);}
-  .emoji-grid button.active{border-color:var(--meal);background:var(--card);}
-  .swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
-  .swatches button{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;}
-  .swatches button.active{border-color:var(--ink);transform:scale(1.08);}
-  .foot{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:22px;}
+.tools{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.tools button{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px}
+.tools button:hover{background:var(--paper-2)}
+.rate-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rate-row span{width:96px;font-size:13px}
+.rate-row input{flex:1;padding:8px 10px;border:1px solid var(--line);border-radius:8px}
+.hint{font-size:12px;color:var(--ink-soft);line-height:1.6}
+.hidden{display:none!important}
+.setup{background:var(--gold);color:var(--ink);padding:12px 16px;font-size:13px;line-height:1.6}
+.setup code{background:rgba(0,0,0,.08);padding:1px 5px;border-radius:4px}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="toolbar">
-    <button class="btn ghost" id="btnExport">⬇️ 导出备份</button>
-    <button class="btn ghost" id="btnImport">⬆️ 导入备份</button>
-    <input type="file" id="fileInput" accept="application/json" hidden>
-  </div>
-
-  <div class="brand">
-    <div class="logo">🍫</div>
-    <div>
-      <h1><span class="h1-edit" id="titleEl" contenteditable="true" spellcheck="false">好事发生！</span></h1>
-      <div class="sub">Life is a box of chocolate</div>
-    </div>
-  </div>
-
-  <!-- 可爱手绘贴纸 -->
-  <div class="stickers">
-    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="66" rx="34" ry="22" fill="#F3D6B0"/><path d="M18 62 a32 20 0 0 0 64 0 z" fill="#fff"/><path d="M50 44 c-16 0 -30 6 -32 18 h64 c-2-12-16-18-32-18z" fill="#E8613C"/><circle cx="40" cy="70" r="3.2" fill="#3a2a1c"/><circle cx="60" cy="70" r="3.2" fill="#3a2a1c"/><path d="M45 76 q5 5 10 0" stroke="#3a2a1c" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="34" cy="72" r="3.5" fill="#F0A0A0" opacity=".7"/><circle cx="66" cy="72" r="3.5" fill="#F0A0A0" opacity=".7"/></svg>
-    <svg viewBox="0 0 100 100"><circle cx="50" cy="54" r="34" fill="#C99562"/><circle cx="50" cy="54" r="34" fill="none" stroke="#A9773F" stroke-width="3"/><circle cx="38" cy="42" r="4" fill="#5a3a1a"/><circle cx="64" cy="46" r="4.5" fill="#5a3a1a"/><circle cx="58" cy="66" r="3.5" fill="#5a3a1a"/><circle cx="34" cy="62" r="3" fill="#5a3a1a"/><circle cx="42" cy="56" r="3.2" fill="#3a2a1c"/><circle cx="58" cy="56" r="3.2" fill="#3a2a1c"/><path d="M44 63 q6 5 12 0" stroke="#3a2a1c" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="36" cy="60" r="3.5" fill="#E88" opacity=".6"/><circle cx="64" cy="60" r="3.5" fill="#E88" opacity=".6"/></svg>
-    <svg viewBox="0 0 100 100"><path d="M32 34 h36 l-4 46 a4 4 0 0 1 -4 4 h-20 a4 4 0 0 1 -4 -4 z" fill="#EBD9C0"/><rect x="30" y="30" width="40" height="8" rx="4" fill="#fff"/><rect x="46" y="14" width="8" height="18" rx="4" fill="#A9773F"/><circle cx="42" cy="55" r="3.2" fill="#3a2a1c"/><circle cx="58" cy="55" r="3.2" fill="#3a2a1c"/><path d="M45 62 q5 5 10 0" stroke="#3a2a1c" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="37" cy="60" r="3" fill="#E88" opacity=".6"/><circle cx="63" cy="60" r="3" fill="#E88" opacity=".6"/><circle cx="40" cy="70" r="3" fill="#7a5a3a"/><circle cx="55" cy="73" r="2.5" fill="#7a5a3a"/></svg>
-    <svg viewBox="0 0 100 100"><rect x="28" y="26" width="44" height="52" rx="6" fill="#6B4322"/><path d="M28 40 h44 M50 26 v52 M28 58 h44" stroke="#4a2c12" stroke-width="3"/><circle cx="40" cy="50" r="3.2" fill="#fff"/><circle cx="60" cy="50" r="3.2" fill="#fff"/><path d="M44 60 q6 5 12 0" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="35" cy="56" r="3" fill="#E88" opacity=".5"/><circle cx="65" cy="56" r="3" fill="#E88" opacity=".5"/></svg>
-    <svg viewBox="0 0 100 100"><path d="M34 40 h32 l-3 40 a5 5 0 0 1 -5 5 h-16 a5 5 0 0 1 -5 -5 z" fill="#F2E2C8"/><rect x="32" y="36" width="36" height="7" rx="3.5" fill="#D9C4A0"/><rect x="46" y="22" width="8" height="16" rx="4" fill="#B98" transform="rotate(12 50 30)"/><circle cx="43" cy="58" r="3" fill="#7a5a3a"/><circle cx="57" cy="58" r="3" fill="#7a5a3a"/><circle cx="42" cy="55" r="3.2" fill="#3a2a1c"/><circle cx="58" cy="55" r="3.2" fill="#3a2a1c"/><path d="M45 63 q5 4 10 0" stroke="#3a2a1c" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
-  </div>
-
-  <div class="monthbar">
-    <button class="nav prev" id="prevM">‹</button>
-    <div class="title" id="monthTitle">2026年7月</div>
-    <div class="today-link" id="todayLink">↺ 回到今天</div>
-    <button class="nav next" id="nextM">›</button>
-  </div>
-
-  <div class="members" id="members"></div>
-
-  <div class="cal">
-    <div class="weekrow"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
-    <div class="grid" id="grid"></div>
-  </div>
-
-  <div class="summary">
-    <div class="sum-head">
-      <h3>📊 消费统计</h3>
-      <div class="scope">
-        <button data-scope="month" class="active">本月</button>
-        <button data-scope="all">累计</button>
-      </div>
-    </div>
-    <div class="sum-top">
-      <div class="sum-big tnum" id="monthTotal">¥0</div>
-      <span class="badge meal">🍚 吃饭 <span class="tnum" id="mealTotal">¥0</span></span>
-      <span class="badge snack">🍪 其他 <span class="tnum" id="snackTotal">¥0</span></span>
-    </div>
-    <div id="userBars"></div>
-  </div>
-
-  <div class="wall">
-    <h3>💬 留言 · 心情墙</h3>
-    <div class="compose">
-      <div class="line1">
-        <span class="clabel">我是</span>
-        <select id="mFrom"></select>
-        <span class="clabel">对</span>
-        <select id="mTo"><option value="">大家 👥</option></select>
-      </div>
-      <div class="moods" id="moodPick"></div>
-      <div class="ats" id="atRow"></div>
-      <div class="row">
-        <textarea id="mText" placeholder="今天吃了啥 / 想说的话 / 记录一下心情…" rows="1"></textarea>
-        <button class="pat" id="mPat" title="拍一拍对方">👋 拍一拍</button>
-        <button class="send" id="mSend">发送</button>
-      </div>
-    </div>
-    <div class="feed" id="feed"></div>
-  </div>
-
-  <div class="foot">数据存在你自己的浏览器里 · 记得用「导出备份」保存或分享 🍫</div>
+<!-- ① 没填 Firebase 配置时的提示 -->
+<div id="setupBanner" class="setup hidden">
+  还没填 Firebase 配置：打开 <code>index.html</code>，把底部 <code>firebaseConfig</code> 换成你自己项目的那一份。
 </div>
 
-<!-- 每日记录弹窗 -->
-<div class="overlay" id="dayOverlay">
-  <div class="modal">
-    <div class="head">
-      <div><div class="dt" id="dayTitle">7月16日</div><div class="wd" id="dayWeekday">星期四</div></div>
-      <div class="x" data-close>×</div>
+<!-- ② 登录页 -->
+<section id="gate" class="gate">
+  <div class="card">
+    <h1 class="display">黄程锡美食平台</h1>
+    <div class="tag">凭口令进店。</div>
+    <div id="gateErr" class="err"></div>
+    <div class="field">
+      <label>口令</label>
+      <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" />
     </div>
-    <div class="body">
-      <div id="dayRecords"></div>
-      <div class="form">
-        <label>谁</label>
-        <select id="fUser"></select>
-        <label>类型</label>
-        <div class="cat-pick">
-          <button type="button" data-cat="meal" class="active meal">🍚 吃饭</button>
-          <button type="button" data-cat="snack" class="snack">🍪 其他</button>
-        </div>
-        <div class="row2">
-          <div><label>金额 ¥</label><input id="fAmount" type="number" inputmode="decimal" min="0" step="0.5" placeholder="0"></div>
-          <div><label>备注（可选）</label><input id="fNote" type="text" placeholder="麻辣烫 / 奶茶…"></div>
-        </div>
-        <button class="save" id="addRecord">＋ 添加记录</button>
+    <button id="mainAuthBtn" class="btn">进店</button>
+  </div>
+</section>
+
+<!-- ③ 主体 -->
+<main id="app" class="hidden">
+  <header class="sign">
+    <div class="wrap sign-row">
+      <div class="brand">
+        <h1 class="display">黄程锡美食平台</h1>
+        <span class="sub">daily food log</span>
       </div>
+      <div class="who">
+        <b id="userLabel"></b>
+        <button id="logoutBtn" class="ghost">退出</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="receipt">
+      <div class="receipt-top">
+        <h2 id="monthTitle" class="display">—</h2>
+        <div class="nav-btns">
+          <button id="prevM" aria-label="上个月">‹</button>
+          <button id="todayBtn" style="width:auto;padding:0 12px;font-size:13px">今天</button>
+          <button id="nextM" aria-label="下个月">›</button>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="k">打卡天数</div><div class="v" id="sDays">0</div></div>
+        <div class="stat"><div class="k">连续打卡</div><div class="v" id="sStreak">0</div></div>
+        <div class="stat"><div class="k">本月吃饭</div><div class="v" id="sMeals">0<small> 餐</small></div></div>
+        <div class="stat"><div class="k">本月花费</div><div class="v" id="sMoney">0</div></div>
+      </div>
+    </section>
+
+    <section class="cal">
+      <div class="dow"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+      <div id="grid" class="grid"></div>
+    </section>
+
+    <div id="legend" class="legend"></div>
+
+    <div class="tools">
+      <button id="settingsBtn">货币与汇率</button>
+      <button id="picsBtn">换等级表情包</button>
     </div>
   </div>
-</div>
+</main>
 
-<!-- 成员弹窗（添加/编辑） -->
-<div class="overlay" id="userOverlay">
-  <div class="modal">
-    <div class="head"><div class="dt" id="userModalTitle">添加成员</div><div class="x" data-close>×</div></div>
-    <div class="body">
-      <div class="form notop">
-        <div class="preview-row">
-          <span class="avatar lg" id="uPreview" style="background:#E07B39">🍫</span>
-          <div><div class="who-txt" id="uPreviewName">新成员</div><div style="font-size:12px;color:var(--ink-soft)">头像预览</div></div>
-        </div>
-        <label>昵称</label>
-        <input id="uName" type="text" placeholder="想叫什么就叫什么！" maxlength="12">
-        <label>用手机相册照片当头像</label>
-        <div class="photo-btns">
-          <label class="pbtn">📷 上传照片<input id="uPhoto" type="file" accept="image/*" hidden></label>
-          <div class="pbtn rm" id="uPhotoRemove" style="display:none">🗑 移除照片</div>
-        </div>
-        <label>或选个 emoji 头像</label>
-        <div class="emoji-grid" id="emojiGrid"></div>
-        <label>也可以自己打一个 emoji（可留空用名字首字）</label>
-        <input id="uEmoji" type="text" placeholder="😺 🍔 ⭐️…" maxlength="2">
-        <label>底色（用照片时不显示）</label>
-        <div class="swatches" id="swatches"></div>
-        <button class="save" id="saveUser" style="background:var(--today)">保存</button>
-        <button class="danger" id="deleteUser" style="display:none">删除这个成员</button>
+<!-- ④ 某一天的弹窗 -->
+<div id="dayMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h3 id="dayTitle" class="display">—</h3>
+      <button class="x" data-close>×</button>
+    </div>
+    <div id="mealList"></div>
+    <div class="form">
+      <div class="field">
+        <label>吃了什么</label>
+        <input id="fName" type="text" placeholder="例如：楼下猪脚饭" />
       </div>
+      <div class="field">
+        <label>评级</label>
+        <div id="fLevels" class="picker"></div>
+      </div>
+      <div class="field row2">
+        <div>
+          <label>金额</label>
+          <input id="fAmount" type="number" step="0.01" min="0" placeholder="0.00" />
+        </div>
+        <div>
+          <label>货币</label>
+          <select id="fCur"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label>照片（可选）</label>
+        <input id="fPhoto" type="file" accept="image/*" />
+        <div id="fPrev" class="prev"><img alt="预览" /></div>
+      </div>
+      <div class="field">
+        <label>备注（可选）</label>
+        <textarea id="fNote" placeholder="辣、量大、老板娘凶……"></textarea>
+      </div>
+      <button id="saveMeal" class="btn">记这一餐</button>
     </div>
   </div>
 </div>
 
-<script>
-/* ============ 数据 ============ */
-const KEY = "group_food_ledger_v2";
-const COLORS = ["#E07B39","#C25E8A","#3F6B4F","#6E86C2","#B5892F","#8E5AA8","#4C9A8E","#C0503D","#D98B5F","#5E7CA8"];
-const CAT = { meal:{label:"吃饭",emoji:"🍚",color:"#E07B39"}, snack:{label:"其他",emoji:"🍪",color:"#C25E8A"} };
-const WD = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
-const AVATAR_EMOJIS = "😀 😄 😎 🥰 😊 🤓 😴 🥳 😺 🐶 🐱 🐰 🐻 🐼 🐨 🐯 🦊 🐹 🐷 🐸 🐧 🦄 🐙 🐳 🍔 🍟 🍕 🍜 🍚 🍙 🍩 🍪 🍰 🧁 🍦 🍓 🍑 🍉 🍀 ⭐️ 🌈 🔥 💖 🌸 ☕️ 🧋 🍫 👑".split(" ");
-const MOODS = [["😊","开心"],["😌","满足"],["🥰","幸福"],["😋","好吃"],["😴","困"],["😅","累"],["😢","难过"],["😤","气"],["🤑","剁手"],["🤔","纠结"]];
+<!-- ⑤ 汇率设置 -->
+<div id="setMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h3 class="display">货币与汇率</h3>
+      <button class="x" data-close>×</button>
+    </div>
+    <div class="field">
+      <label>统计用的本位币</label>
+      <select id="baseCur"></select>
+    </div>
+    <p class="hint">下面是 1 单位外币折合多少本位币。汇率随时会变，自己按当天的填就行。</p>
+    <div id="rateList"></div>
+    <button id="saveRates" class="btn">保存汇率</button>
+  </div>
+</div>
 
-let state = load();
-let view = { y:new Date().getFullYear(), m:new Date().getMonth() };
-let pickedCat="meal", pickedColor=COLORS[0], pickedEmoji="", pickedPhoto=null, editingUserId=null, openDate=null, pickedMood="", summaryScope="month", justPattedId=null;
+<!-- ⑥ 等级表情包 -->
+<div id="picMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h3 class="display">换等级表情包</h3>
+      <button class="x" data-close>×</button>
+    </div>
+    <p class="hint">给每个等级传一张图，日历和记录里就会显示它，不传就用默认的 emoji。</p>
+    <div id="picList"></div>
+  </div>
+</div>
 
-function load(){
-  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.users) return {messages:[],...s}; }catch(e){}
-  try{ const old=JSON.parse(localStorage.getItem("group_food_ledger_v1")); if(old&&old.users) return {messages:[],...old}; }catch(e){}
-  return { title:"好事发生！", users:[], records:[], messages:[] };
-}
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){ alert("保存失败：可能是头像照片太多、浏览器空间满了。可以少传几张照片，或用 emoji 头像。"); } }
-function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-function userById(id){ return state.users.find(u=>u.id===id); }
-function fmt(n){ n=Math.round(n*100)/100; return "¥"+(n%1===0? n : n.toFixed(2)); }
-function dkey(y,m,d){ return y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0"); }
-function avatarHTML(u,cls,extra){
-  const c=(cls||"")+(extra||"");
-  if(u.photo) return `<span class="avatar ${c}" style="background-image:url('${u.photo}')"></span>`;
-  const face=u.emoji||(u.name?u.name.trim()[0]:"?");
-  return `<span class="avatar ${c}" style="background:${u.color}">${face}</span>`;
-}
-function escapeHTML(s){ return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
-function withAts(s){ return escapeHTML(s).replace(/@([^\s@]{1,12})/g,'<span class="at">@$1</span>'); }
-function relTime(ts){
-  const s=(Date.now()-ts)/1000;
-  if(s<60) return "刚刚";
-  if(s<3600) return Math.floor(s/60)+"分钟前";
-  if(s<86400) return Math.floor(s/3600)+"小时前";
-  if(s<172800) return "昨天";
-  const d=new Date(ts); return (d.getMonth()+1)+"月"+d.getDate()+"日";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut,
+  onAuthStateChanged, setPersistence, browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, collection, doc, addDoc, deleteDoc, setDoc, getDoc,
+  onSnapshot, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ===================================================================
+   第 1 步：把下面这块换成你自己 Firebase 项目里的配置
+   =================================================================== */
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_API_KEY",
+  authDomain: "PASTE.firebaseapp.com",
+  projectId: "PASTE_PROJECT_ID",
+  storageBucket: "PASTE.appspot.com",
+  messagingSenderId: "PASTE",
+  appId: "PASTE"
+};
+/* =================================================================== */
+
+const NOT_SET = firebaseConfig.apiKey.startsWith("PASTE");
+if (NOT_SET) document.getElementById('setupBanner').classList.remove('hidden');
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+setPersistence(auth, browserLocalPersistence).catch(()=>{});
+
+/* ---------- 常量 ---------- */
+const LEVELS = [
+  { id:'hb',  name:'夯爆了', emoji:'🤯', color:'#D6242C', rank:5 },
+  { id:'rsr', name:'人上人', emoji:'😎', color:'#F2B705', rank:4 },
+  { id:'yb',  name:'一般',   emoji:'😐', color:'#8B8178', rank:3 },
+  { id:'rxr', name:'人下人', emoji:'🥲', color:'#5E7A8A', rank:2 },
+  { id:'lwl', name:'拉完了', emoji:'💩', color:'#6B4A2F', rank:1 },
+];
+const LV = Object.fromEntries(LEVELS.map(l=>[l.id,l]));
+
+const CURRENCIES = [
+  ['CNY','人民币','¥'], ['HKD','港币','HK$'], ['USD','美元','$'], ['TWD','新台币','NT$'],
+  ['MOP','澳门元','MOP$'], ['JPY','日元','¥'], ['KRW','韩元','₩'], ['EUR','欧元','€'],
+  ['GBP','英镑','£'], ['SGD','新加坡元','S$'], ['AUD','澳元','A$'], ['CAD','加元','C$'],
+  ['THB','泰铢','฿'], ['MYR','马来西亚林吉特','RM']
+];
+const CUR = Object.fromEntries(CURRENCIES.map(c=>[c[0],{name:c[1],sym:c[2]}]));
+// 默认：1 单位外币 = 多少人民币
+const DEFAULT_RATES = {
+  CNY:1, HKD:0.92, USD:7.15, TWD:0.225, MOP:0.89, JPY:0.047, KRW:0.0052,
+  EUR:7.8, GBP:9.1, SGD:5.35, AUD:4.7, CAD:5.2, THB:0.2, MYR:1.55
+};
+
+/* ---------- 状态 ---------- */
+let uid = null;
+let meals = [];                       // 全部记录
+let prefs = { base:'CNY', rates:{...DEFAULT_RATES}, pics:{} };
+let cursor = new Date(); cursor.setDate(1);
+let openDate = null;
+let pickedLevel = 'yb';
+let pickedPhoto = null;               // 压缩后的 dataURL
+const photoCache = {};
+let unsubMeals = null;
+
+/* ---------- 小工具 ---------- */
+const $ = s => document.querySelector(s);
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const todayStr = () => ymd(new Date());
+const money = (n, cur) => (CUR[cur]?.sym || '') + n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const toBase = (amount, cur) => amount * (prefs.rates[cur] ?? 1) / (prefs.rates[prefs.base] ?? 1);
+const esc = s => (s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function faceHTML(levelId, size){
+  const l = LV[levelId]; if(!l) return '';
+  const pic = prefs.pics[levelId];
+  return pic ? `<img src="${pic}" alt="${l.name}" style="width:${size}px;height:${size}px">`
+             : `<span style="font-size:${size}px">${l.emoji}</span>`;
 }
 
-/* ============ 渲染 ============ */
-function render(){
-  document.getElementById("titleEl").textContent = state.title;
-  document.getElementById("monthTitle").textContent = `${view.y}年${view.m+1}月`;
-  renderMembers(); renderGrid(); renderSummary(); renderWallSelects(); renderAtRow(); renderFeed();
-  save();
-}
-
-function renderMembers(){
-  const box=document.getElementById("members"); box.innerHTML="";
-  if(state.users.length===0){ const e=document.createElement("span"); e.className="empty"; e.textContent="还没有成员，点右边 ＋ 添加 →"; box.appendChild(e); }
-  state.users.forEach(u=>{
-    const c=document.createElement("span"); c.className="chip"; c.title="点击编辑";
-    c.innerHTML=avatarHTML(u,"", justPattedId===u.id?" wig":"")+`<span>${u.name}</span>`;
-    c.onclick=()=>openUserModal(u.id);
-    box.appendChild(c);
+/* 压缩图片，避免 Firestore 单文档 1MB 上限 */
+function compress(file, maxSide=1000, quality=0.72){
+  return new Promise((res, rej)=>{
+    const fr = new FileReader();
+    fr.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let {width:w, height:h} = img;
+        const scale = Math.min(1, maxSide/Math.max(w,h));
+        w = Math.round(w*scale); h = Math.round(h*scale);
+        const cv = document.createElement('canvas');
+        cv.width = w; cv.height = h;
+        cv.getContext('2d').drawImage(img,0,0,w,h);
+        let q = quality, out = cv.toDataURL('image/jpeg', q);
+        while(out.length > 700000 && q > 0.3){ q -= 0.12; out = cv.toDataURL('image/jpeg', q); }
+        res(out);
+      };
+      img.onerror = () => rej(new Error('图片读不出来，换一张试试'));
+      img.src = fr.result;
+    };
+    fr.onerror = () => rej(new Error('文件读取失败'));
+    fr.readAsDataURL(file);
   });
-  const add=document.createElement("button"); add.className="add-member"; add.textContent="＋"; add.title="添加成员"; add.onclick=()=>openUserModal(); box.appendChild(add);
-  justPattedId=null;
 }
 
-function renderGrid(){
-  const grid=document.getElementById("grid"); grid.innerHTML="";
-  const first=new Date(view.y,view.m,1); let lead=(first.getDay()+6)%7;
-  const days=new Date(view.y,view.m+1,0).getDate(); const now=new Date();
-  for(let i=0;i<lead;i++){ const b=document.createElement("div"); b.className="cell blank"; grid.appendChild(b); }
-  for(let d=1;d<=days;d++){
-    const key=dkey(view.y,view.m,d);
-    const recs=state.records.filter(r=>r.date===key);
-    const msgs=state.messages.filter(m=>m.date===key);
-    const cell=document.createElement("div"); cell.className="cell";
-    if(now.getFullYear()===view.y&&now.getMonth()===view.m&&now.getDate()===d) cell.classList.add("today");
-    let html=`<div class="d">${d}</div>`;
-    if(msgs.length) html+=`<div class="msgmark">💬</div>`;
-    if(recs.length){
-      const ids=[...new Set(recs.map(r=>r.userId))];
-      let stack=`<div class="stack">`;
-      ids.slice(0,3).forEach(id=>{ const u=userById(id); if(u) stack+=avatarHTML(u,"sm"); });
-      if(ids.length>3) stack+=`<span class="more">+${ids.length-3}</span>`;
-      stack+=`</div>`;
-      const cats=[...new Set(recs.map(r=>r.category))];
-      let dots=`<div class="dots">`+cats.map(c=>`<span class="dot" style="background:${CAT[c].color}"></span>`).join("")+`</div>`;
-      const total=recs.reduce((s,r)=>s+r.amount,0);
-      html+=stack+dots+`<div class="sum tnum">${fmt(total)}</div>`;
-    }
-    cell.innerHTML=html;
-    cell.onclick=()=>openDay(view.y,view.m,d);
-    grid.appendChild(cell);
+/* ===================== 登录 ===================== */
+/* 全站只有一个账号。页面只问口令，邮箱写死在这里。
+   口令由 Firebase 在服务器上校验，所以源码里不出现密码本身。 */
+const ACCOUNT_EMAIL = "hcx@food.app";
+
+const gateErr = $('#gateErr');
+function showErr(e){
+  const map = {
+    'auth/invalid-credential':'口令不对',
+    'auth/wrong-password':'口令不对',
+    'auth/missing-password':'把口令填上',
+    'auth/user-not-found':'Firebase 里还没建这个账号',
+    'auth/too-many-requests':'试太多次被暂时锁了，等几分钟再来',
+    'auth/network-request-failed':'连不上 Firebase，检查网络',
+    'auth/unauthorized-domain':'这个网址没在 Firebase 授权域名里，去控制台 Authentication → Settings 添加',
+    'auth/operation-not-allowed':'邮箱/密码登录方式还没在 Firebase 控制台打开'
+  };
+  gateErr.textContent = map[e?.code] || e?.message || String(e);
+  gateErr.classList.add('on');
+}
+
+async function enter(){
+  gateErr.classList.remove('on');
+  const btn = $('#mainAuthBtn'), pwd = $('#pwd').value;
+  if(!pwd){ $('#pwd').focus(); return; }
+  btn.disabled = true; btn.textContent = '正在开门…';
+  try{
+    await signInWithEmailAndPassword(auth, ACCOUNT_EMAIL, pwd);
+  }catch(err){
+    showErr(err);
+  }finally{
+    btn.disabled = false; btn.textContent = '进店';
   }
 }
+$('#mainAuthBtn').onclick = enter;
+$('#pwd').addEventListener('keydown', e => { if(e.key === 'Enter') enter(); });
+$('#logoutBtn').onclick = () => signOut(auth);
 
-function renderSummary(){
-  document.querySelectorAll(".scope button").forEach(b=>b.classList.toggle("active",b.dataset.scope===summaryScope));
-  const scoped = summaryScope==="all" ? state.records
-    : state.records.filter(r=>{ const [y,m]=r.date.split("-").map(Number); return y===view.y&&(m-1)===view.m; });
-  const total=scoped.reduce((s,r)=>s+r.amount,0);
-  const meal=scoped.filter(r=>r.category==="meal").reduce((s,r)=>s+r.amount,0);
-  const snack=scoped.filter(r=>r.category==="snack").reduce((s,r)=>s+r.amount,0);
-  document.getElementById("monthTotal").textContent=fmt(total);
-  document.getElementById("mealTotal").textContent=fmt(meal);
-  document.getElementById("snackTotal").textContent=fmt(snack);
-  const bars=document.getElementById("userBars"); bars.innerHTML="";
-  const perUser=state.users.map(u=>({u,amt:scoped.filter(r=>r.userId===u.id).reduce((s,r)=>s+r.amount,0)})).filter(x=>x.amt>0).sort((a,b)=>b.amt-a.amt);
-  const max=perUser.length?perUser[0].amt:1;
-  if(perUser.length===0){ bars.innerHTML=`<div style="color:var(--ink-soft);font-size:13px;">${summaryScope==="all"?"还没有任何记录。":"本月还没有记录。"}</div>`; return; }
-  perUser.forEach(({u,amt})=>{
-    const row=document.createElement("div"); row.className="userbar";
-    row.innerHTML=`${avatarHTML(u,"sm")}<span class="name">${u.name}</span><span class="track"><i style="width:${Math.max(6,amt/max*100)}%;background:${u.color}"></i></span><span class="amt tnum">${fmt(amt)}</span>`;
-    bars.appendChild(row);
-  });
-}
-document.querySelectorAll(".scope button").forEach(b=>b.onclick=()=>{ summaryScope=b.dataset.scope; renderSummary(); });
-
-/* ============ 留言墙 ============ */
-function renderWallSelects(){
-  const from=document.getElementById("mFrom"), to=document.getElementById("mTo");
-  const pf=from.value, pt=to.value;
-  from.innerHTML=state.users.map(u=>`<option value="${u.id}">${u.emoji&&!u.photo?u.emoji+" ":""}${u.name}</option>`).join("");
-  to.innerHTML=`<option value="">大家 👥</option>`+state.users.map(u=>`<option value="${u.id}">${u.emoji&&!u.photo?u.emoji+" ":""}${u.name}</option>`).join("");
-  if(pf) from.value=pf; if(pt) to.value=pt;
-}
-function renderAtRow(){
-  const row=document.getElementById("atRow");
-  if(state.users.length===0){ row.innerHTML=""; return; }
-  row.innerHTML=`<span class="clabel" style="align-self:center">@提到：</span>`+state.users.map(u=>`<button data-at="${u.name}">@${u.name}</button>`).join("");
-  row.querySelectorAll("button").forEach(b=>b.onclick=()=>{
-    const t=document.getElementById("mText"); t.value=(t.value?t.value.replace(/\s*$/,' '):"")+"@"+b.dataset.at+" "; t.focus();
-  });
-}
-function renderMoodPick(){
-  const box=document.getElementById("moodPick");
-  box.innerHTML=MOODS.map(([e,l])=>`<button data-m="${e}" title="${l}">${e}</button>`).join("");
-  box.querySelectorAll("button").forEach(b=>{
-    b.classList.toggle("active",b.dataset.m===pickedMood);
-    b.onclick=()=>{ pickedMood=(pickedMood===b.dataset.m?"":b.dataset.m); renderMoodPick(); };
-  });
-}
-function renderFeed(){
-  const feed=document.getElementById("feed");
-  const list=[...state.messages].sort((a,b)=>b.ts-a.ts);
-  if(list.length===0){ feed.innerHTML=`<div class="empty">还没有留言，来发第一条吧～</div>`; return; }
-  feed.innerHTML=list.map(m=>{
-    const u=userById(m.userId); if(!u) return "";
-    if(m.type==="pat"){
-      const t=m.toUserId?userById(m.toUserId):null; const tn=t?t.name:"大家";
-      const isNew=m.id===lastPatId;
-      return `<div class="patline ${isNew?"new":""}">👋 <b>${u.name}</b> 拍了拍 <b>${tn}</b> · ${relTime(m.ts)}<span class="killp" data-mkill="${m.id}">✕</span></div>`;
-    }
-    const t=m.toUserId?userById(m.toUserId):null;
-    const toHTML=t?` <span class="to">→ @${t.name}</span>`:"";
-    const mood=m.mood?`<span class="mood">${m.mood}</span>`:"";
-    return `<div class="post">${avatarHTML(u)}<div class="bubble"><div class="who">${u.name}${toHTML}${mood}</div><div class="txt">${withAts(m.text)}</div><div class="time">${relTime(m.ts)}</div><span class="kill" data-mkill="${m.id}" title="删除">✕</span></div></div>`;
-  }).join("");
-  feed.querySelectorAll("[data-mkill]").forEach(el=>el.onclick=()=>{ state.messages=state.messages.filter(x=>x.id!==el.dataset.mkill); render(); });
-  lastPatId=null;
-}
-let lastPatId=null;
-
-document.getElementById("mSend").onclick=()=>{
-  if(state.users.length===0){ openUserModal(); return; }
-  const text=document.getElementById("mText").value.trim();
-  if(!text){ document.getElementById("mText").focus(); return; }
-  const now=new Date();
-  state.messages.push({ id:uid(), userId:document.getElementById("mFrom").value, toUserId:document.getElementById("mTo").value||null, mood:pickedMood, text, ts:Date.now(), date:dkey(now.getFullYear(),now.getMonth(),now.getDate()) });
-  document.getElementById("mText").value=""; pickedMood=""; renderMoodPick(); render();
-};
-document.getElementById("mPat").onclick=()=>{
-  if(state.users.length===0){ openUserModal(); return; }
-  const from=document.getElementById("mFrom").value;
-  const to=document.getElementById("mTo").value||null;
-  if(to && to===from){ alert("不能拍自己啦 😄 换一个「对」谁。"); return; }
-  const now=new Date(); const id=uid(); lastPatId=id; justPattedId=to;
-  state.messages.push({ id, type:"pat", userId:from, toUserId:to, ts:Date.now(), date:dkey(now.getFullYear(),now.getMonth(),now.getDate()) });
-  render();
-};
-
-/* ============ 每日弹窗 ============ */
-function openDay(y,m,d){
-  if(state.users.length===0){ openUserModal(); return; }
-  openDate=dkey(y,m,d);
-  document.getElementById("dayTitle").textContent=`${m+1}月${d}日`;
-  document.getElementById("dayWeekday").textContent=WD[new Date(y,m,d).getDay()];
-  document.getElementById("fUser").innerHTML=state.users.map(u=>`<option value="${u.id}">${u.emoji&&!u.photo?u.emoji+" ":""}${u.name}</option>`).join("");
-  document.getElementById("fAmount").value=""; document.getElementById("fNote").value=""; setCat("meal");
-  renderDayRecords();
-  document.getElementById("dayOverlay").classList.add("show");
-}
-function renderDayRecords(){
-  const box=document.getElementById("dayRecords");
-  const recs=state.records.filter(r=>r.date===openDate);
-  if(recs.length===0){ box.innerHTML=`<div class="empty-day">今天还没有记录，在下面加一条 ↓</div>`; return; }
-  const total=recs.reduce((s,r)=>s+r.amount,0);
-  box.innerHTML=recs.map(r=>{
-    const u=userById(r.userId); if(!u) return ""; const cat=CAT[r.category];
-    return `<div class="rec">${avatarHTML(u)}<div class="info"><div class="n">${u.name}</div><div class="meta"><span class="cat-tag ${r.category}">${cat.emoji}${cat.label}</span>${r.note?escapeHTML(r.note):""}</div></div><div class="amt tnum">${fmt(r.amount)}</div><div class="kill" data-kill="${r.id}" title="删除">🗑</div></div>`;
-  }).join("")+`<div style="text-align:right;font-weight:800;margin-top:8px" class="tnum">合计 ${fmt(total)}</div>`;
-  box.querySelectorAll("[data-kill]").forEach(el=>el.onclick=()=>{ state.records=state.records.filter(r=>r.id!==el.dataset.kill); render(); renderDayRecords(); });
-}
-function setCat(c){ pickedCat=c; document.querySelectorAll(".cat-pick button").forEach(b=>b.classList.toggle("active",b.dataset.cat===c)); document.getElementById("addRecord").style.background=CAT[c].color; }
-document.querySelectorAll(".cat-pick button").forEach(b=>b.onclick=()=>setCat(b.dataset.cat));
-document.getElementById("addRecord").onclick=()=>{
-  const amt=parseFloat(document.getElementById("fAmount").value);
-  if(!(amt>0)){ alert("请输入大于 0 的金额"); return; }
-  state.records.push({ id:uid(), userId:document.getElementById("fUser").value, date:openDate, category:pickedCat, amount:Math.round(amt*100)/100, note:document.getElementById("fNote").value.trim() });
-  document.getElementById("fAmount").value=""; document.getElementById("fNote").value="";
-  render(); renderDayRecords();
-};
-
-/* ============ 成员弹窗（添加/编辑 + 头像） ============ */
-function refreshUserPreview(){
-  const name=document.getElementById("uName").value.trim();
-  const pv=document.getElementById("uPreview");
-  if(pickedPhoto){ pv.textContent=""; pv.style.backgroundImage=`url('${pickedPhoto}')`; pv.style.background=`center/cover url('${pickedPhoto}')`; }
-  else{ pv.style.backgroundImage="none"; const face=pickedEmoji||document.getElementById("uEmoji").value.trim()||(name?name[0]:"🍫"); pv.textContent=face; pv.style.background=pickedColor; }
-  document.getElementById("uPreviewName").textContent=name||"新成员";
-  document.getElementById("uPhotoRemove").style.display=pickedPhoto?"block":"none";
-}
-function buildEmojiGrid(){
-  const g=document.getElementById("emojiGrid");
-  g.innerHTML=AVATAR_EMOJIS.map(e=>`<button data-e="${e}">${e}</button>`).join("");
-  g.querySelectorAll("button").forEach(b=>{ b.classList.toggle("active",!pickedPhoto&&b.dataset.e===pickedEmoji);
-    b.onclick=()=>{ pickedPhoto=null; pickedEmoji=b.dataset.e; document.getElementById("uEmoji").value=""; buildEmojiGrid(); refreshUserPreview(); }; });
-}
-function buildSwatches(){
-  const sw=document.getElementById("swatches");
-  sw.innerHTML=COLORS.map(c=>`<button style="background:${c}" data-c="${c}"></button>`).join("");
-  sw.querySelectorAll("button").forEach(b=>{ b.classList.toggle("active",b.dataset.c===pickedColor);
-    b.onclick=()=>{ pickedColor=b.dataset.c; buildSwatches(); refreshUserPreview(); }; });
-}
-document.getElementById("uPhoto").onchange=(e)=>{
-  const f=e.target.files[0]; if(!f) return;
-  const rd=new FileReader();
-  rd.onload=()=>{ const img=new Image(); img.onload=()=>{
-    const size=160, c=document.createElement("canvas"); c.width=size; c.height=size;
-    const ctx=c.getContext("2d"); const min=Math.min(img.width,img.height);
-    ctx.drawImage(img,(img.width-min)/2,(img.height-min)/2,min,min,0,0,size,size);
-    pickedPhoto=c.toDataURL("image/jpeg",0.8); pickedEmoji=""; buildEmojiGrid(); refreshUserPreview();
-  }; img.src=rd.result; };
-  rd.readAsDataURL(f); e.target.value="";
-};
-document.getElementById("uPhotoRemove").onclick=()=>{ pickedPhoto=null; buildEmojiGrid(); refreshUserPreview(); };
-function openUserModal(id){
-  editingUserId=id||null;
-  const del=document.getElementById("deleteUser");
-  if(editingUserId){
-    const u=userById(editingUserId);
-    document.getElementById("userModalTitle").textContent="编辑成员";
-    document.getElementById("uName").value=u.name;
-    document.getElementById("uEmoji").value=(u.photo||AVATAR_EMOJIS.includes(u.emoji))?"":(u.emoji||"");
-    pickedPhoto=u.photo||null;
-    pickedEmoji=(!u.photo&&AVATAR_EMOJIS.includes(u.emoji))?u.emoji:"";
-    pickedColor=u.color; del.style.display="block";
+onAuthStateChanged(auth, async user => {
+  if(user){
+    uid = user.uid;
+    $('#gate').classList.add('hidden');
+    $('#app').classList.remove('hidden');
+    $('#userLabel').textContent = '黄程锡';
+    await loadPrefs();
+    listenMeals();
   }else{
-    document.getElementById("userModalTitle").textContent="添加成员";
-    document.getElementById("uName").value=""; document.getElementById("uEmoji").value="";
-    pickedPhoto=null; pickedEmoji=""; pickedColor=COLORS[state.users.length%COLORS.length]; del.style.display="none";
+    uid = null;
+    if(unsubMeals){ unsubMeals(); unsubMeals = null; }
+    meals = [];
+    $('#app').classList.add('hidden');
+    $('#gate').classList.remove('hidden');
   }
-  buildEmojiGrid(); buildSwatches(); refreshUserPreview();
-  document.getElementById("userOverlay").classList.add("show");
+});
+
+/* ===================== 数据 ===================== */
+async function loadPrefs(){
+  try{
+    const snap = await getDoc(doc(db,'users',uid,'meta','prefs'));
+    if(snap.exists()){
+      const d = snap.data();
+      prefs.base = d.base || 'CNY';
+      prefs.rates = { ...DEFAULT_RATES, ...(d.rates||{}) };
+      prefs.pics = d.pics || {};
+    }
+  }catch(e){ console.warn('读取设置失败', e); }
+  buildCurrencySelects();
+  renderLegend();
+  renderLevelPicker();
 }
-document.getElementById("uName").oninput=refreshUserPreview;
-document.getElementById("uEmoji").oninput=()=>{ if(document.getElementById("uEmoji").value.trim()){ pickedPhoto=null; pickedEmoji=""; buildEmojiGrid(); } refreshUserPreview(); };
-document.getElementById("saveUser").onclick=()=>{
-  const name=document.getElementById("uName").value.trim();
-  if(!name){ alert("请输入昵称"); return; }
-  const emoji=pickedEmoji||document.getElementById("uEmoji").value.trim();
-  if(editingUserId){ const u=userById(editingUserId); u.name=name; u.emoji=emoji; u.color=pickedColor; u.photo=pickedPhoto||null; }
-  else{ state.users.push({ id:uid(), name, emoji, color:pickedColor, photo:pickedPhoto||null }); }
-  document.getElementById("userOverlay").classList.remove("show"); render();
+const savePrefs = () => setDoc(doc(db,'users',uid,'meta','prefs'), prefs, { merge:true });
+
+function listenMeals(){
+  if(unsubMeals) unsubMeals();
+  unsubMeals = onSnapshot(collection(db,'users',uid,'meals'), snap => {
+    meals = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    render();
+    if(openDate) renderMealList();
+  }, err => console.error(err));
+}
+
+async function getPhoto(id){
+  if(photoCache[id] !== undefined) return photoCache[id];
+  try{
+    const s = await getDoc(doc(db,'users',uid,'photos',id));
+    photoCache[id] = s.exists() ? s.data().data : null;
+  }catch{ photoCache[id] = null; }
+  return photoCache[id];
+}
+
+/* ===================== 渲染 ===================== */
+function render(){ renderMonth(); renderStats(); renderLegend(); }
+
+function renderMonth(){
+  const y = cursor.getFullYear(), m = cursor.getMonth();
+  $('#monthTitle').textContent = `${y} 年 ${m+1} 月`;
+  const first = new Date(y,m,1).getDay();
+  const days = new Date(y,m+1,0).getDate();
+  const byDay = {};
+  meals.forEach(x => (byDay[x.date] ||= []).push(x));
+
+  let html = '';
+  for(let i=0;i<first;i++) html += '<div class="cell blank"></div>';
+  for(let d=1; d<=days; d++){
+    const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const list = byDay[ds] || [];
+    const isToday = ds === todayStr();
+    let inner = '';
+    if(list.length){
+      const best = list.reduce((a,b)=> (LV[b.level]?.rank||0) > (LV[a.level]?.rank||0) ? b : a);
+      const sum = list.reduce((s,x)=> s + toBase(x.amount||0, x.currency||prefs.base), 0);
+      inner = `<div class="face">${faceHTML(best.level,26)}</div>
+               ${list.length>1?`<div class="cnt">×${list.length}</div>`:''}
+               ${sum>0?`<div class="money mono">${CUR[prefs.base].sym}${Math.round(sum)}</div>`:''}`;
+    }
+    html += `<button class="cell ${list.length?'has':''} ${isToday?'today':''}" data-date="${ds}">
+               <span class="num mono">${d}</span>${inner}
+             </button>`;
+  }
+  $('#grid').innerHTML = html;
+  $('#grid').querySelectorAll('.cell[data-date]').forEach(el => {
+    el.onclick = () => openDay(el.dataset.date);
+  });
+}
+
+function renderStats(){
+  const y = cursor.getFullYear(), m = cursor.getMonth();
+  const pre = `${y}-${String(m+1).padStart(2,'0')}`;
+  const inMonth = meals.filter(x => (x.date||'').startsWith(pre));
+  const dayset = new Set(inMonth.map(x=>x.date));
+  const total = inMonth.reduce((s,x)=> s + toBase(x.amount||0, x.currency||prefs.base), 0);
+  $('#sDays').innerHTML = `${dayset.size}<small> 天</small>`;
+  $('#sMeals').innerHTML = `${inMonth.length}<small> 餐</small>`;
+  $('#sMoney').innerHTML = `<span class="mono">${money(total, prefs.base)}</span>`;
+
+  const all = new Set(meals.map(x=>x.date));
+  let streak = 0;
+  const cur = new Date();
+  if(!all.has(ymd(cur))) cur.setDate(cur.getDate()-1);   // 今天还没吃就从昨天算
+  while(all.has(ymd(cur))){ streak++; cur.setDate(cur.getDate()-1); }
+  $('#sStreak').innerHTML = `${streak}<small> 天</small>`;
+}
+
+function renderLegend(){
+  $('#legend').innerHTML = LEVELS.map(l => {
+    const n = meals.filter(x=>x.level===l.id).length;
+    return `<div class="lv"><span class="em">${faceHTML(l.id,20)}</span>
+      <span style="color:${l.color};font-weight:700">${l.name}</span>
+      <span class="mono" style="color:var(--ink-soft)">${n}</span></div>`;
+  }).join('');
+}
+
+/* ===================== 某天 ===================== */
+function openDay(ds){
+  openDate = ds;
+  const d = new Date(ds+'T00:00:00');
+  const wd = ['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
+  $('#dayTitle').textContent = `${d.getMonth()+1} 月 ${d.getDate()} 日 ${wd}`;
+  resetForm();
+  renderMealList();
+  $('#dayMask').classList.add('on');
+}
+
+async function renderMealList(){
+  const list = meals.filter(x => x.date === openDate)
+                    .sort((a,b)=> (a.createdAtMs||0)-(b.createdAtMs||0));
+  const box = $('#mealList');
+  if(!list.length){
+    box.innerHTML = `<p class="hint" style="margin:0 0 14px">这天还是空的。下面记第一餐。</p>`;
+    return;
+  }
+  box.innerHTML = list.map(x => {
+    const l = LV[x.level] || LV.yb;
+    return `<div class="meal" data-id="${x.id}">
+      ${x.hasPhoto ? `<img class="pic" data-pic="${x.id}" alt="${esc(x.name)}">` : `<div class="pic" style="display:flex;align-items:center;justify-content:center;font-size:30px">${faceHTML(x.level,30)}</div>`}
+      <div class="body">
+        <div class="t">
+          <div class="name">${esc(x.name)||'没写名字'}</div>
+          <div class="price mono">${x.amount ? money(x.amount, x.currency) : '<small>免费</small>'}</div>
+        </div>
+        <div style="margin-top:6px"><span class="stamp" style="color:${l.color}">${l.name}</span></div>
+        ${x.note ? `<div class="note">${esc(x.note)}</div>` : ''}
+        ${x.currency !== prefs.base && x.amount ? `<div class="note mono">≈ ${money(toBase(x.amount,x.currency), prefs.base)}</div>` : ''}
+        <button class="del" data-del="${x.id}">删掉</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  box.querySelectorAll('[data-del]').forEach(b => b.onclick = () => removeMeal(b.dataset.del));
+  for(const img of box.querySelectorAll('[data-pic]')){
+    const src = await getPhoto(img.dataset.pic);
+    if(src) img.src = src;
+  }
+}
+
+function renderLevelPicker(){
+  $('#fLevels').innerHTML = LEVELS.map(l =>
+    `<button class="pick ${l.id===pickedLevel?'on':''}" data-lv="${l.id}"
+      style="${l.id===pickedLevel?`background:${l.color}`:''}">
+      ${faceHTML(l.id,18)} ${l.name}</button>`
+  ).join('');
+  $('#fLevels').querySelectorAll('[data-lv]').forEach(b => b.onclick = () => {
+    pickedLevel = b.dataset.lv; renderLevelPicker();
+  });
+}
+
+function buildCurrencySelects(){
+  const opts = CURRENCIES.map(([c,n]) => `<option value="${c}">${c} · ${n}</option>`).join('');
+  $('#fCur').innerHTML = opts; $('#fCur').value = prefs.base;
+  $('#baseCur').innerHTML = opts; $('#baseCur').value = prefs.base;
+}
+
+function resetForm(){
+  $('#fName').value = ''; $('#fAmount').value = ''; $('#fNote').value = '';
+  $('#fPhoto').value = ''; $('#fPrev').style.display = 'none';
+  pickedPhoto = null; pickedLevel = 'yb';
+  $('#fCur').value = prefs.base;
+  renderLevelPicker();
+}
+
+$('#fPhoto').onchange = async e => {
+  const f = e.target.files[0]; if(!f) return;
+  try{
+    pickedPhoto = await compress(f);
+    $('#fPrev').querySelector('img').src = pickedPhoto;
+    $('#fPrev').style.display = 'block';
+  }catch(err){ alert(err.message); }
 };
-document.getElementById("deleteUser").onclick=()=>{
-  const u=userById(editingUserId); if(!u) return;
-  if(confirm(`删除成员「${u.name}」？TA 的消费记录和留言也会一起消失`)){
-    state.users=state.users.filter(x=>x.id!==editingUserId);
-    state.records=state.records.filter(r=>r.userId!==editingUserId);
-    state.messages=state.messages.filter(m=>m.userId!==editingUserId&&m.toUserId!==editingUserId);
-    document.getElementById("userOverlay").classList.remove("show"); render();
+
+$('#saveMeal').onclick = async () => {
+  const btn = $('#saveMeal');
+  const name = $('#fName').value.trim();
+  if(!name){ $('#fName').focus(); return; }
+  btn.disabled = true; btn.textContent = '正在保存…';
+  try{
+    const ref = await addDoc(collection(db,'users',uid,'meals'), {
+      date: openDate,
+      name,
+      level: pickedLevel,
+      amount: parseFloat($('#fAmount').value) || 0,
+      currency: $('#fCur').value,
+      note: $('#fNote').value.trim(),
+      hasPhoto: !!pickedPhoto,
+      createdAtMs: Date.now(),
+      createdAt: serverTimestamp()
+    });
+    if(pickedPhoto){
+      await setDoc(doc(db,'users',uid,'photos',ref.id), { data: pickedPhoto });
+      photoCache[ref.id] = pickedPhoto;
+    }
+    resetForm();
+  }catch(e){
+    alert('没存上：' + e.message);
+  }finally{
+    btn.disabled = false; btn.textContent = '记这一餐';
   }
 };
 
-/* ============ 顶部 / 导航 ============ */
-document.getElementById("prevM").onclick=()=>{ view.m--; if(view.m<0){view.m=11;view.y--;} render(); };
-document.getElementById("nextM").onclick=()=>{ view.m++; if(view.m>11){view.m=0;view.y++;} render(); };
-document.getElementById("todayLink").onclick=()=>{ const n=new Date(); view={y:n.getFullYear(),m:n.getMonth()}; render(); };
-const titleEl=document.getElementById("titleEl");
-titleEl.onblur=()=>{ state.title=titleEl.textContent.trim()||"好事发生！"; titleEl.textContent=state.title; save(); };
-titleEl.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); titleEl.blur(); } };
+async function removeMeal(id){
+  if(!confirm('删掉这一餐？')) return;
+  await deleteDoc(doc(db,'users',uid,'meals',id));
+  deleteDoc(doc(db,'users',uid,'photos',id)).catch(()=>{});
+  delete photoCache[id];
+}
 
-document.querySelectorAll(".overlay").forEach(o=>o.addEventListener("click",e=>{ if(e.target===o||e.target.dataset.close!==undefined) o.classList.remove("show"); }));
-document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show")); });
+/* ===================== 月份切换 ===================== */
+$('#prevM').onclick = () => { cursor.setMonth(cursor.getMonth()-1); render(); };
+$('#nextM').onclick = () => { cursor.setMonth(cursor.getMonth()+1); render(); };
+$('#todayBtn').onclick = () => { cursor = new Date(); cursor.setDate(1); render(); };
 
-/* ============ 导出 / 导入 ============ */
-document.getElementById("btnExport").onclick=()=>{
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-  a.download=`巧克力账本-${view.y}${String(view.m+1).padStart(2,"0")}.json`; a.click();
+/* ===================== 汇率设置 ===================== */
+$('#settingsBtn').onclick = () => {
+  $('#baseCur').value = prefs.base;
+  drawRates();
+  $('#setMask').classList.add('on');
 };
-document.getElementById("btnImport").onclick=()=>document.getElementById("fileInput").click();
-document.getElementById("fileInput").onchange=e=>{
-  const f=e.target.files[0]; if(!f) return; const r=new FileReader();
-  r.onload=()=>{ try{ const data=JSON.parse(r.result); if(!data.users) throw 0; if(confirm("导入会覆盖当前数据，确定吗？")){ state={messages:[],...data}; render(); } }catch(err){ alert("文件格式不对，请选择本工具导出的备份。"); } e.target.value=""; };
-  r.readAsText(f);
+function drawRates(){
+  const base = $('#baseCur').value;
+  $('#rateList').innerHTML = CURRENCIES.filter(([c])=>c!==base).map(([c,n]) => {
+    const v = (prefs.rates[c] / prefs.rates[base]);
+    return `<div class="rate-row"><span>1 ${c} ${n}</span>
+      <input class="mono" type="number" step="0.0001" data-rate="${c}" value="${(+v.toFixed(4))}"></div>`;
+  }).join('');
+}
+$('#baseCur').onchange = drawRates;
+$('#saveRates').onclick = async () => {
+  const base = $('#baseCur').value;
+  const next = { [base]: 1 };
+  $('#rateList').querySelectorAll('[data-rate]').forEach(i => {
+    next[i.dataset.rate] = parseFloat(i.value) || prefs.rates[i.dataset.rate];
+  });
+  prefs.base = base; prefs.rates = next;
+  await savePrefs();
+  buildCurrencySelects(); render();
+  $('#setMask').classList.remove('on');
 };
 
-renderMoodPick();
-render();
+/* ===================== 等级表情包 ===================== */
+$('#picsBtn').onclick = () => { drawPics(); $('#picMask').classList.add('on'); };
+function drawPics(){
+  $('#picList').innerHTML = LEVELS.map(l => `
+    <div class="meal">
+      <div class="pic" style="display:flex;align-items:center;justify-content:center;font-size:32px">${faceHTML(l.id,44)}</div>
+      <div class="body">
+        <div class="name" style="color:${l.color}">${l.name}</div>
+        <input type="file" accept="image/*" data-pic-lv="${l.id}" style="margin-top:8px;font-size:12px">
+        ${prefs.pics[l.id] ? `<button class="del" data-pic-clear="${l.id}">恢复默认表情</button>` : ''}
+      </div>
+    </div>`).join('');
+  $('#picList').querySelectorAll('[data-pic-lv]').forEach(inp => inp.onchange = async e => {
+    const f = e.target.files[0]; if(!f) return;
+    prefs.pics[inp.dataset.picLv] = await compress(f, 200, 0.8);
+    await savePrefs(); drawPics(); render(); renderLegend(); renderLevelPicker();
+  });
+  $('#picList').querySelectorAll('[data-pic-clear]').forEach(b => b.onclick = async () => {
+    delete prefs.pics[b.dataset.picClear];
+    await setDoc(doc(db,'users',uid,'meta','prefs'), { pics: prefs.pics }, { merge:true });
+    drawPics(); render(); renderLegend(); renderLevelPicker();
+  });
+}
+
+/* ===================== 弹窗关闭 ===================== */
+document.querySelectorAll('.mask').forEach(m => {
+  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('on'); });
+});
+document.querySelectorAll('[data-close]').forEach(b => {
+  b.onclick = () => b.closest('.mask').classList.remove('on');
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') document.querySelectorAll('.mask.on').forEach(m=>m.classList.remove('on'));
+});
+
+/* 初始 */
+buildCurrencySelects();
+renderLevelPicker();
+
 </script>
 </body>
 </html>
