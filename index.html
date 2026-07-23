@@ -383,6 +383,26 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .up-count b{color:var(--ink)}
 @media (max-width:640px){.up-grid{grid-template-columns:repeat(3,1fr);gap:8px}}
 
+
+/* ---------- 消息内嵌照片 ---------- */
+.msg-img{max-width:220px;max-height:220px;width:auto;object-fit:cover;display:block;margin-top:9px;
+  border-radius:12px;border:1px solid var(--line);cursor:zoom-in;background:var(--paper-2)}
+.reply .msg-img{max-width:150px;max-height:150px}
+.cmt .msg-img{max-width:190px;max-height:190px}
+.img-pend{display:none;align-items:center;gap:10px;margin-top:10px;background:var(--paper);
+  border:1px dashed var(--line);border-radius:12px;padding:8px 10px}
+.img-pend.on{display:flex}
+.img-pend img{width:52px;height:52px;object-fit:cover;border-radius:9px}
+.img-pend button{margin-left:auto;font-size:12px;color:var(--ink-soft);text-decoration:underline}
+.zoomer{position:fixed;inset:0;background:rgba(34,26,21,.88);z-index:70;display:none;
+  align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+.zoomer.on{display:flex}
+.zoomer img{max-width:100%;max-height:100%;border-radius:12px}
+@media (max-width:640px){
+  .msg-img{max-width:100%;max-height:260px}
+  .reply .msg-img,.cmt .msg-img{max-width:100%;max-height:200px}
+}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   .wrap{padding:0 12px}
@@ -442,7 +462,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v9</b></div>
+    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v10</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label>口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -529,7 +549,13 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
       <textarea id="wText" maxlength="500" placeholder="喊一句 📣 比如：明天中午一起去吃那家牛肉火锅"></textarea>
       <div class="stk-bar">
         <button id="wStk">😆 加表情包</button>
+        <button id="wImg">📷 加照片</button>
         <button id="stkManage">🗂️ 管理表情包</button>
+      </div>
+      <div id="wImgPend" class="img-pend">
+        <img id="wImgPrev" alt="已选照片">
+        <span style="font-size:13px;color:var(--ink-soft)">这张照片会一起发</span>
+        <button id="wImgClear">不要了</button>
       </div>
       <div id="wStkPend" class="stk-pend">
         <img id="wStkImg" alt="已选表情包">
@@ -579,11 +605,14 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v9</b><br>
-      <span style="font-size:11px">视频动图 · 分人统计 · 相册评论 · 拖拽上传 · 表情包</span></p>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v10</b><br>
+      <span style="font-size:11px">照片评论 · 视频动图 · 分人统计 · 拖拽上传 · 表情包</span></p>
   </div>
 </main>
 
+
+<input id="inlineFile" type="file" accept="image/*" class="hidden">
+<div id="zoomer" class="zoomer"><img id="zoomImg" alt=""></div>
 
 <div id="dzVeil" class="dz-veil">
   <div class="card2"><div class="i2">📥</div>
@@ -675,9 +704,15 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         <span style="font-size:13px;color:var(--ink-soft)">这张会一起发</span>
         <button id="cmtStkClear">不要了</button>
       </div>
+      <div id="cmtImgPend" class="img-pend">
+        <img id="cmtImgPrev" alt="已选照片">
+        <span style="font-size:13px;color:var(--ink-soft)">这张照片会一起发</span>
+        <button id="cmtImgClear">不要了</button>
+      </div>
       <div class="cmt-box">
         <input id="cmtInput" type="text" maxlength="300" placeholder="说点什么…">
         <button class="sb" id="cmtStkBtn">😆</button>
+        <button class="sb" id="cmtImgBtn">📷</button>
         <button class="go2" id="cmtSend">发送</button>
       </div>
     </div>
@@ -801,6 +836,7 @@ let revLevel='rsr', revPhoto=null;
 let upQueue=[], upLevel='yb';
 let boxKey='', boxShotId='', boxOwn=false, boxChunks=0, boxMedia='image', boxMime='';
 let stkTarget=null, pendShoutStk='', pendCmtStk='', pendReplyStk={};
+let imgTarget=null, pendShoutImg='', pendCmtImg='', pendReplyImg={};
 let myAvatar='';
 const photoCache = {};
 const unsubs = [];
@@ -1350,6 +1386,52 @@ $('#stkFile').onchange=async e=>{
   finally{ btn.disabled=false; btn.textContent='传新表情包 📤'; e.target.value='' }
 };
 
+
+/* ===================== 消息里的照片 ===================== */
+function newImgKey(){ return 'im_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+async function commitImg(dataURL){
+  if(!dataURL) return '';
+  const key=newImgKey();
+  await setDoc(C.photo(key),{data:dataURL});
+  photoCache[key]=dataURL;
+  return key;
+}
+async function paintInline(root){
+  for(const img of root.querySelectorAll('[data-inline]')){
+    if(img.dataset.done) continue;
+    const src=await getPhoto(img.dataset.inline);
+    if(src){ img.src=src; img.dataset.done='1'; } else img.remove();
+  }
+}
+function pickImg(target){ imgTarget=target; $('#inlineFile').click(); }
+$('#inlineFile').onchange=async e=>{
+  const f=e.target.files[0]; e.target.value='';
+  if(!f||!imgTarget) return;
+  try{
+    const data=await compress(f,1100,0.74);
+    const t=imgTarget;
+    if(t.type==='shout'){ pendShoutImg=data; $('#wImgPrev').src=data; $('#wImgPend').classList.add('on'); }
+    else if(t.type==='cmt'){ pendCmtImg=data; $('#cmtImgPrev').src=data; $('#cmtImgPend').classList.add('on'); }
+    else if(t.type==='reply'){ pendReplyImg[t.id]=data; renderWall();
+      $('#rbox-'+t.id)?.classList.add('on'); }
+    else if(t.type==='creply'){ pendReplyImg['c'+t.id]=data; renderComments();
+      $('#crbox-'+t.id)?.classList.add('on'); }
+  }catch(err){ alert(err.message) }
+  finally{ imgTarget=null }
+};
+$('#wImg').onclick=()=>pickImg({type:'shout'});
+$('#wImgClear').onclick=()=>{ pendShoutImg=''; $('#wImgPend').classList.remove('on') };
+$('#cmtImgBtn').onclick=()=>pickImg({type:'cmt'});
+$('#cmtImgClear').onclick=()=>{ pendCmtImg=''; $('#cmtImgPend').classList.remove('on') };
+/* 点开看大图 */
+document.addEventListener('click',e=>{
+  const t=e.target;
+  if(t.classList?.contains('msg-img') && t.src){
+    $('#zoomImg').src=t.src; $('#zoomer').classList.add('on');
+  }
+});
+$('#zoomer').onclick=()=>$('#zoomer').classList.remove('on');
+
 /* ===================== 喊话墙 ===================== */
 function renderWall(){
   if(!$('#wall')) return;
@@ -1363,23 +1445,32 @@ function renderWall(){
         <div class="time">${ago(s.createdAtMs||0)}</div></div></div>
       ${s.text?`<div class="txt">${esc(s.text)}</div>`:''}
       ${s.stk?`<img class="msg-stk" data-stk="${s.stk}" alt="表情包">`:''}
+      ${s.img?`<img class="msg-img" data-inline="${s.img}" alt="照片">`:''}
       ${reps.length?`<div class="replies">${reps.map(r=>`
         <div class="reply"><span class="rn">${esc(nameOf(r.cid,r.nick))}</span>${esc(r.text)}
           <span class="rt">${ago(r.ms||0)}</span>
-          ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}</div>`).join('')}</div>`:''}
+          ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}
+          ${r.img?`<img class="msg-img" data-inline="${r.img}" alt="">`:''}</div>`).join('')}</div>`:''}
       <div class="acts"><button data-rep="${s.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button></div>
       <div class="rbox" id="rbox-${s.id}">
         <input type="text" maxlength="200" placeholder="回一句…" data-rinp="${s.id}">
         <button class="sb" data-rstk="${s.id}">😆</button>
+        <button class="sb" data-rimg="${s.id}">📷</button>
         <button class="go2" data-rsend="${s.id}">发送</button>
       </div>
       ${pendReplyStk[s.id]?`<div class="stk-pend on"><img data-stk="${pendReplyStk[s.id]}" alt="">
-        <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张</span>
+        <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张表情</span>
         <button data-rstkclear="${s.id}">不要了</button></div>`:''}
+      ${pendReplyImg[s.id]?`<div class="img-pend on"><img src="${pendReplyImg[s.id]}" alt="">
+        <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张照片</span>
+        <button data-rimgclear="${s.id}">不要了</button></div>`:''}
     </div>`}).join('');
   $('#wall').querySelectorAll('[data-kill]').forEach(b=>b.onclick=async()=>{
     if(!confirm('把这条撕下来？'))return;
+    const t=shouts.find(x=>x.id===b.dataset.kill);
     await deleteDoc(C.one('shouts',b.dataset.kill));
+    if(t?.img) deleteDoc(C.photo(t.img)).catch(()=>{});
+    (t?.replies||[]).forEach(r=>{ if(r.img) deleteDoc(C.photo(r.img)).catch(()=>{}) });
   });
   $('#wall').querySelectorAll('[data-rep]').forEach(b=>b.onclick=()=>{
     const box=$('#rbox-'+b.dataset.rep); box.classList.toggle('on');
@@ -1389,34 +1480,41 @@ function renderWall(){
   $('#wall').querySelectorAll('[data-rstkclear]').forEach(b=>b.onclick=()=>{
     delete pendReplyStk[b.dataset.rstkclear]; renderWall();
   });
+  $('#wall').querySelectorAll('[data-rimg]').forEach(b=>b.onclick=()=>pickImg({type:'reply',id:b.dataset.rimg}));
+  $('#wall').querySelectorAll('[data-rimgclear]').forEach(b=>b.onclick=()=>{
+    delete pendReplyImg[b.dataset.rimgclear]; renderWall();
+  });
   $('#wall').querySelectorAll('[data-rsend]').forEach(b=>b.onclick=()=>sendReply(b.dataset.rsend));
   $('#wall').querySelectorAll('[data-rinp]').forEach(i=>i.addEventListener('keydown',e=>{
     if(e.key==='Enter') sendReply(i.dataset.rinp);
   }));
-  paintStk($('#wall'));
+  paintStk($('#wall')); paintInline($('#wall'));
 }
 async function sendReply(id){
   const inp=document.querySelector(`[data-rinp="${id}"]`);
-  const text=inp.value.trim(), stk=pendReplyStk[id]||'';
-  if(!text&&!stk) return;
+  const text=inp.value.trim(), stk=pendReplyStk[id]||'', imgData=pendReplyImg[id]||'';
+  if(!text&&!stk&&!imgData) return;
   inp.disabled=true;
   try{
+    const img=await commitImg(imgData);
     const s=shouts.find(x=>x.id===id);
     const reps=Array.isArray(s?.replies)?[...s.replies]:[];
-    reps.push({nick,cid,text,stk,ms:Date.now()});
+    reps.push({nick,cid,text,stk,img,ms:Date.now()});
     await updateDoc(C.one('shouts',id),{replies:reps});
-    inp.value=''; delete pendReplyStk[id];
+    inp.value=''; delete pendReplyStk[id]; delete pendReplyImg[id];
   }catch(e){ alert('回复没发出去：'+e.message) }
   finally{ inp.disabled=false }
 }
 async function sendShout(){
   const btn=$('#wSend'), text=$('#wText').value.trim();
-  if(!text&&!pendShoutStk){ $('#wText').focus(); return; }
+  if(!text&&!pendShoutStk&&!pendShoutImg){ $('#wText').focus(); return; }
   btn.disabled=true; btn.textContent='贴上去…';
   try{
-    await addDoc(C.shouts(),{nick,cid,text,stk:pendShoutStk,replies:[],
+    const img=await commitImg(pendShoutImg);
+    await addDoc(C.shouts(),{nick,cid,text,stk:pendShoutStk,img,replies:[],
       createdAtMs:Date.now(),createdAt:serverTimestamp()});
     $('#wText').value=''; pendShoutStk=''; $('#wStkPend').classList.remove('on');
+    pendShoutImg=''; $('#wImgPend').classList.remove('on');
   }catch(e){ alert('没贴上：'+e.message) }
   finally{ btn.disabled=false; btn.textContent='贴上去 📌' }
 }
@@ -1537,6 +1635,7 @@ function openBox(it){
     ${' · 📷 '+esc(nameOf(it.bycid,it.by))}${it.extra?'<br>'+esc(it.extra):''}`;
   $('#boxDel').style.display = boxOwn?'block':'none';
   pendCmtStk=''; $('#cmtStkPend').classList.remove('on'); $('#cmtInput').value='';
+  pendCmtImg=''; $('#cmtImgPend').classList.remove('on');
   renderComments();
   $('#boxMask').classList.add('on');
 }
@@ -1585,24 +1684,33 @@ function renderComments(){
         <div><div class="cn">${esc(nameOf(c.cid,c.nick))}</div><div class="ct">${ago(c.ms||0)}</div></div></div>
       ${c.text?`<div class="cx">${esc(c.text)}</div>`:''}
       ${c.stk?`<img class="msg-stk" data-stk="${c.stk}" alt="">`:''}
+      ${c.img?`<img class="msg-img" data-inline="${c.img}" alt="照片">`:''}
       ${reps.length?`<div class="replies">${reps.map(r=>`
         <div class="reply"><span class="rn">${esc(nameOf(r.cid,r.nick))}</span>${esc(r.text)}
           <span class="rt">${ago(r.ms||0)}</span>
-          ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}</div>`).join('')}</div>`:''}
+          ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}
+          ${r.img?`<img class="msg-img" data-inline="${r.img}" alt="">`:''}</div>`).join('')}</div>`:''}
       <div class="acts"><button data-crep="${c.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button></div>
       <div class="rbox" id="crbox-${c.id}">
         <input type="text" maxlength="200" placeholder="回一句…" data-crinp="${c.id}">
         <button class="sb" data-crstk="${c.id}">😆</button>
+        <button class="sb" data-crimg="${c.id}">📷</button>
         <button class="go2" data-crsend="${c.id}">发送</button>
       </div>
       ${pendReplyStk['c'+c.id]?`<div class="stk-pend on"><img data-stk="${pendReplyStk['c'+c.id]}" alt="">
-        <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张</span>
+        <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张表情</span>
         <button data-crstkclear="${c.id}">不要了</button></div>`:''}
+      ${pendReplyImg['c'+c.id]?`<div class="img-pend on"><img src="${pendReplyImg['c'+c.id]}" alt="">
+        <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张照片</span>
+        <button data-crimgclear="${c.id}">不要了</button></div>`:''}
     </div>`}).join('');
 
   $('#cmtList').querySelectorAll('[data-cdel]').forEach(b=>b.onclick=async()=>{
     if(!confirm('删掉这条评论？'))return;
+    const t=comments.find(x=>x.id===b.dataset.cdel);
     await deleteDoc(C.one('comments',b.dataset.cdel));
+    if(t?.img) deleteDoc(C.photo(t.img)).catch(()=>{});
+    (t?.replies||[]).forEach(r=>{ if(r.img) deleteDoc(C.photo(r.img)).catch(()=>{}) });
   });
   $('#cmtList').querySelectorAll('[data-crep]').forEach(b=>b.onclick=()=>{
     const box=$('#crbox-'+b.dataset.crep); box.classList.toggle('on');
@@ -1612,34 +1720,41 @@ function renderComments(){
   $('#cmtList').querySelectorAll('[data-crstkclear]').forEach(b=>b.onclick=()=>{
     delete pendReplyStk['c'+b.dataset.crstkclear]; renderComments();
   });
+  $('#cmtList').querySelectorAll('[data-crimg]').forEach(b=>b.onclick=()=>pickImg({type:'creply',id:b.dataset.crimg}));
+  $('#cmtList').querySelectorAll('[data-crimgclear]').forEach(b=>b.onclick=()=>{
+    delete pendReplyImg['c'+b.dataset.crimgclear]; renderComments();
+  });
   $('#cmtList').querySelectorAll('[data-crsend]').forEach(b=>b.onclick=()=>sendCmtReply(b.dataset.crsend));
   $('#cmtList').querySelectorAll('[data-crinp]').forEach(i=>i.addEventListener('keydown',e=>{
     if(e.key==='Enter') sendCmtReply(i.dataset.crinp);
   }));
-  paintStk($('#cmtList'));
+  paintStk($('#cmtList')); paintInline($('#cmtList'));
 }
 async function sendComment(){
   const inp=$('#cmtInput'), text=inp.value.trim();
-  if(!text&&!pendCmtStk) { inp.focus(); return; }
+  if(!text&&!pendCmtStk&&!pendCmtImg) { inp.focus(); return; }
   const btn=$('#cmtSend'); btn.disabled=true;
   try{
-    await addDoc(C.comments(),{key:boxKey,nick,cid,text,stk:pendCmtStk,replies:[],
+    const img=await commitImg(pendCmtImg);
+    await addDoc(C.comments(),{key:boxKey,nick,cid,text,stk:pendCmtStk,img,replies:[],
       ms:Date.now(),createdAt:serverTimestamp()});
     inp.value=''; pendCmtStk=''; $('#cmtStkPend').classList.remove('on');
+    pendCmtImg=''; $('#cmtImgPend').classList.remove('on');
   }catch(e){ alert('评论没发出去：'+e.message) }
   finally{ btn.disabled=false }
 }
 async function sendCmtReply(id){
   const inp=document.querySelector(`[data-crinp="${id}"]`);
-  const text=inp.value.trim(), stk=pendReplyStk['c'+id]||'';
-  if(!text&&!stk) return;
+  const text=inp.value.trim(), stk=pendReplyStk['c'+id]||'', imgData=pendReplyImg['c'+id]||'';
+  if(!text&&!stk&&!imgData) return;
   inp.disabled=true;
   try{
+    const img=await commitImg(imgData);
     const c=comments.find(x=>x.id===id);
     const reps=Array.isArray(c?.replies)?[...c.replies]:[];
-    reps.push({nick,cid,text,stk,ms:Date.now()});
+    reps.push({nick,cid,text,stk,img,ms:Date.now()});
     await updateDoc(C.one('comments',id),{replies:reps});
-    inp.value=''; delete pendReplyStk['c'+id];
+    inp.value=''; delete pendReplyStk['c'+id]; delete pendReplyImg['c'+id];
   }catch(e){ alert('回复没发出去：'+e.message) }
   finally{ inp.disabled=false }
 }
@@ -1946,6 +2061,7 @@ new MutationObserver(()=>{
 }).observe($('#boxMask'),{attributes:true,attributeFilter:['class']});
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
+    if($('#zoomer').classList.contains('on')){ $('#zoomer').classList.remove('on'); return; }
     const on=[...document.querySelectorAll('.mask.on')];
     if(on.length) on[on.length-1].classList.remove('on');
   }
