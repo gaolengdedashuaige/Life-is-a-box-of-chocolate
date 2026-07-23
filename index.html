@@ -354,6 +354,35 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   .dz-veil .card2{padding:26px 30px}
 }
 
+
+/* ---------- 视频 / 动图 ---------- */
+.mbadge{position:absolute;top:7px;left:7px;background:rgba(34,26,21,.75);color:#fff;
+  font-size:11px;padding:3px 8px;border-radius:999px;display:flex;align-items:center;gap:4px}
+.mbadge.gif{background:rgba(214,36,44,.85);font-weight:700}
+.play-ov{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;
+  border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;
+  justify-content:center;font-size:17px;padding-left:3px;box-shadow:0 2px 10px rgba(0,0,0,.3);
+  pointer-events:none}
+.shot-card .ph-wrap{position:relative}
+#boxMedia video,#boxMedia img{width:100%;border-radius:14px;display:block;background:#000}
+#boxMedia video{max-height:62vh}
+.loadbar{font-size:13px;color:var(--ink-soft);text-align:center;padding:26px 10px}
+
+/* ---------- 上传预览（可删） ---------- */
+.up-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;margin-top:0}
+.up-item{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  background:var(--paper-2)}
+.up-item img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.up-item .rmx{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;
+  background:rgba(34,26,21,.8);color:#fff;font-size:14px;line-height:26px;text-align:center;
+  box-shadow:0 2px 5px rgba(0,0,0,.3)}
+.up-item .rmx:hover{background:var(--red)}
+.up-item .sz{position:absolute;bottom:0;left:0;right:0;background:rgba(34,26,21,.72);color:#fff;
+  font-size:10px;padding:3px 6px;display:flex;justify-content:space-between;gap:4px}
+.up-count{font-size:13px;color:var(--ink-soft);margin:0 0 10px}
+.up-count b{color:var(--ink)}
+@media (max-width:640px){.up-grid{grid-template-columns:repeat(3,1fr);gap:8px}}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   .wrap{padding:0 12px}
@@ -413,7 +442,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v8</b></div>
+    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v9</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label>口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -529,13 +558,13 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   <div id="v-alb" class="view wrap">
     <div class="upload-bar">
       <button id="albUpload" class="btn">上传照片 📤</button>
-      <input id="albFile" type="file" accept="image/*" multiple class="hidden">
+      <input id="albFile" type="file" accept="image/*,video/*" multiple class="hidden">
     </div>
     <div id="dropzone" class="dropzone">
       <div class="dz-ico">🖼️</div>
-      <div class="dz-t">把照片拖到这里</div>
-      <div class="dz-s">从桌面、文件夹、或者另一个网页直接拖进来<br>
-        也可以复制图片后按 <b>Ctrl / ⌘ + V</b> 粘贴</div>
+      <div class="dz-t">把照片 / 视频拖到这里</div>
+      <div class="dz-s">照片、动图 GIF、短视频都行<br>
+        也可以复制后按 <b>Ctrl / ⌘ + V</b> 粘贴</div>
     </div>
     <p class="hint" style="margin-top:14px">📸 直接上传的照片，加上日历和品鉴里配过的图。点开可以看大图、写评论。</p>
     <div id="album" class="album"></div>
@@ -550,8 +579,8 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v8</b><br>
-      <span style="font-size:11px">分人统计 · 相册评论 · 拖拽上传 · 表情包 · 头像</span></p>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v9</b><br>
+      <span style="font-size:11px">视频动图 · 分人统计 · 相册评论 · 拖拽上传 · 表情包</span></p>
   </div>
 </main>
 
@@ -635,7 +664,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <div id="boxMask" class="mask">
   <div class="sheet lightbox">
     <div class="sheet-head"><h3 id="boxTitle" class="display">—</h3><button class="x" data-close>×</button></div>
-    <img id="boxImg" class="big" alt="" />
+    <div id="boxMedia"></div>
     <div id="boxInfo" class="info"></div>
     <button id="boxDel" class="btn btn-alt" style="margin-top:12px">删掉这张 🗑️</button>
     <div class="cmt-wrap">
@@ -693,7 +722,9 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <div id="upMask" class="mask">
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">📤 上传到相册</h3><button class="x" data-close>×</button></div>
-    <div id="upPrev" class="album" style="margin-top:0"></div>
+    <p id="upCount" class="up-count"></p>
+    <div id="upPrev" class="up-grid"></div>
+    <button id="upAddMore" class="btn btn-alt" style="margin-top:10px">再加几个 ➕</button>
     <div class="field" style="margin-top:14px"><label>说明 💬（可选）</label>
       <input id="upCap" type="text" maxlength="40" placeholder="例如：这碗面真的绝" /></div>
     <div class="field"><label>顺便评个级 ⭐</label><div id="upLevels" class="picker"></div></div>
@@ -768,7 +799,7 @@ let calWho = 'all';
 let openDate=null, pickedLevel='yb', pickedPhoto=null;
 let revLevel='rsr', revPhoto=null;
 let upQueue=[], upLevel='yb';
-let boxKey='', boxShotId='', boxOwn=false;
+let boxKey='', boxShotId='', boxOwn=false, boxChunks=0, boxMedia='image', boxMime='';
 let stkTarget=null, pendShoutStk='', pendCmtStk='', pendReplyStk={};
 let myAvatar='';
 const photoCache = {};
@@ -840,6 +871,85 @@ function squareCrop(dataURL,size=140){
       res(cv.toDataURL('image/jpeg',0.82))};
     img.onerror=()=>rej(new Error('处理失败'));
     img.src=dataURL});
+}
+
+
+/* ===================== 大文件分片存取 ===================== */
+const CHUNK = 600000;          // 每片字符数，留足 Firestore 1MB 余量
+const MAX_CHUNKS = 12;         // 上限约 7MB base64 ≈ 5.3MB 原文件
+function readDataURL(file){
+  return new Promise((res,rej)=>{
+    const fr=new FileReader();
+    fr.onload=()=>res(fr.result);
+    fr.onerror=()=>rej(new Error('文件读取失败'));
+    fr.readAsDataURL(file);
+  });
+}
+function prettySize(n){
+  if(n<1024) return n+' B';
+  if(n<1048576) return (n/1024).toFixed(0)+' KB';
+  return (n/1048576).toFixed(1)+' MB';
+}
+function durText(sec){
+  if(!sec||!isFinite(sec)) return '';
+  const m=Math.floor(sec/60), x=Math.round(sec%60);
+  return m?`${m}:${String(x).padStart(2,'0')}`:`0:${String(x).padStart(2,'0')}`;
+}
+async function saveMedia(key, dataURL){
+  const n=Math.ceil(dataURL.length/CHUNK);
+  if(n>MAX_CHUNKS) throw new Error(`文件太大了（约 ${prettySize(dataURL.length*0.75)}），请压到 5MB 以内`);
+  for(let i=0;i<n;i++)
+    await setDoc(C.photo(`${key}_p${i}`), { data: dataURL.slice(i*CHUNK,(i+1)*CHUNK) });
+  photoCache['full_'+key]=dataURL;
+  return n;
+}
+async function loadMedia(key, n){
+  if(photoCache['full_'+key]!==undefined) return photoCache['full_'+key];
+  let out='';
+  try{
+    for(let i=0;i<n;i++){
+      const d=await getDoc(C.photo(`${key}_p${i}`));
+      if(!d.exists()){ photoCache['full_'+key]=null; return null; }
+      out+=d.data().data;
+    }
+  }catch{ photoCache['full_'+key]=null; return null; }
+  photoCache['full_'+key]=out;
+  return out;
+}
+function delMedia(key, n){
+  for(let i=0;i<(n||0);i++) deleteDoc(C.photo(`${key}_p${i}`)).catch(()=>{});
+  delete photoCache['full_'+key];
+}
+/* 取视频第一帧当封面 */
+function videoPoster(file){
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file);
+    const v=document.createElement('video');
+    v.muted=true; v.playsInline=true; v.preload='metadata'; v.src=url;
+    let settled=false;
+    const grab=()=>{
+      if(settled) return;
+      try{
+        const w0=v.videoWidth,h0=v.videoHeight;
+        if(!w0||!h0) throw new Error('no frame');
+        settled=true;
+        const sc=Math.min(1,700/Math.max(w0,h0));
+        const cv=document.createElement('canvas');
+        cv.width=Math.round(w0*sc); cv.height=Math.round(h0*sc);
+        cv.getContext('2d').drawImage(v,0,0,cv.width,cv.height);
+        const out={poster:cv.toDataURL('image/jpeg',0.75), dur:v.duration||0};
+        URL.revokeObjectURL(url); res(out);
+      }catch(e){
+        settled=true; URL.revokeObjectURL(url);
+        rej(new Error('读不出视频画面，换个格式试试（mp4 最稳）'));
+      }
+    };
+    v.onloadeddata=()=>{ try{ v.currentTime=Math.min(0.1,(v.duration||1)/10); }catch{ grab(); } };
+    v.onseeked=grab;
+    v.onerror=()=>{ if(!settled){ settled=true; URL.revokeObjectURL(url);
+      rej(new Error('这个视频浏览器打不开，试试 mp4')); } };
+    setTimeout(()=>{ if(!settled) grab(); }, 4000);
+  });
 }
 
 /* ===================== 进店 ===================== */
@@ -943,7 +1053,7 @@ async function setAvatarFrom(src){
   renderMe(); renderWall(); renderPlans(); renderFolks(); renderWhoBar(); renderMealList(); renderComments();
 }
 async function renderAvatarGrid(){
-  const items=albumItems();
+  const items=albumItems().filter(it=>(it.media||'image')!=='video');
   $('#avEmpty').classList.toggle('hidden', items.length>0);
   $('#avGrid').innerHTML=items.map(it=>
     `<div class="av-pick" data-avk="${it.key}"><img data-apic2="${it.key}" alt=""></div>`).join('');
@@ -1384,7 +1494,8 @@ function albumItems(){
   }));
   const c2=shots.map(s=>({
     key:'shot_'+s.id, id:s.id, title:s.caption||'照片', sub:'相册', by:s.by, bycid:s.cid,
-    level:s.level, ms:s.createdAtMs||0, extra:'', kind:'shot', own:true
+    level:s.level, ms:s.createdAtMs||0, extra:'', kind:'shot', own:true,
+    media:s.kind||'image', chunks:s.chunks||0, mime:s.mime||'', dur:s.dur||0
   }));
   return [...a,...b,...c2].sort((x,y)=>y.ms-x.ms);
 }
@@ -1397,9 +1508,14 @@ async function renderAlbum(){
   $('#albEmpty').classList.toggle('hidden', items.length>0);
   $('#album').innerHTML=items.map(it=>{
     const n=cmtCount(it.key);
+    const mk=it.media||'image';
     return `<div class="shot-card" data-key="${it.key}">
       ${n?`<span class="cbadge">💬 ${n}</span>`:''}
-      <img class="ph" data-apic="${it.key}" alt="${esc(it.title)}">
+      <div class="ph-wrap">
+        <img class="ph" data-apic="${it.key}" alt="${esc(it.title)}">
+        ${mk==='video'?`<span class="mbadge">🎬 ${durText(it.dur)}</span><span class="play-ov">▶</span>`:''}
+        ${mk==='gif'?`<span class="mbadge gif">GIF</span>`:''}
+      </div>
       <div class="cap"><div class="n">${faceHTML(it.level,13)} ${esc(it.title)||'没写名字'}</div>
         <div class="m"><span>${esc(it.sub)}</span><span>${esc(nameOf(it.bycid,it.by))}</span></div></div>
     </div>`}).join('');
@@ -1414,8 +1530,9 @@ async function renderAlbum(){
 }
 function openBox(it){
   boxKey=it.key; boxShotId=it.id||''; boxOwn=!!it.own;
+  boxChunks=it.chunks||0; boxMedia=it.media||'image'; boxMime=it.mime||'';
   $('#boxTitle').textContent=it.title||'照片';
-  $('#boxImg').src=photoCache[it.key]||'';
+  renderBoxMedia(it);
   $('#boxInfo').innerHTML=`${faceHTML(it.level,18)} ${esc(LV[it.level]?.name||'')} · ${esc(it.sub)}
     ${' · 📷 '+esc(nameOf(it.bycid,it.by))}${it.extra?'<br>'+esc(it.extra):''}`;
   $('#boxDel').style.display = boxOwn?'block':'none';
@@ -1423,11 +1540,29 @@ function openBox(it){
   renderComments();
   $('#boxMask').classList.add('on');
 }
+async function renderBoxMedia(it){
+  const box=$('#boxMedia'), thumb=photoCache[it.key]||'';
+  const mk=it.media||'image';
+  if(mk==='image' || !it.chunks){
+    box.innerHTML=`<img class="big" src="${thumb}" alt="">`;
+    return;
+  }
+  box.innerHTML=`<img class="big" src="${thumb}" alt="">
+    <div class="loadbar">${mk==='video'?'🎬 正在载入视频…':'正在载入动图…'}</div>`;
+  const full=await loadMedia(it.key, it.chunks);
+  if(boxKey!==it.key) return;                 // 已经切走了
+  if(!full){ box.innerHTML=`<img class="big" src="${thumb}" alt="">
+    <div class="loadbar">原文件丢了，只剩封面。</div>`; return; }
+  box.innerHTML = mk==='video'
+    ? `<video class="big" controls playsinline preload="metadata" poster="${thumb}" src="${full}"></video>`
+    : `<img class="big" src="${full}" alt="">`;
+}
 $('#boxDel').onclick=async()=>{
   if(!boxShotId) return;
-  if(!confirm('删掉这张照片？评论也会一起没。')) return;
+  if(!confirm('删掉这个？评论也会一起没。')) return;
   await deleteDoc(C.one('shots',boxShotId));
   deleteDoc(C.photo(boxKey)).catch(()=>{});
+  delMedia(boxKey, boxChunks);
   for(const c of comments.filter(c=>c.key===boxKey)) deleteDoc(C.one('comments',c.id)).catch(()=>{});
   delete photoCache[boxKey];
   $('#boxMask').classList.remove('on');
@@ -1512,19 +1647,70 @@ $('#cmtSend').onclick=sendComment;
 $('#cmtInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendComment()});
 
 /* ---------- 相册直传：点选 / 拖拽 / 粘贴 ---------- */
+const okType = f => f.type.startsWith('image/') || f.type.startsWith('video/');
+
+async function buildItem(f){
+  const isVid = f.type.startsWith('video/');
+  const isGif = /gif/i.test(f.type);
+  if(isVid){
+    const {poster,dur} = await videoPoster(f);
+    return { kind:'video', thumb:poster, full:await readDataURL(f),
+             mime:f.type, dur, name:f.name, size:f.size };
+  }
+  if(isGif){
+    return { kind:'gif', thumb:await compress(f,700,0.75), full:await readDataURL(f),
+             mime:f.type, dur:0, name:f.name, size:f.size };
+  }
+  return { kind:'image', thumb:await compress(f,1200,0.74), full:null,
+           mime:'image/jpeg', dur:0, name:f.name, size:f.size };
+}
+async function addToQueue(fileList){
+  const files=[...fileList].filter(okType);
+  if(!files.length){ alert('没找到图片或视频'); return; }
+  const room = 9-upQueue.length;
+  if(room<=0){ alert('一次最多 9 个，先删掉几个再加'); return; }
+  const take = files.slice(0,room);
+  $('#upCount').innerHTML = `正在处理 ${take.length} 个文件…`;
+  for(const f of take){
+    try{ upQueue.push(await buildItem(f)); }
+    catch(e){ alert(`「${f.name}」跳过了：${e.message}`); }
+    renderUpPrev();
+  }
+  renderUpPrev();
+}
 async function startUpload(fileList){
-  const files=[...fileList].filter(f=>f.type.startsWith('image/')).slice(0,9);
-  if(!files.length){ alert('没找到图片文件'); return; }
   upQueue=[]; upLevel='yb';
-  $('#upPrev').innerHTML='<p class="hint">正在压缩…</p>';
-  $('#upCap').value=''; renderUpLevels(); $('#upMask').classList.add('on');
-  try{
-    for(const f of files) upQueue.push(await compress(f,1200,0.74));
-    $('#upPrev').innerHTML=upQueue.map(d=>`<div class="shot-card"><img class="ph" src="${d}" alt=""></div>`).join('');
-  }catch(err){ alert(err.message); $('#upMask').classList.remove('on') }
+  $('#upCap').value=''; renderUpLevels();
+  $('#upPrev').innerHTML=''; $('#upCount').textContent='正在处理…';
+  $('#upMask').classList.add('on');
+  await addToQueue(fileList);
+  if(!upQueue.length) $('#upMask').classList.remove('on');
+}
+function renderUpPrev(){
+  const n=upQueue.length;
+  $('#upCount').innerHTML = n ? `已选 <b>${n}</b> 个（最多 9 个）· 点右上角 ✕ 去掉不要的`
+                              : '一个都没剩了，关掉窗口重新选吧。';
+  $('#upPrev').innerHTML = upQueue.map((it,i)=>`
+    <div class="up-item">
+      <button class="rmx" data-rm="${i}" title="去掉这个">✕</button>
+      <img src="${it.thumb}" alt="">
+      <div class="sz"><span>${it.kind==='video'?'🎬 '+durText(it.dur):it.kind==='gif'?'GIF':'照片'}</span>
+        <span>${prettySize(it.size)}</span></div>
+    </div>`).join('');
+  $('#upPrev').querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{
+    upQueue.splice(+b.dataset.rm,1); renderUpPrev();
+  });
+  $('#upSave').disabled = !n;
 }
 $('#albUpload').onclick=()=>$('#albFile').click();
-$('#albFile').onchange=async e=>{ await startUpload(e.target.files); e.target.value=''; };
+$('#upAddMore').onclick=()=>{ $('#albFile').dataset.mode='add'; $('#albFile').click(); };
+$('#albFile').onchange=async e=>{
+  const add = e.target.dataset.mode==='add';
+  e.target.dataset.mode='';
+  if(add) await addToQueue(e.target.files);
+  else await startUpload(e.target.files);
+  e.target.value='';
+};
 
 /* 拖拽 */
 const dz=$('#dropzone'), veil=$('#dzVeil');
@@ -1545,7 +1731,8 @@ document.addEventListener('drop',async e=>{
   if(!hasFiles(e)||!onAlbum()) return;
   e.preventDefault();
   dragDepth=0; veil.classList.remove('on'); dz.classList.remove('hot');
-  await startUpload(e.dataTransfer.files);
+  if($('#upMask').classList.contains('on')) await addToQueue(e.dataTransfer.files);
+  else await startUpload(e.dataTransfer.files);
 });
 dz.onclick=()=>$('#albFile').click();
 
@@ -1554,11 +1741,13 @@ document.addEventListener('paste',async e=>{
   if(!onAlbum()) return;
   const tag=(document.activeElement?.tagName||'').toLowerCase();
   if(tag==='input'||tag==='textarea') return;
-  const files=[...(e.clipboardData?.files||[])];
+  const files=[...(e.clipboardData?.files||[])].filter(okType);
   if(!files.length) return;
   e.preventDefault();
-  await startUpload(files);
+  if($('#upMask').classList.contains('on')) await addToQueue(files);
+  else await startUpload(files);
 });
+
 function renderUpLevels(){
   $('#upLevels').innerHTML=LEVELS.map(l=>
     `<button class="pick ${l.id===upLevel?'on':''}" data-ulv="${l.id}"
@@ -1567,13 +1756,27 @@ function renderUpLevels(){
 }
 $('#upSave').onclick=async()=>{
   if(!upQueue.length) return;
-  const btn=$('#upSave'); btn.disabled=true; btn.textContent='上传中…';
+  const btn=$('#upSave'); btn.disabled=true;
+  const cap=$('#upCap').value.trim();
+  let done=0;
   try{
-    const cap=$('#upCap').value.trim();
-    for(const data of upQueue){
+    for(const it of upQueue){
+      done++; btn.textContent=`上传中 ${done}/${upQueue.length}…`;
       const ref=await addDoc(C.shots(),{caption:cap,level:upLevel,by:nick,cid,
+        kind:it.kind, mime:it.mime, dur:it.dur||0, chunks:0,
         createdAtMs:Date.now(),createdAt:serverTimestamp()});
-      await setDoc(C.photo('shot_'+ref.id),{data}); photoCache['shot_'+ref.id]=data;
+      const key='shot_'+ref.id;
+      await setDoc(C.photo(key),{data:it.thumb});
+      photoCache[key]=it.thumb;
+      if(it.full){
+        try{
+          const n=await saveMedia(key,it.full);
+          await updateDoc(C.one('shots',ref.id),{chunks:n});
+        }catch(e){
+          await updateDoc(C.one('shots',ref.id),{kind:'image',chunks:0});
+          alert(`「${it.name}」只存下了封面：${e.message}`);
+        }
+      }
     }
     upQueue=[]; $('#upMask').classList.remove('on');
   }catch(e){ alert('传不上去：'+e.message) }
@@ -1735,6 +1938,12 @@ function drawPics(){
 
 document.querySelectorAll('.mask').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.mask').classList.remove('on'));
+/* 关掉大图就停掉视频 */
+new MutationObserver(()=>{
+  if(!$('#boxMask').classList.contains('on')){
+    const v=$('#boxMedia')?.querySelector('video'); if(v) v.pause();
+  }
+}).observe($('#boxMask'),{attributes:true,attributeFilter:['class']});
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     const on=[...document.querySelectorAll('.mask.on')];
