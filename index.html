@@ -331,6 +331,29 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .ver b{color:var(--red);font-weight:700}
 .nick-tag{cursor:pointer}
 
+
+/* ---------- 拖拽上传 ---------- */
+.dropzone{border:3px dashed var(--line);border-radius:20px;background:#fff;padding:30px 20px;
+  text-align:center;margin-top:14px;transition:background .15s,border-color .15s,transform .15s}
+.dropzone .dz-ico{font-size:38px;line-height:1;margin-bottom:8px}
+.dropzone .dz-t{font-size:15px;font-weight:700}
+.dropzone .dz-s{font-size:12px;color:var(--ink-soft);margin-top:6px;line-height:1.7}
+.dropzone.hot{border-color:var(--red);background:var(--pink);transform:scale(1.01)}
+.dropzone.hot .dz-ico{transform:scale(1.15)}
+.dz-veil{position:fixed;inset:0;z-index:60;background:rgba(214,36,44,.14);
+  backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;pointer-events:none}
+.dz-veil.on{display:flex}
+.dz-veil .card2{background:#fff;border:4px dashed var(--red);border-radius:24px;
+  padding:36px 46px;text-align:center;box-shadow:0 10px 0 rgba(34,26,21,.12)}
+.dz-veil .card2 .i2{font-size:52px;line-height:1}
+.dz-veil .card2 .t2{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:24px;margin-top:10px}
+.dz-veil .card2 .s2b{font-size:13px;color:var(--ink-soft);margin-top:6px}
+@media (max-width:640px){
+  .dropzone{padding:22px 14px}
+  .dropzone .dz-ico{font-size:32px}
+  .dz-veil .card2{padding:26px 30px}
+}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   .wrap{padding:0 12px}
@@ -390,7 +413,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v6</b></div>
+    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v8</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label>口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -508,7 +531,13 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
       <button id="albUpload" class="btn">上传照片 📤</button>
       <input id="albFile" type="file" accept="image/*" multiple class="hidden">
     </div>
-    <p class="hint">📸 直接上传的照片，加上日历和品鉴里配过的图。点开可以看大图、写评论。</p>
+    <div id="dropzone" class="dropzone">
+      <div class="dz-ico">🖼️</div>
+      <div class="dz-t">把照片拖到这里</div>
+      <div class="dz-s">从桌面、文件夹、或者另一个网页直接拖进来<br>
+        也可以复制图片后按 <b>Ctrl / ⌘ + V</b> 粘贴</div>
+    </div>
+    <p class="hint" style="margin-top:14px">📸 直接上传的照片，加上日历和品鉴里配过的图。点开可以看大图、写评论。</p>
     <div id="album" class="album"></div>
     <div id="albEmpty" class="empty hidden">相册还是空的 📷<br>点上面的「上传照片」传第一张。</div>
   </div>
@@ -521,11 +550,17 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v6</b><br>
-      <span style="font-size:11px">分人统计 · 相册评论 · 表情包 · 头像</span></p>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v8</b><br>
+      <span style="font-size:11px">分人统计 · 相册评论 · 拖拽上传 · 表情包 · 头像</span></p>
   </div>
 </main>
 
+
+<div id="dzVeil" class="dz-veil">
+  <div class="card2"><div class="i2">📥</div>
+    <div class="t2">松手就上传</div>
+    <div class="s2b">一次最多 9 张</div></div>
+</div>
 
 <div id="dayMask" class="mask">
   <div class="sheet">
@@ -767,9 +802,14 @@ function whenText(iso){
 }
 const AVC = ['#D6242C','#F2B705','#1E6F5C','#5E7A8A','#B4568F','#C4611B','#3C7A5A','#7A5BB5'];
 function avColor(s){ let h=0; for(const ch of (s||'?')) h=(h*31+ch.charCodeAt(0))>>>0; return AVC[h%AVC.length]; }
+/* 名字一律现查现用：存的是 cid，显示时取此人当前昵称 */
+function nameOf(id, fallback){
+  if(id===cid) return nick || fallback || '匿名';
+  return folkMap[id]?.nick || fallback || '匿名';
+}
 function avatarHTML(id, name){
   const src = (id===cid && myAvatar) ? myAvatar : (folkMap[id]?.avatar || '');
-  const nm = name || folkMap[id]?.nick || '?';
+  const nm = nameOf(id, name) || '?';
   if(src) return `<img class="av" src="${src}" alt="${esc(nm)}">`;
   return `<span class="av-txt" style="background:${avColor(nm||id)}">${esc(nm.trim().charAt(0)||'?')}</span>`;
 }
@@ -875,7 +915,11 @@ $('#meBox').onclick=()=>{
 };
 $('#nickSave').onclick=async()=>{
   const v=$('#nickInput2').value.trim(); if(!v)return;
-  nick=v; ls('hcx_nick',v); renderMe(); await ping(); $('#meMask').classList.remove('on');
+  nick=v; ls('hcx_nick',v);
+  renderMe(); renderWhoBar(); renderCal(); renderWall(); renderPlans();
+  renderFolks(); renderComments(); renderAlbum(); renderReviews(); renderMealList();
+  await ping();
+  $('#meMask').classList.remove('on');
 };
 $('#openAvatar').onclick=()=>{
   $('#meMask').classList.remove('on'); $('#avStatus').textContent='';
@@ -946,7 +990,8 @@ function listenAll(){
     folks=s.docs.map(d=>({id:d.id,...d.data()}));
     folkMap=Object.fromEntries(folks.map(f=>[f.id,f]));
     if(!myAvatar && folkMap[cid]?.avatar){ myAvatar=folkMap[cid].avatar; ls('hcx_av',myAvatar); }
-    renderMe(); renderWhoBar(); renderFolks(); renderWall(); renderPlans(); renderComments();
+    renderMe(); renderWhoBar(); renderCal(); renderFolks(); renderWall();
+    renderPlans(); renderComments(); renderAlbum(); renderReviews(); renderMealList();
   });
 }
 async function getPhoto(id){
@@ -966,10 +1011,13 @@ function mealOwners(){
   const seen={};
   meals.forEach(m=>{
     const k=m.cid||('n:'+(m.by||'匿名'));
-    if(!seen[k]) seen[k]={key:k, cid:m.cid||'', nick:m.by||folkMap[m.cid]?.nick||'匿名', n:0};
+    if(!seen[k]) seen[k]={key:k, cid:m.cid||'', nick:nameOf(m.cid,m.by), n:0};
     seen[k].n++;
   });
-  folks.forEach(f=>{ if(!seen[f.id]) seen[f.id]={key:f.id, cid:f.id, nick:f.nick, n:0}; });
+  folks.forEach(f=>{
+    if(seen[f.id]) seen[f.id].nick=nameOf(f.id,f.nick);
+    else seen[f.id]={key:f.id, cid:f.id, nick:nameOf(f.id,f.nick), n:0};
+  });
   return Object.values(seen).sort((a,b)=>b.n-a.n);
 }
 function mineOf(m){ return m.cid ? m.cid : ('n:'+(m.by||'匿名')); }
@@ -1015,7 +1063,7 @@ function renderMonth(){
       const who=[...new Set(list.map(mineOf))];
       const dots = calWho==='all' && who.length>1
         ? `<div class="dots">${who.slice(0,3).map(k=>{
-             const nm=folkMap[k]?.nick||k.replace('n:','');
+             const nm=folkMap[k]?.nick||k.replace('n:','');  // 仅用于取色
              return `<i style="background:${avColor(nm)}"></i>`}).join('')}</div>` : '';
       inner=`${dots}<div class="face">${faceHTML(best.level,26)}</div>
              ${list.length>1?`<div class="cnt">×${list.length}</div>`:''}
@@ -1074,7 +1122,7 @@ async function renderMealList(){
         <div style="margin-top:6px"><span class="stamp" style="color:${l.color}">${l.name}</span></div>
         ${x.note?`<div class="nt">💬 ${esc(x.note)}</div>`:''}
         ${x.currency!==prefs.base&&x.amount?`<div class="nt mono">≈ ${money(toBase(x.amount,x.currency),prefs.base)}</div>`:''}
-        <div class="who3">${avatarHTML(x.cid,x.by)}<span>${esc(x.by)||'匿名'} 记的</span></div>
+        <div class="who3">${avatarHTML(x.cid,x.by)}<span>${esc(nameOf(x.cid,x.by))} 记的</span></div>
         <button class="del" data-del="${x.id}">删掉</button>
       </div></div>`}).join('');
   box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>removeMeal(b.dataset.del));
@@ -1201,12 +1249,12 @@ function renderWall(){
     return `<div class="note">
       <button class="kill" data-kill="${s.id}">✕</button>
       <div class="hd">${avatarHTML(s.cid,s.nick)}
-        <div><div class="nick">${esc(s.nick)||'匿名食客'}</div>
+        <div><div class="nick">${esc(nameOf(s.cid,s.nick))}</div>
         <div class="time">${ago(s.createdAtMs||0)}</div></div></div>
       ${s.text?`<div class="txt">${esc(s.text)}</div>`:''}
       ${s.stk?`<img class="msg-stk" data-stk="${s.stk}" alt="表情包">`:''}
       ${reps.length?`<div class="replies">${reps.map(r=>`
-        <div class="reply"><span class="rn">${esc(r.nick)}</span>${esc(r.text)}
+        <div class="reply"><span class="rn">${esc(nameOf(r.cid,r.nick))}</span>${esc(r.text)}
           <span class="rt">${ago(r.ms||0)}</span>
           ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}</div>`).join('')}</div>`:''}
       <div class="acts"><button data-rep="${s.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button></div>
@@ -1286,7 +1334,7 @@ function renderPlans(){
       <div class="meta">📍 <b>${esc(p.place)||'地点待定'}</b><br>
         🕐 <b>${whenText(p.when)}</b>${past?' <span style="color:var(--red)">（已过）</span>':''}<br>
         ${p.note?'💬 '+esc(p.note)+'<br>':''}
-        <span style="font-size:12px">由 ${esc(p.by)||'某人'} 发起 · ${ago(p.createdAtMs||0)}</span></div>
+        <span style="font-size:12px">由 ${esc(nameOf(p.cid,p.by))} 发起 · ${ago(p.createdAtMs||0)}</span></div>
       <div class="joins"><span style="font-size:13px;color:var(--ink-soft)">${joins.length?`已有 ${joins.length} 人：`:'还没人举手'}</span>
         ${joins.map(j=>avatarHTML(j.cid,j.nick)).join('')}</div>
       <button class="btn go ${iam?'in':''}" data-pgo="${p.id}">${iam?'我去 ✋ （点一下取消）':'我要去 🙋'}</button>
@@ -1353,7 +1401,7 @@ async function renderAlbum(){
       ${n?`<span class="cbadge">💬 ${n}</span>`:''}
       <img class="ph" data-apic="${it.key}" alt="${esc(it.title)}">
       <div class="cap"><div class="n">${faceHTML(it.level,13)} ${esc(it.title)||'没写名字'}</div>
-        <div class="m"><span>${esc(it.sub)}</span><span>${esc(it.by)||''}</span></div></div>
+        <div class="m"><span>${esc(it.sub)}</span><span>${esc(nameOf(it.bycid,it.by))}</span></div></div>
     </div>`}).join('');
   $('#album').querySelectorAll('.shot-card').forEach(card=>card.onclick=()=>{
     const it=items.find(x=>x.key===card.dataset.key); if(!it) return;
@@ -1369,7 +1417,7 @@ function openBox(it){
   $('#boxTitle').textContent=it.title||'照片';
   $('#boxImg').src=photoCache[it.key]||'';
   $('#boxInfo').innerHTML=`${faceHTML(it.level,18)} ${esc(LV[it.level]?.name||'')} · ${esc(it.sub)}
-    ${it.by?' · 📷 '+esc(it.by):''}${it.extra?'<br>'+esc(it.extra):''}`;
+    ${' · 📷 '+esc(nameOf(it.bycid,it.by))}${it.extra?'<br>'+esc(it.extra):''}`;
   $('#boxDel').style.display = boxOwn?'block':'none';
   pendCmtStk=''; $('#cmtStkPend').classList.remove('on'); $('#cmtInput').value='';
   renderComments();
@@ -1399,11 +1447,11 @@ function renderComments(){
     return `<div class="cmt">
       <button class="kill" data-cdel="${c.id}">✕</button>
       <div class="hd">${avatarHTML(c.cid,c.nick)}
-        <div><div class="cn">${esc(c.nick)||'匿名'}</div><div class="ct">${ago(c.ms||0)}</div></div></div>
+        <div><div class="cn">${esc(nameOf(c.cid,c.nick))}</div><div class="ct">${ago(c.ms||0)}</div></div></div>
       ${c.text?`<div class="cx">${esc(c.text)}</div>`:''}
       ${c.stk?`<img class="msg-stk" data-stk="${c.stk}" alt="">`:''}
       ${reps.length?`<div class="replies">${reps.map(r=>`
-        <div class="reply"><span class="rn">${esc(r.nick)}</span>${esc(r.text)}
+        <div class="reply"><span class="rn">${esc(nameOf(r.cid,r.nick))}</span>${esc(r.text)}
           <span class="rt">${ago(r.ms||0)}</span>
           ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}</div>`).join('')}</div>`:''}
       <div class="acts"><button data-crep="${c.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button></div>
@@ -1463,10 +1511,10 @@ async function sendCmtReply(id){
 $('#cmtSend').onclick=sendComment;
 $('#cmtInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendComment()});
 
-/* ---------- 相册直传 ---------- */
-$('#albUpload').onclick=()=>$('#albFile').click();
-$('#albFile').onchange=async e=>{
-  const files=[...e.target.files].slice(0,9); if(!files.length)return;
+/* ---------- 相册直传：点选 / 拖拽 / 粘贴 ---------- */
+async function startUpload(fileList){
+  const files=[...fileList].filter(f=>f.type.startsWith('image/')).slice(0,9);
+  if(!files.length){ alert('没找到图片文件'); return; }
   upQueue=[]; upLevel='yb';
   $('#upPrev').innerHTML='<p class="hint">正在压缩…</p>';
   $('#upCap').value=''; renderUpLevels(); $('#upMask').classList.add('on');
@@ -1474,8 +1522,43 @@ $('#albFile').onchange=async e=>{
     for(const f of files) upQueue.push(await compress(f,1200,0.74));
     $('#upPrev').innerHTML=upQueue.map(d=>`<div class="shot-card"><img class="ph" src="${d}" alt=""></div>`).join('');
   }catch(err){ alert(err.message); $('#upMask').classList.remove('on') }
-  finally{ e.target.value='' }
-};
+}
+$('#albUpload').onclick=()=>$('#albFile').click();
+$('#albFile').onchange=async e=>{ await startUpload(e.target.files); e.target.value=''; };
+
+/* 拖拽 */
+const dz=$('#dropzone'), veil=$('#dzVeil');
+const onAlbum=()=>$('#v-alb').classList.contains('on');
+const hasFiles=e=>[...(e.dataTransfer?.types||[])].includes('Files');
+let dragDepth=0;
+['dragenter','dragover'].forEach(t=>document.addEventListener(t,e=>{
+  if(!hasFiles(e)||!onAlbum()) return;
+  e.preventDefault();
+  if(t==='dragenter'){ dragDepth++; veil.classList.add('on'); dz.classList.add('hot'); }
+}));
+document.addEventListener('dragleave',e=>{
+  if(!hasFiles(e)||!onAlbum()) return;
+  dragDepth=Math.max(0,dragDepth-1);
+  if(!dragDepth){ veil.classList.remove('on'); dz.classList.remove('hot'); }
+});
+document.addEventListener('drop',async e=>{
+  if(!hasFiles(e)||!onAlbum()) return;
+  e.preventDefault();
+  dragDepth=0; veil.classList.remove('on'); dz.classList.remove('hot');
+  await startUpload(e.dataTransfer.files);
+});
+dz.onclick=()=>$('#albFile').click();
+
+/* 粘贴 */
+document.addEventListener('paste',async e=>{
+  if(!onAlbum()) return;
+  const tag=(document.activeElement?.tagName||'').toLowerCase();
+  if(tag==='input'||tag==='textarea') return;
+  const files=[...(e.clipboardData?.files||[])];
+  if(!files.length) return;
+  e.preventDefault();
+  await startUpload(files);
+});
 function renderUpLevels(){
   $('#upLevels').innerHTML=LEVELS.map(l=>
     `<button class="pick ${l.id===upLevel?'on':''}" data-ulv="${l.id}"
@@ -1516,7 +1599,7 @@ async function renderReviews(){
         <span class="stamp" style="color:${l.color}">${l.name}</span></div>
         ${r.verdict?`<p class="verdict">${esc(r.verdict)}</p>`:''}
         ${r.body?`<div class="body">${esc(r.body)}</div>`:''}
-        <div class="foot"><span>✍️ ${esc(r.author)||'匿名'} · ${ago(r.createdAtMs||0)}
+        <div class="foot"><span>✍️ ${esc(nameOf(r.cid,r.author))} · ${ago(r.createdAtMs||0)}
           <button class="del" data-rdel="${r.id}" style="margin-left:10px;text-decoration:underline">删掉</button></span>
           ${r.price?`<span class="p mono">人均 ${money(r.price,r.currency)}</span>`:''}</div>
       </div></article>`}).join('');
@@ -1566,6 +1649,7 @@ function folkStats(f){
     + comments.reduce((n,c)=>n+((c.replies||[]).filter(r=>r.cid===f.id).length),0);
   const ate=meals.filter(m=>m.cid?m.cid===f.id:m.by===f.nick).length;
   const wrote=reviews.filter(r=>r.cid?r.cid===f.id:r.author===f.nick).length;
+  /* 注：早期没存 cid 的旧记录只能按名字认，改名后会对不上 */
   const went=plans.filter(p=>(p.joins||[]).some(j=>j.cid===f.id)).length;
   const shot=shots.filter(x=>x.cid===f.id).length;
   return {said,ate,wrote,went,shot,total:said+ate+wrote+went+shot};
@@ -1577,7 +1661,7 @@ function renderFolks(){
   $('#folks').innerHTML=sorted.map(f=>{
     const on=(now-(f.lastSeen||0))<ONLINE_MS, st=folkStats(f);
     return `<div class="folk">${avatarHTML(f.id,f.nick)}
-      <div class="fn">${esc(f.nick)||'无名氏'}</div>
+      <div class="fn">${esc(nameOf(f.id,f.nick))}</div>
       <div class="fs"><span class="dot ${on?'on':''}"></span>${on?'在线':ago(f.lastSeen||0)}<br>
         📣 ${st.said} · 🍚 ${st.ate}</div>
       ${f.id===cid?'<span class="me-tag">这是你</span>':''}</div>`}).join('');
@@ -1591,7 +1675,7 @@ function renderUserList(){
   $('#ulSum').textContent=`共 ${rows.length} 位 · ${rows.filter(r=>r.on).length} 位在线`;
   $('#ulist').innerHTML=rows.map((r,i)=>`
     <div class="urow"><span class="rk mono">${i+1}</span>${avatarHTML(r.f.id,r.f.nick)}
-      <div class="who2"><div class="n2">${esc(r.f.nick)||'无名氏'}${r.f.id===cid?' <span class="me-tag" style="margin:0">你</span>':''}</div>
+      <div class="who2"><div class="n2">${esc(nameOf(r.f.id,r.f.nick))}${r.f.id===cid?' <span class="me-tag" style="margin:0">你</span>':''}</div>
         <div class="s2"><span class="dot ${r.on?'on':''}"></span>${r.on?'在线':'最后出现 '+ago(r.f.lastSeen||0)}
           ${r.f.joinedAt?' · 加入于 '+ago(r.f.joinedAt):''}</div></div>
       <div class="nums">
