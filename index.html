@@ -7,91 +7,138 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-
 <style>
 :root{
-  --red:#D6242C;
-  --red-deep:#9E1017;
-  --gold:#F2B705;
-  --paper:#FCF7EC;
-  --paper-2:#F4EAD7;
-  --ink:#221A15;
-  --ink-soft:#6B5D51;
-  --line:#E0D2BA;
-  --jade:#1E6F5C;
-  --shadow:0 2px 0 var(--line);
-  --r:14px;
+  --red:#D6242C; --red-deep:#9E1017; --gold:#F2B705;
+  --paper:#FCF7EC; --paper-2:#F4EAD7; --ink:#221A15; --ink-soft:#6B5D51;
+  --line:#E0D2BA; --jade:#1E6F5C;
+  --pink:#FFE3EC; --mint:#E3F6EF; --sky:#E4F0FB;
+  --r:18px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
   background:var(--paper);
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(34,26,21,.06) 1px, transparent 0);
+  background-image:radial-gradient(circle at 1px 1px, rgba(34,26,21,.06) 1px, transparent 0);
   background-size:22px 22px;
   color:var(--ink);
   font-family:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
   -webkit-font-smoothing:antialiased;
-  padding-bottom:60px;
+  padding-bottom:50px;
 }
 .display{font-family:"ZCOOL QingKe HuangYou","Noto Sans SC",sans-serif;font-weight:400;letter-spacing:.02em}
 .mono{font-family:"Space Mono",ui-monospace,monospace}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-
+.hidden{display:none!important}
 .wrap{max-width:960px;margin:0 auto;padding:0 16px}
+.hint{font-size:12px;color:var(--ink-soft);line-height:1.7}
 
-/* ---------- 顶部招牌 ---------- */
-.sign{
-  background:var(--red);
-  color:#fff;
-  border-bottom:5px solid var(--gold);
-  padding:18px 0 16px;
-  position:relative;
-  overflow:hidden;
-}
-.sign::after{
-  content:"";position:absolute;left:0;right:0;bottom:-5px;height:5px;
-  background:repeating-linear-gradient(90deg,var(--gold) 0 14px,var(--red-deep) 14px 28px);
-}
-.sign-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.brand{display:flex;align-items:baseline;gap:10px}
-.brand h1{font-size:30px;margin:0;line-height:1}
-.brand .sub{font-size:11px;letter-spacing:.35em;opacity:.75;text-transform:uppercase}
-.who{display:flex;align-items:center;gap:10px;font-size:13px}
-.who b{font-weight:500;opacity:.9;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ---------- 招牌 ---------- */
+.sign{background:var(--red);color:#fff;border-bottom:5px solid var(--gold);padding:18px 0 0;position:relative}
+.sign-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand h1{font-size:29px;margin:0;line-height:1;white-space:nowrap}
+.brand .sub{font-size:11px;letter-spacing:.3em;opacity:.7;text-transform:uppercase}
+.who{display:flex;align-items:center;gap:9px;font-size:13px;flex:none}
 .ghost{border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:5px 12px;font-size:12px;color:#fff}
-.ghost:hover{background:rgba(255,255,255,.15)}
+.tabs{display:flex;gap:4px;margin-top:14px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{color:rgba(255,255,255,.75);font-size:14px;padding:9px 14px;border-radius:12px 12px 0 0;white-space:nowrap;flex:none}
+.tab.on{color:var(--ink);background:var(--paper);font-weight:700}
+.view{display:none}
+.view.on{display:block}
 
-/* ---------- 小票统计 ---------- */
-.receipt{
-  background:#fff;border:1px solid var(--line);border-radius:var(--r);
-  margin-top:20px;padding:16px 18px;
-  box-shadow:0 4px 0 rgba(34,26,21,.06);
-}
-.receipt-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed var(--line);padding-bottom:10px;margin-bottom:12px}
+/* ---------- 通用 ---------- */
+.btn{background:var(--red);color:#fff;border-radius:14px;padding:12px 18px;font-size:15px;
+  font-weight:700;width:100%;box-shadow:0 3px 0 var(--red-deep)}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--red-deep)}
+.btn[disabled]{opacity:.5}
+.btn-alt{background:#fff;border:1px solid var(--line);color:var(--ink);box-shadow:0 3px 0 var(--line)}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:5px}
+.field input[type=text],.field input[type=number],.field input[type=password],
+.field input[type=datetime-local],.field textarea,.field select{
+  width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--paper)}
+.field textarea{resize:vertical;min-height:56px}
+.row2{display:flex;gap:10px}.row2>div{flex:1}
+.picker{display:flex;flex-wrap:wrap;gap:6px}
+.pick{border:1px solid var(--line);border-radius:11px;padding:8px 11px;display:flex;align-items:center;
+  gap:6px;font-size:13px;background:var(--paper)}
+.pick.on{color:#fff;border-color:transparent;font-weight:700}
+.pick img{width:20px;height:20px;border-radius:50%;object-fit:cover}
+.stamp{display:inline-flex;align-items:center;justify-content:center;border:2px solid currentColor;
+  border-radius:7px;padding:2px 9px;font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:13px;
+  transform:rotate(-5deg);white-space:nowrap}
+.empty{text-align:center;color:var(--ink-soft);font-size:14px;padding:44px 20px;
+  border:2px dashed var(--line);border-radius:20px;margin-top:20px;line-height:1.8}
+.prev{margin-top:8px;display:none}
+.prev img{max-width:120px;border-radius:10px;display:block}
+
+/* ---------- 头像 ---------- */
+.av{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;background:var(--paper-2)}
+.av-txt{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:15px;font-weight:700}
+
+/* ---------- 登录 ---------- */
+.gate{max-width:400px;margin:7vh auto;padding:0 16px}
+.gate .card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;
+  box-shadow:0 6px 0 rgba(34,26,21,.08)}
+.gate h1{font-size:31px;margin:0 0 4px}
+.gate .tag{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.err{background:#FDE8E8;border:1px solid #F5C2C2;color:#9E1017;font-size:13px;padding:9px 12px;
+  border-radius:11px;margin-bottom:12px;display:none}
+.err.on{display:block}
+
+/* ---------- 封面 ---------- */
+.cover{display:flex;gap:18px;align-items:center;background:#fff;border:2px solid var(--line);
+  border-radius:22px;padding:16px;margin-top:20px;box-shadow:0 5px 0 rgba(34,26,21,.07);position:relative}
+.cover .shot{width:128px;height:164px;object-fit:cover;object-position:62% 28%;border-radius:16px;
+  flex:none;border:3px solid var(--gold);transform:rotate(-2.5deg)}
+.cover h2{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:25px;margin:0 0 6px;font-weight:400}
+.cover p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.7}
+.cover .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cover .tg{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--pink)}
+.cover .tg:nth-child(2){background:var(--mint)}
+.cover .tg:nth-child(3){background:var(--sky)}
+.cover .badge{position:absolute;top:-10px;right:14px;background:var(--gold);font-size:12px;
+  font-weight:700;padding:5px 12px;border-radius:999px;transform:rotate(4deg)}
+
+/* ---------- 谁的日历 ---------- */
+.whobar{display:flex;gap:8px;overflow-x:auto;padding:14px 0 4px;scrollbar-width:none}
+.whobar::-webkit-scrollbar{display:none}
+.wchip{display:flex;align-items:center;gap:7px;background:#fff;border:2px solid var(--line);
+  border-radius:999px;padding:5px 14px 5px 5px;flex:none;font-size:14px;white-space:nowrap}
+.wchip .av,.wchip .av-txt{width:28px;height:28px;font-size:13px}
+.wchip.on{border-color:var(--red);background:#fff;font-weight:700;box-shadow:0 2px 0 rgba(214,36,44,.25)}
+.wchip .cnt2{font-size:11px;color:var(--ink-soft);font-weight:400}
+.wchip.on .cnt2{color:var(--red)}
+.allico{width:28px;height:28px;border-radius:50%;background:var(--paper-2);display:flex;
+  align-items:center;justify-content:center;font-size:14px;flex:none}
+</style>
+
+<style>
+/* ---------- 小票 / 日历 ---------- */
+.receipt{background:#fff;border:1px solid var(--line);border-radius:20px;margin-top:14px;padding:16px 18px;
+  box-shadow:0 4px 0 rgba(34,26,21,.06)}
+.receipt-top{display:flex;justify-content:space-between;align-items:center;
+  border-bottom:2px dashed var(--line);padding-bottom:10px;margin-bottom:12px;gap:10px}
 .receipt-top h2{font-size:20px;margin:0}
-.nav-btns{display:flex;gap:6px;align-items:center}
-.nav-btns button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);font-size:16px;line-height:1}
-.nav-btns button:hover{background:var(--paper-2)}
+.nav-btns{display:flex;gap:6px;align-items:center;flex:none}
+.nav-btns button{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);font-size:16px;line-height:1}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.stat{padding:6px 0}
-.stat .k{font-size:11px;color:var(--ink-soft);letter-spacing:.1em}
+.stat .k{font-size:11px;color:var(--ink-soft)}
 .stat .v{font-size:22px;font-weight:700;line-height:1.2;margin-top:2px}
 .stat .v small{font-size:12px;font-weight:400;color:var(--ink-soft)}
-
-/* ---------- 日历 ---------- */
-.cal{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:0 4px 0 rgba(34,26,21,.06)}
+.cal{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;
+  box-shadow:0 4px 0 rgba(34,26,21,.06)}
 .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
-.dow span{text-align:center;font-size:11px;color:var(--ink-soft);letter-spacing:.1em}
+.dow span{text-align:center;font-size:11px;color:var(--ink-soft)}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.cell{
-  position:relative;aspect-ratio:1/1;border:1px solid var(--line);border-radius:10px;
-  background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:transform .12s ease, box-shadow .12s ease;
-}
-.cell:hover{transform:translateY(-2px);box-shadow:0 4px 0 var(--line)}
+.cell{position:relative;aspect-ratio:1/1;border:1px solid var(--line);border-radius:14px;background:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .12s}
+.cell:hover{transform:translateY(-3px) rotate(-1deg)}
 .cell.blank{border:none;background:none;pointer-events:none}
 .cell .num{position:absolute;top:5px;left:7px;font-size:11px;color:var(--ink-soft)}
 .cell.today{border-color:var(--red);border-width:2px}
@@ -101,141 +148,51 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .cell .cnt{position:absolute;bottom:5px;right:7px;font-size:10px;color:var(--ink-soft)}
 .cell .money{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:10px;color:var(--jade)}
 .cell.has{background:#fff}
-
-/* ---------- 印章 ---------- */
-.stamp{
-  display:inline-flex;align-items:center;justify-content:center;
-  border:2px solid currentColor;border-radius:6px;padding:2px 8px;
-  font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:13px;
-  transform:rotate(-6deg);opacity:.92;white-space:nowrap;
-}
-
-/* ---------- 图例 ---------- */
+.cell .dots{position:absolute;top:5px;right:6px;display:flex;gap:2px}
+.cell .dots i{width:5px;height:5px;border-radius:50%;display:block}
 .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.legend .lv{display:flex;align-items:center;gap:6px;font-size:12px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 10px 4px 5px}
-.legend .lv .em{font-size:16px}
-.legend .lv img{width:22px;height:22px;border-radius:50%;object-fit:cover}
-.legend .bar{height:4px;border-radius:2px;min-width:4px}
+.legend .lv{display:flex;align-items:center;gap:6px;font-size:12px;background:#fff;border:1px solid var(--line);
+  border-radius:999px;padding:4px 11px 4px 6px}
+.tools{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.tools button{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 15px}
+.rate-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rate-row span{width:96px;font-size:13px}
+.rate-row input{flex:1;padding:8px 10px;border:1px solid var(--line);border-radius:9px}
 
 /* ---------- 弹窗 ---------- */
-.mask{position:fixed;inset:0;background:rgba(34,26,21,.55);display:none;z-index:50;align-items:flex-end;justify-content:center}
+.mask{position:fixed;inset:0;background:rgba(34,26,21,.55);display:none;z-index:50;
+  align-items:flex-end;justify-content:center}
 .mask.on{display:flex}
-.sheet{
-  background:var(--paper);width:100%;max-width:620px;max-height:92vh;overflow:auto;
-  border-radius:18px 18px 0 0;padding:18px;
-  animation:up .22s cubic-bezier(.2,.8,.2,1);
-}
+.sheet{background:var(--paper);width:100%;max-width:620px;max-height:92vh;overflow:auto;
+  border-radius:22px 22px 0 0;padding:18px;animation:up .22s cubic-bezier(.2,.8,.2,1)}
 @keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
-@media (min-width:640px){.mask{align-items:center}.sheet{border-radius:18px}}
+@media (min-width:640px){.mask{align-items:center}.sheet{border-radius:22px}}
 @media (prefers-reduced-motion:reduce){.sheet{animation:none}.cell{transition:none}}
-.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
 .sheet-head h3{margin:0;font-size:22px}
-.x{font-size:22px;width:34px;height:34px;border-radius:50%;line-height:1}
-.x:hover{background:var(--paper-2)}
-
-.meal{display:flex;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
-.meal .pic{width:76px;height:76px;border-radius:8px;object-fit:cover;background:var(--paper-2);flex:none}
+.x{font-size:22px;width:34px;height:34px;border-radius:50%;line-height:1;flex:none}
+.meal{display:flex;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:10px;margin-bottom:10px}
+.meal .pic{width:76px;height:76px;border-radius:11px;object-fit:cover;background:var(--paper-2);flex:none}
 .meal .body{flex:1;min-width:0}
 .meal .t{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
 .meal .name{font-weight:700;font-size:15px}
 .meal .price{font-size:15px;color:var(--jade)}
-.meal .price small{color:var(--ink-soft)}
-.meal .note{font-size:13px;color:var(--ink-soft);margin-top:4px;word-break:break-word}
+.meal .nt{font-size:13px;color:var(--ink-soft);margin-top:4px;word-break:break-word}
 .meal .del{font-size:12px;color:var(--ink-soft);margin-top:6px;text-decoration:underline}
-
-.form{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:6px}
-.field{margin-bottom:12px}
-.field label{display:block;font-size:12px;color:var(--ink-soft);letter-spacing:.08em;margin-bottom:5px}
-.field input[type=text],.field input[type=number],.field textarea,.field select,.field input[type=email],.field input[type=password]{
-  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--paper);
-}
-.field textarea{resize:vertical;min-height:56px}
-.row2{display:flex;gap:10px}
-.row2>div{flex:1}
-.picker{display:flex;flex-wrap:wrap;gap:6px}
-.pick{border:1px solid var(--line);border-radius:10px;padding:7px 10px;display:flex;align-items:center;gap:6px;font-size:13px;background:var(--paper)}
-.pick img{width:20px;height:20px;border-radius:50%;object-fit:cover}
-.pick.on{color:#fff;border-color:transparent;font-weight:700}
-.btn{background:var(--red);color:#fff;border-radius:10px;padding:12px 18px;font-size:15px;font-weight:700;width:100%}
-.btn:hover{background:var(--red-deep)}
-.btn[disabled]{opacity:.5;cursor:default}
-.btn-alt{background:#fff;border:1px solid var(--line);color:var(--ink)}
-.btn-alt:hover{background:var(--paper-2)}
-.prev{margin-top:8px;display:none}
-.prev img{max-width:120px;border-radius:8px;display:block}
-
-/* ---------- 登录 ---------- */
-.gate{max-width:400px;margin:8vh auto;padding:0 16px}
-.gate .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:0 6px 0 rgba(34,26,21,.08)}
-.gate h1{font-size:32px;margin:0 0 4px}
-.gate .tag{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
-.gate .swap{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:14px}
-.gate .swap button{color:var(--red);text-decoration:underline}
-.err{background:#FDE8E8;border:1px solid #F5C2C2;color:#9E1017;font-size:13px;padding:9px 12px;border-radius:9px;margin-bottom:12px;display:none}
-.err.on{display:block}
-.hr{display:flex;align-items:center;gap:10px;color:var(--ink-soft);font-size:12px;margin:14px 0}
-.hr::before,.hr::after{content:"";flex:1;height:1px;background:var(--line)}
-
-.tools{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.tools button{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px}
-.tools button:hover{background:var(--paper-2)}
-.rate-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.rate-row span{width:96px;font-size:13px}
-.rate-row input{flex:1;padding:8px 10px;border:1px solid var(--line);border-radius:8px}
-.hint{font-size:12px;color:var(--ink-soft);line-height:1.6}
-.hidden{display:none!important}
-.setup{background:var(--gold);color:var(--ink);padding:12px 16px;font-size:13px;line-height:1.6}
-.setup code{background:rgba(0,0,0,.08);padding:1px 5px;border-radius:4px}
-</style>
-<style>
-/* ---------- 可爱化 ---------- */
-:root{ --pink:#FFE3EC; --mint:#E3F6EF; --sky:#E4F0FB; --r:18px; }
-.receipt,.cal,.rev,.shout-form,.plan{border-radius:20px}
-.cell{border-radius:14px}
-.cell:hover{transform:translateY(-3px) rotate(-1deg)}
-.btn{border-radius:14px;box-shadow:0 3px 0 var(--red-deep)}
-.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--red-deep)}
-.btn-alt{box-shadow:0 3px 0 var(--line)}
-
-/* ---------- 板块切换 ---------- */
-.tabs{display:flex;gap:4px;margin-top:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none;padding-bottom:0}
-.tabs::-webkit-scrollbar{display:none}
-.tab{color:rgba(255,255,255,.75);font-size:14px;padding:9px 14px;border-radius:12px 12px 0 0;
-  white-space:nowrap;flex:none}
-.tab.on{color:var(--ink);background:var(--paper);font-weight:700}
-.view{display:none}
-.view.on{display:block}
-
-/* ---------- 头像 ---------- */
-.av{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;background:var(--paper-2)}
-.av-txt{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;
-  justify-content:center;color:#fff;font-size:15px;font-weight:700}
-
-/* ---------- 封面 ---------- */
-.cover{display:flex;gap:18px;align-items:center;background:#fff;border:2px solid var(--line);
-  border-radius:22px;padding:16px;margin-top:20px;box-shadow:0 5px 0 rgba(34,26,21,.07);position:relative}
-.cover .shot{width:128px;height:164px;object-fit:cover;object-position:62% 28%;border-radius:16px;
-  flex:none;border:3px solid var(--gold);transform:rotate(-2.5deg)}
-.cover .txt{flex:1;min-width:0}
-.cover h2{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:25px;margin:0 0 6px;font-weight:400}
-.cover p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.7}
-.cover .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.cover .tg{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--pink)}
-.cover .tg:nth-child(2){background:var(--mint)}
-.cover .tg:nth-child(3){background:var(--sky)}
-.cover .badge{position:absolute;top:-10px;right:14px;background:var(--gold);color:var(--ink);
-  font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;transform:rotate(4deg);
-  box-shadow:0 2px 0 rgba(34,26,21,.15)}
+.meal .who3{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-soft);margin-top:6px}
+.meal .who3 .av,.meal .who3 .av-txt{width:22px;height:22px;font-size:11px}
+.form{background:#fff;border:1px dashed var(--line);border-radius:14px;padding:14px;margin-top:6px}
 
 /* ---------- 喊话墙 ---------- */
-.shout-form{background:#fff;border:1px solid var(--line);padding:14px;margin-top:20px;box-shadow:0 4px 0 rgba(34,26,21,.06)}
+.shout-form{background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;margin-top:20px;
+  box-shadow:0 4px 0 rgba(34,26,21,.06)}
 .shout-form textarea{width:100%;min-height:56px;padding:11px 13px;border:1px solid var(--line);
   border-radius:13px;background:var(--paper);resize:vertical}
 .shout-form .send{margin-top:10px;width:auto;padding:11px 24px;float:right}
 .wall{margin-top:20px}
-.note{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px 15px;
-  margin-bottom:12px;position:relative;box-shadow:0 3px 0 rgba(34,26,21,.05)}
+.note{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px 15px;margin-bottom:12px;
+  position:relative;box-shadow:0 3px 0 rgba(34,26,21,.05)}
 .note:nth-child(4n+1){background:#FFFBEE}
 .note:nth-child(4n+2){background:var(--mint)}
 .note:nth-child(4n+3){background:var(--pink)}
@@ -244,6 +201,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .note .time{font-size:11px;color:var(--ink-soft)}
 .note .txt{margin-top:8px;font-size:15px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
 .note .kill{position:absolute;top:11px;right:13px;font-size:13px;color:var(--ink-soft);opacity:.4}
+.note:hover .kill{opacity:1}
 .note .acts{margin-top:10px;display:flex;gap:14px;font-size:13px}
 .note .acts button{color:var(--ink-soft);text-decoration:underline}
 .replies{margin-top:10px;border-left:3px solid var(--line);padding-left:12px}
@@ -252,22 +210,71 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .reply .rt{font-size:11px;color:var(--ink-soft);margin-left:6px}
 .rbox{display:none;margin-top:10px;gap:8px}
 .rbox.on{display:flex}
-.rbox input{flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:11px;background:#fff}
-.rbox button{background:var(--red);color:#fff;border-radius:11px;padding:9px 16px;font-size:14px;flex:none}
+.rbox input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:#fff}
+.rbox .sb{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 13px;flex:none}
+.rbox .go2{background:var(--red);color:#fff;border-radius:11px;padding:10px 16px;flex:none;font-size:14px}
+.msg-stk{max-width:150px;max-height:150px;object-fit:contain;display:block;margin-top:9px;border-radius:10px}
+.reply .msg-stk{max-width:110px;max-height:110px}
+
+/* ---------- 表情包 ---------- */
+.stk-bar{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.stk-bar button{border:1px solid var(--line);background:#fff;border-radius:11px;padding:8px 14px;font-size:13px}
+.stk-pend{display:none;align-items:center;gap:10px;margin-top:10px;background:var(--paper);
+  border:1px dashed var(--line);border-radius:12px;padding:8px 10px}
+.stk-pend.on{display:flex}
+.stk-pend img{width:52px;height:52px;object-fit:contain}
+.stk-pend button{margin-left:auto;font-size:12px;color:var(--ink-soft);text-decoration:underline}
+.stk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-top:14px}
+.stk{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;cursor:pointer}
+.stk:hover{transform:scale(1.06)}
+.stk img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block}
+.stk .rm{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;
+  background:var(--red);color:#fff;font-size:12px;line-height:22px;text-align:center}
 
 /* ---------- 约饭 ---------- */
-.plan{background:#fff;border:1px solid var(--line);padding:16px 18px;margin-top:14px;
+.plan{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px 18px;margin-top:14px;
   box-shadow:0 4px 0 rgba(34,26,21,.06);position:relative}
 .plan.past{opacity:.55}
 .plan h3{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:22px;margin:0 0 8px;font-weight:400}
 .plan .meta{font-size:14px;color:var(--ink-soft);line-height:1.9}
 .plan .meta b{color:var(--ink);font-weight:500}
-.plan .joins{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:12px;
-  padding-top:12px;border-top:2px dashed var(--line)}
+.plan .joins{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;
+  border-top:2px dashed var(--line)}
 .plan .joins .av,.plan .joins .av-txt{width:30px;height:30px;font-size:13px}
-.plan .go{margin-top:12px;width:100%;padding:12px}
+.plan .go{margin-top:12px;width:100%}
 .plan .go.in{background:var(--jade);box-shadow:0 3px 0 #14503E}
 .plan .kill{position:absolute;top:14px;right:16px;font-size:13px;color:var(--ink-soft);opacity:.4}
+
+/* ---------- 相册 ---------- */
+.upload-bar{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.upload-bar .btn{width:auto;padding:12px 22px}
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;margin-top:14px}
+.shot-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  box-shadow:0 3px 0 rgba(34,26,21,.05);cursor:pointer;transition:transform .14s;position:relative}
+.shot-card:hover{transform:translateY(-3px) rotate(-1deg)}
+.shot-card .ph{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:var(--paper-2)}
+.shot-card .cap{padding:9px 11px}
+.shot-card .cap .n{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shot-card .cap .m{font-size:11px;color:var(--ink-soft);margin-top:3px;display:flex;
+  justify-content:space-between;gap:6px}
+.shot-card .cbadge{position:absolute;top:7px;right:7px;background:rgba(34,26,21,.72);color:#fff;
+  font-size:11px;padding:3px 8px;border-radius:999px}
+.lightbox img.big{width:100%;border-radius:14px;display:block}
+.lightbox .info{margin-top:12px;font-size:14px;line-height:1.7}
+.cmt-wrap{margin-top:16px;border-top:2px dashed var(--line);padding-top:14px}
+.cmt-wrap h4{margin:0 0 12px;font-size:15px}
+.cmt{background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 13px;margin-bottom:10px;position:relative}
+.cmt .hd{display:flex;align-items:center;gap:8px}
+.cmt .cn{font-size:14px;font-weight:700;color:var(--red)}
+.cmt .ct{font-size:11px;color:var(--ink-soft)}
+.cmt .cx{margin-top:7px;font-size:14px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
+.cmt .kill{position:absolute;top:10px;right:12px;font-size:12px;color:var(--ink-soft);opacity:.45}
+.cmt .acts{margin-top:8px;font-size:12px}
+.cmt .acts button{color:var(--ink-soft);text-decoration:underline}
+.cmt-box{display:flex;gap:8px;margin-top:12px}
+.cmt-box input{flex:1;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.cmt-box .sb{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 13px;flex:none}
+.cmt-box .go2{background:var(--red);color:#fff;border-radius:12px;padding:11px 17px;flex:none;font-size:14px}
 
 /* ---------- 食客 ---------- */
 .folks{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:20px}
@@ -279,51 +286,12 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#C9C4BC;margin-right:5px}
 .dot.on{background:#2BB673}
 .me-tag{display:inline-block;background:var(--gold);font-size:11px;padding:2px 8px;border-radius:999px;margin-top:6px}
-
-/* ---------- 品鉴 ---------- */
-.rev-new{margin-top:20px;width:auto;padding:13px 26px}
-.rev{background:#fff;border:1px solid var(--line);margin-top:16px;overflow:hidden;box-shadow:0 4px 0 rgba(34,26,21,.06)}
-.rev .hero{width:100%;max-height:320px;object-fit:cover;display:block;background:var(--paper-2)}
-.rev .in{padding:18px 20px}
-.rev .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
-.rev h3{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:26px;margin:0;font-weight:400}
-.rev .dish{font-size:13px;color:var(--ink-soft);margin-top:2px}
-.rev .verdict{font-family:"Noto Serif SC",serif;font-weight:600;font-size:19px;line-height:1.55;
-  border-left:4px solid var(--gold);padding-left:14px;margin:16px 0;border-radius:0}
-.rev .body{font-size:15px;line-height:1.85;white-space:pre-wrap;word-break:break-word}
-.rev .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
-  margin-top:16px;padding-top:12px;border-top:2px dashed var(--line);font-size:12px;color:var(--ink-soft)}
-.rev .foot .p{font-size:17px;color:var(--jade)}
-
-/* ---------- 相册 ---------- */
-.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;margin-top:20px}
-.shot-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;
-  box-shadow:0 3px 0 rgba(34,26,21,.05);cursor:pointer;transition:transform .14s}
-.shot-card:hover{transform:translateY(-3px) rotate(-1deg)}
-.shot-card.pickable{border:2px solid var(--gold)}
-.shot-card .ph{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:var(--paper-2)}
-.shot-card .cap{padding:9px 11px}
-.shot-card .cap .n{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.shot-card .cap .m{font-size:11px;color:var(--ink-soft);margin-top:3px;display:flex;justify-content:space-between;gap:6px}
-.lightbox img{width:100%;border-radius:14px;display:block}
-.lightbox .info{margin-top:12px;font-size:14px;line-height:1.7}
-
-.empty{text-align:center;color:var(--ink-soft);font-size:14px;padding:44px 20px;
-  border:2px dashed var(--line);border-radius:20px;margin-top:20px;line-height:1.8}
-.nick-tag{cursor:pointer}
-.ver{text-align:center;font-size:12px;color:var(--ink-soft);margin:36px 0 12px;line-height:1.8}
-.ver b{color:var(--red);font-weight:700}
-.av-edit{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-.av-edit .av,.av-edit .av-txt{width:66px;height:66px;font-size:27px}
-
-
-/* ---------- 用户列表 ---------- */
-.ul-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
-  margin-top:32px;padding-bottom:10px;border-bottom:2px dashed var(--line)}
+.ul-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:32px;
+  padding-bottom:10px;border-bottom:2px dashed var(--line)}
 .ul-head h3{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:21px;margin:0;font-weight:400}
 .ul-head .sum{font-size:12px;color:var(--ink-soft)}
-.ulist{background:#fff;border:1px solid var(--line);border-radius:18px;margin-top:12px;
-  overflow:hidden;box-shadow:0 3px 0 rgba(34,26,21,.05)}
+.ulist{background:#fff;border:1px solid var(--line);border-radius:18px;margin-top:12px;overflow:hidden;
+  box-shadow:0 3px 0 rgba(34,26,21,.05)}
 .urow{display:flex;align-items:center;gap:11px;padding:12px 14px;border-bottom:1px solid var(--line)}
 .urow:last-child{border-bottom:none}
 .urow:nth-child(even){background:var(--paper)}
@@ -337,100 +305,83 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .urow .nums .nv{font-size:15px;font-weight:700;line-height:1.2}
 .urow .nums .nk{font-size:10px;color:var(--ink-soft);margin-top:1px}
 .urow .drop{flex:none;font-size:12px;color:var(--ink-soft);opacity:.4;padding:4px 6px}
-.urow:hover .drop{opacity:1}
-@media (max-width:640px){
-  .urow{padding:11px 11px;gap:9px}
-  .urow .rk{display:none}
-  .urow .av,.urow .av-txt{width:34px;height:34px;font-size:15px}
-  .urow .nums{gap:8px}
-  .urow .nums div{min-width:28px}
-  .urow .nums .nv{font-size:14px}
-  .urow .drop{opacity:.75}
-}
+
+/* ---------- 品鉴 ---------- */
+.rev-new{margin-top:20px;width:auto;padding:13px 26px}
+.rev{background:#fff;border:1px solid var(--line);border-radius:20px;margin-top:16px;overflow:hidden;
+  box-shadow:0 4px 0 rgba(34,26,21,.06)}
+.rev .hero{width:100%;max-height:320px;object-fit:cover;display:block;background:var(--paper-2)}
+.rev .in{padding:18px 20px}
+.rev .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.rev h3{font-family:"ZCOOL QingKe HuangYou",sans-serif;font-size:26px;margin:0;font-weight:400}
+.rev .dish{font-size:13px;color:var(--ink-soft);margin-top:2px}
+.rev .verdict{font-family:"Noto Serif SC",serif;font-weight:600;font-size:19px;line-height:1.55;
+  border-left:4px solid var(--gold);padding-left:14px;margin:16px 0}
+.rev .body{font-size:15px;line-height:1.85;white-space:pre-wrap;word-break:break-word}
+.rev .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-top:16px;padding-top:12px;border-top:2px dashed var(--line);font-size:12px;color:var(--ink-soft)}
+.rev .foot .p{font-size:17px;color:var(--jade)}
+
+.av-edit{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.av-edit .av,.av-edit .av-txt{width:66px;height:66px;font-size:27px}
+.av-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;margin-top:14px}
+.av-pick{border:2px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;background:var(--paper-2)}
+.av-pick img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.ver{text-align:center;font-size:12px;color:var(--ink-soft);margin:36px 0 12px;line-height:1.8}
+.ver b{color:var(--red);font-weight:700}
+.nick-tag{cursor:pointer}
 
 /* ================= 手机端 ================= */
 @media (max-width:640px){
-  body{padding-bottom:30px}
   .wrap{padding:0 12px}
   .sign{padding:14px 0 0}
-  .brand h1{font-size:23px}
+  .brand h1{font-size:22px}
   .brand .sub{display:none}
-  .sign-row{align-items:center}
   .who{font-size:12px}
   .tabs{margin:12px -12px 0;padding:0 12px}
   .tab{font-size:13px;padding:10px 12px}
   .cover{flex-direction:column;text-align:center;gap:12px;padding:14px}
   .cover .shot{width:140px;height:180px}
   .cover .badge{right:auto;left:50%;transform:translateX(-50%) rotate(-3deg)}
+  .whobar{margin:0 -12px;padding:14px 12px 4px}
   .stats{grid-template-columns:repeat(2,1fr);gap:6px}
   .stat .v{font-size:19px}
   .stat .k{font-size:10px}
   .cal{padding:9px}
   .grid,.dow{gap:4px}
   .cell{border-radius:10px}
+  .cell:hover{transform:none}
   .cell .num{font-size:10px;top:3px;left:5px}
   .cell .face{font-size:20px}
   .cell .face img{width:26px;height:26px}
-  .cell .money{font-size:9px;bottom:2px}
-  .cell .cnt{font-size:9px;bottom:2px;right:4px}
-  .cell:hover{transform:none}
+  .cell .money,.cell .cnt{font-size:9px;bottom:2px}
   .album{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
   .shot-card:hover{transform:none}
   .shot-card .cap{padding:7px 8px}
   .shot-card .cap .n{font-size:12px}
   .folks{grid-template-columns:repeat(2,1fr);gap:10px}
-  .sheet{max-height:94vh;padding:16px 14px 30px;border-radius:22px 22px 0 0}
-  .meal{flex-direction:row;gap:10px;padding:9px}
+  .urow{padding:11px;gap:9px}
+  .urow .rk{display:none}
+  .urow .av,.urow .av-txt{width:34px;height:34px;font-size:15px}
+  .urow .nums{gap:8px}.urow .nums div{min-width:28px}.urow .nums .nv{font-size:14px}
+  .urow .drop{opacity:.75}
+  .sheet{max-height:94vh;padding:16px 14px 30px}
   .meal .pic{width:64px;height:64px}
   .note .kill{opacity:.75}
-  .rbox{flex-direction:column}
-  .rbox button{width:100%}
+  .rbox,.cmt-box{flex-wrap:wrap}
+  .rbox input,.cmt-box input{min-width:100%}
+  .rbox .go2,.cmt-box .go2{flex:1}
   .rev .in{padding:15px 16px}
   .rev h3{font-size:22px}
-  .rev .verdict{font-size:17px}
   .tools{flex-direction:column}
   .tools button{width:100%;padding:11px}
-  .btn{padding:14px 18px}
+  .upload-bar{flex-direction:column}.upload-bar .btn{width:100%}
+  .stk-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
+  .av-grid{grid-template-columns:repeat(3,1fr)}
   input,select,textarea{font-size:16px!important}
   .rate-row span{width:78px;font-size:12px}
 }
-@media (max-width:380px){
-  .cell .face{font-size:17px}
-  .folks{grid-template-columns:1fr}
-}
-
-/* ---------- 表情包 ---------- */
-.stk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-top:14px}
-.stk{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;
-  padding:6px;cursor:pointer;transition:transform .12s}
-.stk:hover{transform:scale(1.06)}
-.stk img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block}
-.stk .rm{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;
-  background:var(--red);color:#fff;font-size:12px;line-height:22px;text-align:center;
-  box-shadow:0 2px 0 var(--red-deep)}
-.stk-bar{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
-.stk-bar button{border:1px solid var(--line);background:#fff;border-radius:11px;padding:8px 14px;font-size:13px}
-.stk-bar button:hover{background:var(--paper-2)}
-.stk-pend{display:none;align-items:center;gap:10px;margin-top:10px;background:var(--paper);
-  border:1px dashed var(--line);border-radius:12px;padding:8px 10px}
-.stk-pend.on{display:flex}
-.stk-pend img{width:52px;height:52px;object-fit:contain}
-.stk-pend button{margin-left:auto;font-size:12px;color:var(--ink-soft);text-decoration:underline}
-.msg-stk{max-width:150px;max-height:150px;object-fit:contain;display:block;margin-top:9px;border-radius:10px}
-.reply .msg-stk{max-width:110px;max-height:110px}
-.upload-bar{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
-.upload-bar .btn{width:auto;padding:12px 22px}
-.av-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;margin-top:14px}
-.av-pick{border:2px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;background:var(--paper-2)}
-.av-pick:hover{border-color:var(--gold)}
-.av-pick img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
-@media (max-width:640px){
-  .stk-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
-  .av-grid{grid-template-columns:repeat(3,1fr)}
-  .upload-bar{flex-direction:column}
-  .upload-bar .btn{width:100%}
-  .stk:hover{transform:none}
-}
+@media (max-width:380px){.cell .face{font-size:17px}.folks{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -439,21 +390,17 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v5</b></div>
+    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v6</b></div>
     <div id="gateErr" class="err"></div>
-    <div class="field">
-      <label>口令</label>
-      <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" />
-    </div>
+    <div class="field"><label>口令</label>
+      <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
     <button id="enterBtn" class="btn">进店 🚪</button>
   </div>
   <div class="card hidden" id="gateStep2">
     <h1 class="display">先取个名 🏷️</h1>
-    <div class="tag">留言、约饭、写品鉴都会署这个名。随时能改。</div>
-    <div class="field">
-      <label>你的昵称</label>
-      <input id="nickInput" type="text" maxlength="12" placeholder="例如：小明" />
-    </div>
+    <div class="tag">你记的饭、发的言都会挂在这个名下。</div>
+    <div class="field"><label>你的昵称</label>
+      <input id="nickInput" type="text" maxlength="12" placeholder="例如：小明" /></div>
     <button id="nickBtn" class="btn">就叫这个 👌</button>
   </div>
 </section>
@@ -486,16 +433,17 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="cover">
       <span class="badge">本店店主 👑</span>
       <img class="shot" src="cover.jpg" alt="黄程锡" onerror="this.style.display='none'">
-      <div class="txt">
+      <div>
         <h2>黄程锡 🍜</h2>
         <p>每天吃了什么、值几个钱、配得上几分——全在这儿了。<br>看到好吃的记得来喊一声。</p>
         <div class="tags">
-          <span class="tg">🔥 无辣不欢</span>
-          <span class="tg">🦐 海鲜信徒</span>
-          <span class="tg">💸 该花就花</span>
+          <span class="tg">🔥 无辣不欢</span><span class="tg">🦐 海鲜信徒</span><span class="tg">💸 该花就花</span>
         </div>
       </div>
     </div>
+
+    <div id="whobar" class="whobar"></div>
+
     <section class="receipt">
       <div class="receipt-top">
         <h2 id="monthTitle" class="display">—</h2>
@@ -512,6 +460,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         <div class="stat"><div class="k">💸 本月花费</div><div class="v" id="sMoney">0</div></div>
       </div>
     </section>
+
     <section class="cal">
       <div class="dow"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
       <div id="grid" class="grid"></div>
@@ -519,7 +468,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div id="legend" class="legend"></div>
     <div class="tools">
       <button id="settingsBtn">💱 货币与汇率</button>
-      <button id="picsBtn">😆 换等级表情包</button>
+      <button id="picsBtn">😆 换等级表情</button>
     </div>
   </div>
 
@@ -532,7 +481,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
       </div>
       <div id="wStkPend" class="stk-pend">
         <img id="wStkImg" alt="已选表情包">
-        <span style="font-size:13px;color:var(--ink-soft)">这张会跟着一起发</span>
+        <span style="font-size:13px;color:var(--ink-soft)">这张会一起发</span>
         <button id="wStkClear">不要了</button>
       </div>
       <button id="wSend" class="btn send">贴上去 📌</button>
@@ -559,7 +508,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
       <button id="albUpload" class="btn">上传照片 📤</button>
       <input id="albFile" type="file" accept="image/*" multiple class="hidden">
     </div>
-    <p class="hint" style="margin-top:14px">📸 这里有你直接上传的照片，加上日历和品鉴里配过的图。点开看大图。</p>
+    <p class="hint">📸 直接上传的照片，加上日历和品鉴里配过的图。点开可以看大图、写评论。</p>
     <div id="album" class="album"></div>
     <div id="albEmpty" class="empty hidden">相册还是空的 📷<br>点上面的「上传照片」传第一张。</div>
   </div>
@@ -567,17 +516,13 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   <div id="v-folk" class="view wrap">
     <p class="hint" style="margin-top:20px">👥 所有进过店的人。绿点表示三分钟内还在线。</p>
     <div id="folks" class="folks"></div>
-
-    <div class="ul-head">
-      <h3>📋 用户列表</h3>
-      <span class="sum" id="ulSum"></span>
-    </div>
+    <div class="ul-head"><h3>📋 用户列表</h3><span class="sum" id="ulSum"></span></div>
     <div id="ulist" class="ulist"></div>
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v5</b><br>
-      <span style="font-size:11px">相册直传 · 表情包 · 独立头像选择 · 用户列表</span></p>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v6</b><br>
+      <span style="font-size:11px">分人统计 · 相册评论 · 表情包 · 头像</span></p>
   </div>
 </main>
 
@@ -597,8 +542,8 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
       <div class="field"><label>照片 📷（可选）</label>
         <input id="fPhoto" type="file" accept="image/*" />
         <div id="fPrev" class="prev"><img alt="预览" /></div></div>
-      <div class="field"><label>备注 💬（可选）</label>
-        <textarea id="fNote" placeholder="辣、量大、老板娘凶……"></textarea></div>
+      <div class="field"><label>评价 💬（可选）</label>
+        <textarea id="fNote" placeholder="好吃在哪、雷在哪、下次还点不点……"></textarea></div>
       <button id="saveMeal" class="btn">记这一餐 ✅</button>
     </div>
   </div>
@@ -607,14 +552,10 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <div id="planMask" class="mask">
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">🍱 发起约饭</h3><button class="x" data-close>×</button></div>
-    <div class="field"><label>吃什么 🍲</label>
-      <input id="pTitle" type="text" maxlength="30" placeholder="例如：潮汕牛肉火锅" /></div>
-    <div class="field"><label>在哪 📍</label>
-      <input id="pPlace" type="text" maxlength="40" placeholder="例如：陈记，地铁 B 口出来左转" /></div>
-    <div class="field"><label>什么时候 🕐</label>
-      <input id="pWhen" type="datetime-local" /></div>
-    <div class="field"><label>补充 💬（可选）</label>
-      <textarea id="pNote" placeholder="人均大概多少、要不要提前订位……"></textarea></div>
+    <div class="field"><label>吃什么 🍲</label><input id="pTitle" type="text" maxlength="30" placeholder="例如：潮汕牛肉火锅" /></div>
+    <div class="field"><label>在哪 📍</label><input id="pPlace" type="text" maxlength="40" placeholder="例如：陈记，地铁 B 口左转" /></div>
+    <div class="field"><label>什么时候 🕐</label><input id="pWhen" type="datetime-local" /></div>
+    <div class="field"><label>补充 💬（可选）</label><textarea id="pNote" placeholder="人均大概多少、要不要订位……"></textarea></div>
     <button id="pSave" class="btn">发出去 📣</button>
   </div>
 </div>
@@ -623,7 +564,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">💱 货币与汇率</h3><button class="x" data-close>×</button></div>
     <div class="field"><label>统计用的本位币</label><select id="baseCur"></select></div>
-    <p class="hint">下面是 1 单位外币折合多少本位币，按当天的填就行。</p>
+    <p class="hint">1 单位外币折合多少本位币，按当天的填。</p>
     <div id="rateList"></div>
     <button id="saveRates" class="btn">保存汇率 ✅</button>
   </div>
@@ -631,7 +572,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 
 <div id="picMask" class="mask">
   <div class="sheet">
-    <div class="sheet-head"><h3 class="display">😆 换等级表情包</h3><button class="x" data-close>×</button></div>
+    <div class="sheet-head"><h3 class="display">😆 换等级表情</h3><button class="x" data-close>×</button></div>
     <p class="hint">给每个等级传一张图，全站都会跟着换。</p>
     <div id="picList"></div>
   </div>
@@ -640,19 +581,15 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <div id="revMask" class="mask">
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">✍️ 写一篇品鉴</h3><button class="x" data-close>×</button></div>
-    <div class="field"><label>店名 🏪</label>
-      <input id="rPlace" type="text" placeholder="例如：陈记潮汕牛肉火锅" /></div>
-    <div class="field"><label>吃的什么 🍲</label>
-      <input id="rDish" type="text" placeholder="例如：吊龙 + 匙柄 + 手打牛肉丸" /></div>
+    <div class="field"><label>店名 🏪</label><input id="rPlace" type="text" placeholder="例如：陈记潮汕牛肉火锅" /></div>
+    <div class="field"><label>吃的什么 🍲</label><input id="rDish" type="text" placeholder="例如：吊龙 + 匙柄 + 牛肉丸" /></div>
     <div class="field"><label>评级 ⭐</label><div id="rLevels" class="picker"></div></div>
     <div class="field row2">
       <div><label>人均 💰</label><input id="rPrice" type="number" step="0.01" min="0" placeholder="0.00" /></div>
       <div><label>货币</label><select id="rCur"></select></div>
     </div>
-    <div class="field"><label>一句话结论 💡</label>
-      <input id="rVerdict" type="text" maxlength="60" placeholder="吊龙三秒烫，为这一口值得打车过去" /></div>
-    <div class="field"><label>正文 📝</label>
-      <textarea id="rBody" style="min-height:150px" placeholder="环境、服务、哪道必点、哪道避雷……"></textarea></div>
+    <div class="field"><label>一句话结论 💡</label><input id="rVerdict" type="text" maxlength="60" placeholder="为这一口值得打车过去" /></div>
+    <div class="field"><label>正文 📝</label><textarea id="rBody" style="min-height:150px" placeholder="环境、服务、必点、避雷……"></textarea></div>
     <div class="field"><label>配图 📷（可选）</label>
       <input id="rPhoto" type="file" accept="image/*" />
       <div id="rPrev" class="prev"><img alt="预览" /></div></div>
@@ -663,9 +600,23 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <div id="boxMask" class="mask">
   <div class="sheet lightbox">
     <div class="sheet-head"><h3 id="boxTitle" class="display">—</h3><button class="x" data-close>×</button></div>
-    <img id="boxImg" alt="" />
+    <img id="boxImg" class="big" alt="" />
     <div id="boxInfo" class="info"></div>
-    <button id="boxDel" class="btn btn-alt" style="margin-top:14px">删掉这张 🗑️</button>
+    <button id="boxDel" class="btn btn-alt" style="margin-top:12px">删掉这张 🗑️</button>
+    <div class="cmt-wrap">
+      <h4 id="cmtTitle">💬 评论</h4>
+      <div id="cmtList"></div>
+      <div id="cmtStkPend" class="stk-pend">
+        <img id="cmtStkImg" alt="">
+        <span style="font-size:13px;color:var(--ink-soft)">这张会一起发</span>
+        <button id="cmtStkClear">不要了</button>
+      </div>
+      <div class="cmt-box">
+        <input id="cmtInput" type="text" maxlength="300" placeholder="说点什么…">
+        <button class="sb" id="cmtStkBtn">😆</button>
+        <button class="go2" id="cmtSend">发送</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -673,13 +624,10 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">🙋 我的资料</h3><button class="x" data-close>×</button></div>
     <div class="av-edit"><span id="meAvPrev"></span>
-      <div style="font-size:13px;color:var(--ink-soft);line-height:1.7">
-        这是你现在的头像。<br>点下面换一张。
-      </div></div>
+      <div class="hint">这是你现在的头像。<br>换了会立刻同步到所有地方。</div></div>
     <button id="openAvatar" class="btn btn-alt" style="margin-bottom:16px">换头像 🖼️</button>
-    <div class="field"><label>昵称</label>
-      <input id="nickInput2" type="text" maxlength="12" placeholder="例如：小明" /></div>
-    <p class="hint">改名只影响以后发的内容，之前发过的还是旧名字。</p>
+    <div class="field"><label>昵称</label><input id="nickInput2" type="text" maxlength="12" /></div>
+    <p class="hint">改名只影响以后发的内容。</p>
     <button id="nickSave" class="btn">保存 ✅</button>
   </div>
 </div>
@@ -687,8 +635,9 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <div id="avMask" class="mask">
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">🖼️ 换头像</h3><button class="x" data-close>×</button></div>
-    <button id="avUpload" class="btn">从手机/电脑传一张 📤</button>
+    <button id="avUpload" class="btn">从手机 / 电脑选一张 📤</button>
     <input id="avFile" type="file" accept="image/*" class="hidden">
+    <div id="avStatus" class="hint" style="margin-top:10px"></div>
     <p class="hint" style="margin-top:16px">或者从相册里挑一张现成的：</p>
     <div id="avGrid" class="av-grid"></div>
     <div id="avEmpty" class="hint hidden" style="margin-top:12px">相册还没有照片。</div>
@@ -700,9 +649,9 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="sheet-head"><h3 id="stkTitle" class="display">😆 表情包</h3><button class="x" data-close>×</button></div>
     <button id="stkUpload" class="btn">传新表情包 📤</button>
     <input id="stkFile" type="file" accept="image/*" multiple class="hidden">
-    <p class="hint" style="margin-top:14px">大家共用一套。点一张就贴到正在写的那条上，点右上角红叉删掉。</p>
+    <p class="hint" style="margin-top:14px">大家共用一套。点一张贴到正在写的内容上，点红叉删除。</p>
     <div id="stkGrid" class="stk-grid"></div>
-    <div id="stkEmpty" class="empty hidden">还没有表情包 🫥<br>传几张进来。</div>
+    <div id="stkEmpty" class="empty hidden">还没有表情包 🫥<br>点上面传几张。</div>
   </div>
 </div>
 
@@ -741,18 +690,20 @@ const GATE = "hcx0130";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
+const B = ['board','hcx'];
 const C = {
-  meals:   () => collection(db,'board','hcx','meals'),
-  shouts:  () => collection(db,'board','hcx','shouts'),
-  reviews: () => collection(db,'board','hcx','reviews'),
-  plans:   () => collection(db,'board','hcx','plans'),
-  shots:   () => collection(db,'board','hcx','shots'),
-  stickers:() => collection(db,'board','hcx','stickers'),
-  folks:   () => collection(db,'board','hcx','folks'),
-  folk:    id => doc(db,'board','hcx','folks',id),
-  photo:   id => doc(db,'board','hcx','photos',id),
-  prefs:   () => doc(db,'board','hcx','meta','prefs')
+  meals:   () => collection(db,...B,'meals'),
+  shouts:  () => collection(db,...B,'shouts'),
+  reviews: () => collection(db,...B,'reviews'),
+  plans:   () => collection(db,...B,'plans'),
+  shots:   () => collection(db,...B,'shots'),
+  stickers:() => collection(db,...B,'stickers'),
+  comments:() => collection(db,...B,'comments'),
+  folks:   () => collection(db,...B,'folks'),
+  folk:    id => doc(db,...B,'folks',id),
+  photo:   id => doc(db,...B,'photos',id),
+  prefs:   () => doc(db,...B,'meta','prefs'),
+  one:     (c,id) => doc(db,...B,c,id)
 };
 
 const LEVELS = [
@@ -774,23 +725,25 @@ const DEFAULT_RATES = { CNY:1, HKD:0.92, USD:7.15, TWD:0.225, MOP:0.89, JPY:0.04
   KRW:0.0052, EUR:7.8, GBP:9.1, SGD:5.35, AUD:4.7, CAD:5.2, THB:0.2, MYR:1.55 };
 const ONLINE_MS = 3*60*1000;
 
-let meals=[], shouts=[], reviews=[], plans=[], folks=[], shots=[], stickers=[];
+let meals=[], shouts=[], reviews=[], plans=[], shots=[], stickers=[], comments=[], folks=[];
 let folkMap = {};
 let prefs = { base:'CNY', rates:{...DEFAULT_RATES}, pics:{} };
 let cursor = new Date(); cursor.setDate(1);
+let calWho = 'all';
 let openDate=null, pickedLevel='yb', pickedPhoto=null;
 let revLevel='rsr', revPhoto=null;
-let myAvatar='', boxKey='', boxKind='';
-let stkTarget=null, pendShoutStk='', pendReplyStk={};
 let upQueue=[], upLevel='yb';
+let boxKey='', boxShotId='', boxOwn=false;
+let stkTarget=null, pendShoutStk='', pendCmtStk='', pendReplyStk={};
+let myAvatar='';
 const photoCache = {};
 const unsubs = [];
 
-/* ---- 身份：浏览器里存一个 id 和昵称 ---- */
-function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch{ return null } }
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch{return null} }
 let cid = ls('hcx_cid');
-if(!cid){ cid = 'c'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); ls('hcx_cid',cid); }
+if(!cid){ cid='c'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); ls('hcx_cid',cid); }
 let nick = ls('hcx_nick') || '';
+myAvatar = ls('hcx_av') || '';
 
 const $ = s => document.querySelector(s);
 const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -814,12 +767,11 @@ function whenText(iso){
 }
 const AVC = ['#D6242C','#F2B705','#1E6F5C','#5E7A8A','#B4568F','#C4611B','#3C7A5A','#7A5BB5'];
 function avColor(s){ let h=0; for(const ch of (s||'?')) h=(h*31+ch.charCodeAt(0))>>>0; return AVC[h%AVC.length]; }
-function avatarHTML(id, name, cls){
-  const f = folkMap[id];
-  const src = f?.avatar || (id===cid ? myAvatar : '');
-  if(src) return `<img class="av ${cls||''}" src="${src}" alt="${esc(name)}">`;
-  const ch = (name||'?').trim().charAt(0) || '?';
-  return `<span class="av-txt ${cls||''}" style="background:${avColor(name||id)}">${esc(ch)}</span>`;
+function avatarHTML(id, name){
+  const src = (id===cid && myAvatar) ? myAvatar : (folkMap[id]?.avatar || '');
+  const nm = name || folkMap[id]?.nick || '?';
+  if(src) return `<img class="av" src="${src}" alt="${esc(nm)}">`;
+  return `<span class="av-txt" style="background:${avColor(nm||id)}">${esc(nm.trim().charAt(0)||'?')}</span>`;
 }
 function faceHTML(id,size){
   const l=LV[id]; if(!l) return '';
@@ -839,18 +791,15 @@ function compress(file,maxSide=1000,q0=0.72){
       img.onerror=()=>rej(new Error('图片读不出来，换一张'));img.src=fr.result};
     fr.onerror=()=>rej(new Error('文件读取失败'));fr.readAsDataURL(file)});
 }
-/* 方形裁切，用于头像 */
-function squareCrop(dataURL, size=128){
-  return new Promise(res=>{
+function squareCrop(dataURL,size=140){
+  return new Promise((res,rej)=>{
     const img=new Image();
-    img.onload=()=>{
-      const s=Math.min(img.width,img.height);
+    img.onload=()=>{const s=Math.min(img.width,img.height);
       const cv=document.createElement('canvas'); cv.width=cv.height=size;
       cv.getContext('2d').drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,size,size);
-      res(cv.toDataURL('image/jpeg',0.8));
-    };
-    img.src=dataURL;
-  });
+      res(cv.toDataURL('image/jpeg',0.82))};
+    img.onerror=()=>rej(new Error('处理失败'));
+    img.src=dataURL});
 }
 
 /* ===================== 进店 ===================== */
@@ -868,160 +817,192 @@ async function enter(){
       'auth/unauthorized-domain':'这个网址没在 Firebase 授权域名里，去 Authentication → Settings 添加',
       'auth/network-request-failed':'连不上 Firebase，检查网络'
     };
-    gateErr.textContent = map[e.code] || e.message;
-    gateErr.classList.add('on');
+    gateErr.textContent=map[e.code]||e.message; gateErr.classList.add('on');
   }finally{ btn.disabled=false; btn.textContent='进店 🚪'; }
 }
-$('#enterBtn').onclick = enter;
-$('#pwd').addEventListener('keydown', e=>{ if(e.key==='Enter') enter(); });
-$('#logoutBtn').onclick = () => signOut(auth);
-
+$('#enterBtn').onclick=enter;
+$('#pwd').addEventListener('keydown',e=>{if(e.key==='Enter')enter()});
+$('#logoutBtn').onclick=()=>signOut(auth);
 function askNick(){
-  $('#gateStep1').classList.add('hidden');
-  $('#gateStep2').classList.remove('hidden');
-  $('#nickInput').focus();
+  $('#gateStep1').classList.add('hidden'); $('#gateStep2').classList.remove('hidden'); $('#nickInput').focus();
 }
 function confirmNick(){
-  const v=$('#nickInput').value.trim();
-  if(!v){ $('#nickInput').focus(); return; }
+  const v=$('#nickInput').value.trim(); if(!v){$('#nickInput').focus();return}
   nick=v; ls('hcx_nick',v); openApp();
 }
-$('#nickBtn').onclick = confirmNick;
-$('#nickInput').addEventListener('keydown', e=>{ if(e.key==='Enter') confirmNick(); });
+$('#nickBtn').onclick=confirmNick;
+$('#nickInput').addEventListener('keydown',e=>{if(e.key==='Enter')confirmNick()});
 
 function renderMe(){
-  $('#meBox').innerHTML = avatarHTML(cid, nick) +
-    `<b style="max-width:88px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nick)}</b>`;
+  $('#meBox').innerHTML = avatarHTML(cid,nick) +
+    `<b style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nick)}</b>`;
 }
 async function openApp(){
-  $('#gate').classList.add('hidden');
-  $('#app').classList.remove('hidden');
+  $('#gate').classList.add('hidden'); $('#app').classList.remove('hidden');
   renderMe();
+  /* 先把自己那份读回来，头像才不会被下面的签到冲掉 */
+  try{
+    const s=await getDoc(C.folk(cid));
+    if(s.exists() && s.data().avatar){ myAvatar=s.data().avatar; ls('hcx_av',myAvatar); renderMe(); }
+  }catch(e){ console.warn('读取个人资料失败',e); }
   await loadPrefs();
   listenAll();
-  ping(); setInterval(ping, 60000);
+  ping(); setInterval(ping,60000);
   document.addEventListener('visibilitychange',()=>{ if(!document.hidden) ping(); });
 }
+/* 签到：只写会变的字段，绝不把 avatar 写成空 */
 async function ping(){
   try{
-    const patch = { nick, avatar:myAvatar||null, lastSeen:Date.now() };
+    const patch = { nick, lastSeen:Date.now() };
+    if(myAvatar) patch.avatar = myAvatar;
     if(!folkMap[cid]?.joinedAt) patch.joinedAt = Date.now();
     await setDoc(C.folk(cid), patch, {merge:true});
-  }catch(e){ console.warn('签到失败',e); }
+  }catch(e){ console.warn('签到失败',e) }
 }
-onAuthStateChanged(auth, user=>{
-  if(user){ nick ? openApp() : askNick(); }
+onAuthStateChanged(auth,user=>{
+  if(user){ nick?openApp():askNick(); }
   else{
     while(unsubs.length) unsubs.pop()();
-    meals=[];shouts=[];reviews=[];plans=[];folks=[];
-    $('#app').classList.add('hidden');
-    $('#gate').classList.remove('hidden');
-    $('#gateStep1').classList.remove('hidden');
-    $('#gateStep2').classList.add('hidden');
-    $('#pwd').value='';
+    meals=[];shouts=[];reviews=[];plans=[];shots=[];comments=[];folks=[];
+    $('#app').classList.add('hidden'); $('#gate').classList.remove('hidden');
+    $('#gateStep1').classList.remove('hidden'); $('#gateStep2').classList.add('hidden'); $('#pwd').value='';
   }
 });
 
-/* 我的资料 */
-$('#meBox').onclick = ()=>{
-  $('#nickInput2').value = nick;
-  $('#meAvPrev').innerHTML = avatarHTML(cid, nick);
-  $('#meMask').classList.add('on');
+/* ---------- 我的资料 / 头像 ---------- */
+$('#meBox').onclick=()=>{
+  $('#nickInput2').value=nick; $('#meAvPrev').innerHTML=avatarHTML(cid,nick); $('#meMask').classList.add('on');
 };
-$('#nickSave').onclick = async ()=>{
-  const v=$('#nickInput2').value.trim(); if(!v) return;
-  nick=v; ls('hcx_nick',v); renderMe(); await ping();
-  $('#meMask').classList.remove('on');
+$('#nickSave').onclick=async()=>{
+  const v=$('#nickInput2').value.trim(); if(!v)return;
+  nick=v; ls('hcx_nick',v); renderMe(); await ping(); $('#meMask').classList.remove('on');
 };
-$('#openAvatar').onclick = ()=>{
-  $('#meMask').classList.remove('on');
-  renderAvatarGrid();
-  $('#avMask').classList.add('on');
+$('#openAvatar').onclick=()=>{
+  $('#meMask').classList.remove('on'); $('#avStatus').textContent='';
+  renderAvatarGrid(); $('#avMask').classList.add('on');
 };
-$('#avUpload').onclick = ()=> $('#avFile').click();
-$('#avFile').onchange = async e=>{
-  const f=e.target.files[0]; if(!f) return;
+$('#avUpload').onclick=()=>$('#avFile').click();
+$('#avFile').onchange=async e=>{
+  const f=e.target.files[0]; if(!f)return;
+  $('#avStatus').textContent='正在处理…';
   try{
-    await setAvatarFrom(await compress(f,600,0.8));
-    $('#avMask').classList.remove('on');
-  }catch(err){ alert(err.message) }
-  finally{ e.target.value=''; }
+    await setAvatarFrom(await compress(f,700,0.85));
+    $('#avStatus').textContent='换好了 🎉';
+    setTimeout(()=>$('#avMask').classList.remove('on'),500);
+  }catch(err){ $('#avStatus').textContent='失败：'+err.message }
+  finally{ e.target.value='' }
 };
 async function setAvatarFrom(src){
   myAvatar = await squareCrop(src);
+  ls('hcx_av', myAvatar);
   await setDoc(C.folk(cid), { nick, avatar:myAvatar, lastSeen:Date.now() }, {merge:true});
-  renderMe(); renderWall(); renderPlans(); renderFolks();
+  renderMe(); renderWall(); renderPlans(); renderFolks(); renderWhoBar(); renderMealList(); renderComments();
+}
+async function renderAvatarGrid(){
+  const items=albumItems();
+  $('#avEmpty').classList.toggle('hidden', items.length>0);
+  $('#avGrid').innerHTML=items.map(it=>
+    `<div class="av-pick" data-avk="${it.key}"><img data-apic2="${it.key}" alt=""></div>`).join('');
+  $('#avGrid').querySelectorAll('[data-avk]').forEach(el=>el.onclick=async()=>{
+    const src=photoCache[el.dataset.avk]; if(!src)return;
+    $('#avStatus').textContent='正在处理…';
+    try{ await setAvatarFrom(src); $('#avStatus').textContent='换好了 🎉';
+      setTimeout(()=>$('#avMask').classList.remove('on'),500);
+    }catch(e){ $('#avStatus').textContent='失败：'+e.message }
+  });
+  for(const img of $('#avGrid').querySelectorAll('[data-apic2]')){
+    const src=await getPhoto(img.dataset.apic2);
+    if(src) img.src=src; else img.closest('.av-pick')?.remove();
+  }
 }
 
 /* ===================== 数据 ===================== */
 async function loadPrefs(){
   try{
-    const s = await getDoc(C.prefs());
-    if(s.exists()){
-      const d=s.data();
-      prefs.base=d.base||'CNY';
-      prefs.rates={...DEFAULT_RATES,...(d.rates||{})};
-      prefs.pics=d.pics||{};
-    }
-  }catch(e){ console.warn('设置读取失败',e); }
+    const s=await getDoc(C.prefs());
+    if(s.exists()){ const d=s.data();
+      prefs.base=d.base||'CNY'; prefs.rates={...DEFAULT_RATES,...(d.rates||{})}; prefs.pics=d.pics||{}; }
+  }catch(e){ console.warn('设置读取失败',e) }
   buildCurrencySelects(); renderLevelPicker(); renderRevLevels();
 }
-const savePrefs = () => setDoc(C.prefs(), prefs, {merge:true});
+const savePrefs=()=>setDoc(C.prefs(),prefs,{merge:true});
 
 function listenAll(){
   while(unsubs.length) unsubs.pop()();
-  unsubs.push(onSnapshot(C.meals(), s=>{
-    meals=s.docs.map(d=>({id:d.id,...d.data()}));
-    renderCal(); renderAlbum(); renderFolks(); if(openDate) renderMealList();
-  }, e=>console.error(e)));
-  unsubs.push(onSnapshot(C.shouts(), s=>{
-    shouts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0));
-    renderWall(); renderFolks();
-  }, e=>console.error(e)));
-  unsubs.push(onSnapshot(C.reviews(), s=>{
-    reviews=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0));
-    renderReviews(); renderAlbum();
-  }, e=>console.error(e)));
-  unsubs.push(onSnapshot(C.shots(), s=>{
-    shots=s.docs.map(d=>({id:d.id,...d.data()}));
-    renderAlbum();
-  }, e=>console.error(e)));
-  unsubs.push(onSnapshot(C.stickers(), s=>{
-    stickers=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0));
-    preloadStickers();
-  }, e=>console.error(e)));
-  unsubs.push(onSnapshot(C.plans(), s=>{
-    plans=s.docs.map(d=>({id:d.id,...d.data()}));
-    renderPlans();
-  }, e=>console.error(e)));
-  unsubs.push(onSnapshot(C.folks(), s=>{
+  const sub=(ref,fn)=>unsubs.push(onSnapshot(ref,fn,e=>console.error(e)));
+  sub(C.meals(), s=>{ meals=s.docs.map(d=>({id:d.id,...d.data()}));
+    renderWhoBar(); renderCal(); renderAlbum(); renderFolks(); if(openDate) renderMealList(); });
+  sub(C.shouts(), s=>{ shouts=s.docs.map(d=>({id:d.id,...d.data()}))
+    .sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0)); renderWall(); renderFolks(); });
+  sub(C.reviews(), s=>{ reviews=s.docs.map(d=>({id:d.id,...d.data()}))
+    .sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0)); renderReviews(); renderAlbum(); });
+  sub(C.plans(), s=>{ plans=s.docs.map(d=>({id:d.id,...d.data()})); renderPlans(); renderFolks(); });
+  sub(C.shots(), s=>{ shots=s.docs.map(d=>({id:d.id,...d.data()})); renderAlbum(); renderFolks(); });
+  sub(C.comments(), s=>{ comments=s.docs.map(d=>({id:d.id,...d.data()}))
+    .sort((a,b)=>(a.ms||0)-(b.ms||0)); renderComments(); renderAlbum(); });
+  sub(C.stickers(), s=>{ stickers=s.docs.map(d=>({id:d.id,...d.data()}))
+    .sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0)); preloadStickers(); });
+  sub(C.folks(), s=>{
     folks=s.docs.map(d=>({id:d.id,...d.data()}));
     folkMap=Object.fromEntries(folks.map(f=>[f.id,f]));
-    if(folkMap[cid]?.avatar && !myAvatar) myAvatar=folkMap[cid].avatar;
-    renderMe(); renderFolks(); renderWall(); renderPlans();
-  }, e=>console.error(e)));
+    if(!myAvatar && folkMap[cid]?.avatar){ myAvatar=folkMap[cid].avatar; ls('hcx_av',myAvatar); }
+    renderMe(); renderWhoBar(); renderFolks(); renderWall(); renderPlans(); renderComments();
+  });
 }
 async function getPhoto(id){
   if(photoCache[id]!==undefined) return photoCache[id];
   try{ const s=await getDoc(C.photo(id)); photoCache[id]=s.exists()?s.data().data:null; }
-  catch{ photoCache[id]=null; }
+  catch{ photoCache[id]=null }
   return photoCache[id];
 }
-
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+t.dataset.view));
 });
 
 
+/* ===================== 谁的日历 ===================== */
+function mealOwners(){
+  const seen={};
+  meals.forEach(m=>{
+    const k=m.cid||('n:'+(m.by||'匿名'));
+    if(!seen[k]) seen[k]={key:k, cid:m.cid||'', nick:m.by||folkMap[m.cid]?.nick||'匿名', n:0};
+    seen[k].n++;
+  });
+  folks.forEach(f=>{ if(!seen[f.id]) seen[f.id]={key:f.id, cid:f.id, nick:f.nick, n:0}; });
+  return Object.values(seen).sort((a,b)=>b.n-a.n);
+}
+function mineOf(m){ return m.cid ? m.cid : ('n:'+(m.by||'匿名')); }
+function calMeals(){
+  if(calWho==='all') return meals;
+  return meals.filter(m=>mineOf(m)===calWho);
+}
+function renderWhoBar(){
+  if(!$('#whobar')) return;
+  const owners=mealOwners();
+  const all=`<button class="wchip ${calWho==='all'?'on':''}" data-who="all">
+      <span class="allico">👥</span>全部人 <span class="cnt2">${meals.length}</span></button>`;
+  $('#whobar').innerHTML = all + owners.map(o=>`
+    <button class="wchip ${calWho===o.key?'on':''}" data-who="${o.key}">
+      ${avatarHTML(o.cid,o.nick)}${esc(o.nick)} <span class="cnt2">${o.n}</span></button>`).join('');
+  $('#whobar').querySelectorAll('[data-who]').forEach(b=>b.onclick=()=>{
+    calWho=b.dataset.who; renderWhoBar(); renderCal();
+  });
+}
+function whoLabel(){
+  if(calWho==='all') return '全部人';
+  const o=mealOwners().find(x=>x.key===calWho);
+  return o?o.nick:'某人';
+}
+
 /* ===================== 日历 ===================== */
 function renderCal(){ renderMonth(); renderStats(); renderLegend(); }
-
 function renderMonth(){
   const y=cursor.getFullYear(), m=cursor.getMonth();
   $('#monthTitle').textContent=`${y} 年 ${m+1} 月`;
   const first=new Date(y,m,1).getDay(), days=new Date(y,m+1,0).getDate();
-  const byDay={}; meals.forEach(x=>(byDay[x.date]||=[]).push(x));
+  const list0=calMeals(), byDay={};
+  list0.forEach(x=>(byDay[x.date]||=[]).push(x));
   let html='';
   for(let i=0;i<first;i++) html+='<div class="cell blank"></div>';
   for(let d=1;d<=days;d++){
@@ -1031,7 +1012,12 @@ function renderMonth(){
     if(list.length){
       const best=list.reduce((a,b)=>(LV[b.level]?.rank||0)>(LV[a.level]?.rank||0)?b:a);
       const sum=list.reduce((s,x)=>s+toBase(x.amount||0,x.currency||prefs.base),0);
-      inner=`<div class="face">${faceHTML(best.level,26)}</div>
+      const who=[...new Set(list.map(mineOf))];
+      const dots = calWho==='all' && who.length>1
+        ? `<div class="dots">${who.slice(0,3).map(k=>{
+             const nm=folkMap[k]?.nick||k.replace('n:','');
+             return `<i style="background:${avColor(nm)}"></i>`}).join('')}</div>` : '';
+      inner=`${dots}<div class="face">${faceHTML(best.level,26)}</div>
              ${list.length>1?`<div class="cnt">×${list.length}</div>`:''}
              ${sum>0?`<div class="money mono">${CUR[prefs.base].sym}${Math.round(sum)}</div>`:''}`;
     }
@@ -1042,23 +1028,28 @@ function renderMonth(){
   $('#grid').querySelectorAll('.cell[data-date]').forEach(el=>el.onclick=()=>openDay(el.dataset.date));
 }
 function renderStats(){
+  const list=calMeals();
   const pre=`${cursor.getFullYear()}-${String(cursor.getMonth()+1).padStart(2,'0')}`;
-  const inM=meals.filter(x=>(x.date||'').startsWith(pre));
+  const inM=list.filter(x=>(x.date||'').startsWith(pre));
   const total=inM.reduce((s,x)=>s+toBase(x.amount||0,x.currency||prefs.base),0);
   $('#sDays').innerHTML=`${new Set(inM.map(x=>x.date)).size}<small> 天</small>`;
   $('#sMeals').innerHTML=`${inM.length}<small> 餐</small>`;
   $('#sMoney').innerHTML=`<span class="mono">${money(total,prefs.base)}</span>`;
-  const all=new Set(meals.map(x=>x.date)); let streak=0; const c=new Date();
+  const all=new Set(list.map(x=>x.date)); let streak=0; const c=new Date();
   if(!all.has(ymd(c))) c.setDate(c.getDate()-1);
   while(all.has(ymd(c))){streak++;c.setDate(c.getDate()-1)}
   $('#sStreak').innerHTML=`${streak}<small> 天</small>`;
 }
 function renderLegend(){
-  $('#legend').innerHTML=LEVELS.map(l=>{
-    const n=meals.filter(x=>x.level===l.id).length;
-    return `<div class="lv"><span class="em">${faceHTML(l.id,20)}</span>
-      <span style="color:${l.color};font-weight:700">${l.name}</span>
-      <span class="mono" style="color:var(--ink-soft)">${n}</span></div>`}).join('');
+  const list=calMeals();
+  $('#legend').innerHTML=`<div class="lv" style="background:var(--paper-2)">
+      <span style="font-weight:700">${esc(whoLabel())}</span>
+      <span class="mono" style="color:var(--ink-soft)">${list.length} 餐</span></div>` +
+    LEVELS.map(l=>{
+      const n=list.filter(x=>x.level===l.id).length;
+      return `<div class="lv"><span>${faceHTML(l.id,20)}</span>
+        <span style="color:${l.color};font-weight:700">${l.name}</span>
+        <span class="mono" style="color:var(--ink-soft)">${n}</span></div>`}).join('');
 }
 function openDay(ds){
   openDate=ds;
@@ -1068,6 +1059,7 @@ function openDay(ds){
   resetMealForm(); renderMealList(); $('#dayMask').classList.add('on');
 }
 async function renderMealList(){
+  if(!openDate||!$('#mealList')) return;
   const list=meals.filter(x=>x.date===openDate).sort((a,b)=>(a.createdAtMs||0)-(b.createdAtMs||0));
   const box=$('#mealList');
   if(!list.length){ box.innerHTML=`<p class="hint" style="margin:0 0 14px">这天还是空的 🍽️ 下面记第一餐。</p>`; return; }
@@ -1076,13 +1068,13 @@ async function renderMealList(){
     return `<div class="meal">
       ${x.hasPhoto?`<img class="pic" data-pic="${x.id}" alt="${esc(x.name)}">`
         :`<div class="pic" style="display:flex;align-items:center;justify-content:center">${faceHTML(x.level,34)}</div>`}
-      <div class="body"><div class="t">
-        <div class="name">${esc(x.name)||'没写名字'}</div>
-        <div class="price mono">${x.amount?money(x.amount,x.currency):'<small>免费</small>'}</div></div>
+      <div class="body">
+        <div class="t"><div class="name">${esc(x.name)||'没写名字'}</div>
+          <div class="price mono">${x.amount?money(x.amount,x.currency):'<small>免费</small>'}</div></div>
         <div style="margin-top:6px"><span class="stamp" style="color:${l.color}">${l.name}</span></div>
-        ${x.note?`<div class="note">${esc(x.note)}</div>`:''}
-        ${x.currency!==prefs.base&&x.amount?`<div class="note mono">≈ ${money(toBase(x.amount,x.currency),prefs.base)}</div>`:''}
-        <div class="note" style="margin-top:4px">${x.by?'📷 '+esc(x.by):''}</div>
+        ${x.note?`<div class="nt">💬 ${esc(x.note)}</div>`:''}
+        ${x.currency!==prefs.base&&x.amount?`<div class="nt mono">≈ ${money(toBase(x.amount,x.currency),prefs.base)}</div>`:''}
+        <div class="who3">${avatarHTML(x.cid,x.by)}<span>${esc(x.by)||'匿名'} 记的</span></div>
         <button class="del" data-del="${x.id}">删掉</button>
       </div></div>`}).join('');
   box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>removeMeal(b.dataset.del));
@@ -1098,7 +1090,7 @@ function renderLevelPicker(){
 }
 function buildCurrencySelects(){
   const o=CURRENCIES.map(([c,n])=>`<option value="${c}">${c} · ${n}</option>`).join('');
-  ['#fCur','#rCur','#baseCur'].forEach(sel=>{ $(sel).innerHTML=o; $(sel).value=prefs.base; });
+  ['#fCur','#rCur','#baseCur'].forEach(s=>{ $(s).innerHTML=o; $(s).value=prefs.base; });
 }
 function resetMealForm(){
   $('#fName').value='';$('#fAmount').value='';$('#fNote').value='';
@@ -1119,7 +1111,7 @@ $('#saveMeal').onclick=async()=>{
     const ref=await addDoc(C.meals(),{
       date:openDate, name, level:pickedLevel,
       amount:parseFloat($('#fAmount').value)||0, currency:$('#fCur').value,
-      note:$('#fNote').value.trim(), hasPhoto:!!pickedPhoto, by:nick,
+      note:$('#fNote').value.trim(), hasPhoto:!!pickedPhoto, by:nick, cid,
       createdAtMs:Date.now(), createdAt:serverTimestamp()
     });
     if(pickedPhoto){ await setDoc(C.photo(ref.id),{data:pickedPhoto}); photoCache[ref.id]=pickedPhoto; }
@@ -1129,7 +1121,7 @@ $('#saveMeal').onclick=async()=>{
 };
 async function removeMeal(id){
   if(!confirm('删掉这一餐？')) return;
-  await deleteDoc(doc(db,'board','hcx','meals',id));
+  await deleteDoc(C.one('meals',id));
   deleteDoc(C.photo(id)).catch(()=>{});
   delete photoCache[id];
 }
@@ -1138,84 +1130,140 @@ $('#nextM').onclick=()=>{cursor.setMonth(cursor.getMonth()+1);renderCal()};
 $('#todayBtn').onclick=()=>{cursor=new Date();cursor.setDate(1);renderCal()};
 
 
-/* ===================== 喊话墙（带回复） ===================== */
+/* ===================== 表情包 ===================== */
+async function preloadStickers(){
+  for(const s of stickers) await getPhoto('stk_'+s.id);
+  paintStk(document);
+  if($('#stkMask').classList.contains('on')) renderStickers();
+}
+function paintStk(root){
+  root.querySelectorAll('[data-stk]').forEach(img=>{
+    const src=photoCache['stk_'+img.dataset.stk];
+    if(src) img.src=src; else img.style.display='none';
+  });
+}
+function openStickers(target){
+  stkTarget=target;
+  $('#stkTitle').textContent = target?'😆 挑一张贴上去':'🗂️ 管理表情包';
+  renderStickers(); $('#stkMask').classList.add('on');
+}
+function renderStickers(){
+  $('#stkEmpty').classList.toggle('hidden', stickers.length>0);
+  $('#stkGrid').innerHTML=stickers.map(s=>`
+    <div class="stk" data-pick="${s.id}"><span class="rm" data-sdel="${s.id}">✕</span>
+      <img data-stk="${s.id}" alt="表情包"></div>`).join('');
+  paintStk($('#stkGrid'));
+  $('#stkGrid').querySelectorAll('[data-pick]').forEach(el=>el.onclick=e=>{
+    if(e.target.dataset.sdel) return;
+    const id=el.dataset.pick; if(!stkTarget) return;
+    if(stkTarget.type==='shout'){
+      pendShoutStk=id; $('#wStkImg').src=photoCache['stk_'+id]||''; $('#wStkPend').classList.add('on');
+    }else if(stkTarget.type==='cmt'){
+      pendCmtStk=id; $('#cmtStkImg').src=photoCache['stk_'+id]||''; $('#cmtStkPend').classList.add('on');
+    }else{
+      pendReplyStk[stkTarget.id]=id; renderWall();
+      const box=$('#rbox-'+stkTarget.id); if(box) box.classList.add('on');
+    }
+    $('#stkMask').classList.remove('on');
+  });
+  $('#stkGrid').querySelectorAll('[data-sdel]').forEach(b=>b.onclick=async ev=>{
+    ev.stopPropagation();
+    if(!confirm('删掉这个表情包？')) return;
+    await deleteDoc(C.one('stickers',b.dataset.sdel));
+    deleteDoc(C.photo('stk_'+b.dataset.sdel)).catch(()=>{});
+  });
+}
+$('#wStk').onclick=()=>openStickers({type:'shout'});
+$('#stkManage').onclick=()=>openStickers(null);
+$('#wStkClear').onclick=()=>{pendShoutStk='';$('#wStkPend').classList.remove('on')};
+$('#cmtStkBtn').onclick=()=>openStickers({type:'cmt'});
+$('#cmtStkClear').onclick=()=>{pendCmtStk='';$('#cmtStkPend').classList.remove('on')};
+$('#stkUpload').onclick=()=>$('#stkFile').click();
+$('#stkFile').onchange=async e=>{
+  const files=[...e.target.files]; if(!files.length)return;
+  const btn=$('#stkUpload'); btn.disabled=true; btn.textContent='上传中…';
+  try{
+    for(const f of files){
+      const data=await compress(f,260,0.82);
+      const ref=await addDoc(C.stickers(),{by:nick,cid,createdAtMs:Date.now()});
+      await setDoc(C.photo('stk_'+ref.id),{data}); photoCache['stk_'+ref.id]=data;
+    }
+  }catch(err){ alert('传不上去：'+err.message) }
+  finally{ btn.disabled=false; btn.textContent='传新表情包 📤'; e.target.value='' }
+};
+
+/* ===================== 喊话墙 ===================== */
 function renderWall(){
   if(!$('#wall')) return;
   $('#wallEmpty').classList.toggle('hidden', shouts.length>0);
-  $('#wall').innerHTML = shouts.map(s=>{
-    const reps = Array.isArray(s.replies)?s.replies:[];
+  $('#wall').innerHTML=shouts.map(s=>{
+    const reps=Array.isArray(s.replies)?s.replies:[];
     return `<div class="note">
       <button class="kill" data-kill="${s.id}">✕</button>
-      <div class="hd">
-        ${avatarHTML(s.cid, s.nick)}
+      <div class="hd">${avatarHTML(s.cid,s.nick)}
         <div><div class="nick">${esc(s.nick)||'匿名食客'}</div>
-        <div class="time">${ago(s.createdAtMs||0)}</div></div>
-      </div>
+        <div class="time">${ago(s.createdAtMs||0)}</div></div></div>
       ${s.text?`<div class="txt">${esc(s.text)}</div>`:''}
       ${s.stk?`<img class="msg-stk" data-stk="${s.stk}" alt="表情包">`:''}
       ${reps.length?`<div class="replies">${reps.map(r=>`
         <div class="reply"><span class="rn">${esc(r.nick)}</span>${esc(r.text)}
-        <span class="rt">${ago(r.ms||0)}</span>
-        ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="表情包">`:''}</div>`).join('')}</div>`:''}
-      <div class="acts">
-        <button data-rep="${s.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button>
-      </div>
+          <span class="rt">${ago(r.ms||0)}</span>
+          ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}</div>`).join('')}</div>`:''}
+      <div class="acts"><button data-rep="${s.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button></div>
       <div class="rbox" id="rbox-${s.id}">
         <input type="text" maxlength="200" placeholder="回一句…" data-rinp="${s.id}">
-        <button data-rstk="${s.id}" style="background:#fff;border:1px solid var(--line);color:var(--ink)">😆</button>
-        <button data-rsend="${s.id}">发送</button>
+        <button class="sb" data-rstk="${s.id}">😆</button>
+        <button class="go2" data-rsend="${s.id}">发送</button>
       </div>
       ${pendReplyStk[s.id]?`<div class="stk-pend on"><img data-stk="${pendReplyStk[s.id]}" alt="">
         <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张</span>
         <button data-rstkclear="${s.id}">不要了</button></div>`:''}
     </div>`}).join('');
-
   $('#wall').querySelectorAll('[data-kill]').forEach(b=>b.onclick=async()=>{
-    if(!confirm('把这条撕下来？')) return;
-    await deleteDoc(doc(db,'board','hcx','shouts',b.dataset.kill));
+    if(!confirm('把这条撕下来？'))return;
+    await deleteDoc(C.one('shouts',b.dataset.kill));
   });
   $('#wall').querySelectorAll('[data-rep]').forEach(b=>b.onclick=()=>{
-    const box=$('#rbox-'+b.dataset.rep);
-    box.classList.toggle('on');
+    const box=$('#rbox-'+b.dataset.rep); box.classList.toggle('on');
     if(box.classList.contains('on')) box.querySelector('input').focus();
   });
-  $('#wall').querySelectorAll('[data-rsend]').forEach(b=>b.onclick=()=>sendReply(b.dataset.rsend));
   $('#wall').querySelectorAll('[data-rstk]').forEach(b=>b.onclick=()=>openStickers({type:'reply',id:b.dataset.rstk}));
   $('#wall').querySelectorAll('[data-rstkclear]').forEach(b=>b.onclick=()=>{
     delete pendReplyStk[b.dataset.rstkclear]; renderWall();
   });
-  paintStickerImgs($('#wall'));
+  $('#wall').querySelectorAll('[data-rsend]').forEach(b=>b.onclick=()=>sendReply(b.dataset.rsend));
   $('#wall').querySelectorAll('[data-rinp]').forEach(i=>i.addEventListener('keydown',e=>{
     if(e.key==='Enter') sendReply(i.dataset.rinp);
   }));
+  paintStk($('#wall'));
 }
 async function sendReply(id){
   const inp=document.querySelector(`[data-rinp="${id}"]`);
   const text=inp.value.trim(), stk=pendReplyStk[id]||'';
-  if(!text && !stk) return;
+  if(!text&&!stk) return;
   inp.disabled=true;
   try{
     const s=shouts.find(x=>x.id===id);
     const reps=Array.isArray(s?.replies)?[...s.replies]:[];
-    reps.push({ nick, cid, text, stk, ms:Date.now() });
-    await updateDoc(doc(db,'board','hcx','shouts',id), { replies:reps });
+    reps.push({nick,cid,text,stk,ms:Date.now()});
+    await updateDoc(C.one('shouts',id),{replies:reps});
     inp.value=''; delete pendReplyStk[id];
   }catch(e){ alert('回复没发出去：'+e.message) }
-  finally{ inp.disabled=false; inp.focus(); }
+  finally{ inp.disabled=false }
 }
 async function sendShout(){
   const btn=$('#wSend'), text=$('#wText').value.trim();
-  if(!text && !pendShoutStk){ $('#wText').focus(); return; }
+  if(!text&&!pendShoutStk){ $('#wText').focus(); return; }
   btn.disabled=true; btn.textContent='贴上去…';
   try{
-    await addDoc(C.shouts(),{ nick, cid, text, stk:pendShoutStk, replies:[],
-      createdAtMs:Date.now(), createdAt:serverTimestamp() });
-    $('#wText').value=''; clearShoutStk();
+    await addDoc(C.shouts(),{nick,cid,text,stk:pendShoutStk,replies:[],
+      createdAtMs:Date.now(),createdAt:serverTimestamp()});
+    $('#wText').value=''; pendShoutStk=''; $('#wStkPend').classList.remove('on');
   }catch(e){ alert('没贴上：'+e.message) }
   finally{ btn.disabled=false; btn.textContent='贴上去 📌' }
 }
 $('#wSend').onclick=sendShout;
-$('#wText').addEventListener('keydown',e=>{ if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)) sendShout(); });
+$('#wText').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))sendShout()});
 
 /* ===================== 约饭 ===================== */
 function renderPlans(){
@@ -1223,48 +1271,42 @@ function renderPlans(){
   const now=Date.now();
   const sorted=[...plans].sort((a,b)=>{
     const ta=a.when?new Date(a.when).getTime():0, tb=b.when?new Date(b.when).getTime():0;
-    const pa=ta<now, pb=tb<now;
+    const pa=ta<now,pb=tb<now;
     if(pa!==pb) return pa?1:-1;
-    return pa ? tb-ta : ta-tb;
+    return pa?tb-ta:ta-tb;
   });
   $('#planEmpty').classList.toggle('hidden', sorted.length>0);
-  $('#planList').innerHTML = sorted.map(p=>{
+  $('#planList').innerHTML=sorted.map(p=>{
     const joins=Array.isArray(p.joins)?p.joins:[];
     const iam=joins.some(j=>j.cid===cid);
-    const past=p.when && new Date(p.when).getTime()<now;
+    const past=p.when&&new Date(p.when).getTime()<now;
     return `<div class="plan ${past?'past':''}">
       <button class="kill" data-pkill="${p.id}">✕</button>
       <h3>🍱 ${esc(p.title)}</h3>
-      <div class="meta">
-        📍 <b>${esc(p.place)||'地点待定'}</b><br>
+      <div class="meta">📍 <b>${esc(p.place)||'地点待定'}</b><br>
         🕐 <b>${whenText(p.when)}</b>${past?' <span style="color:var(--red)">（已过）</span>':''}<br>
         ${p.note?'💬 '+esc(p.note)+'<br>':''}
-        <span style="font-size:12px">由 ${esc(p.by)||'某人'} 发起 · ${ago(p.createdAtMs||0)}</span>
-      </div>
-      <div class="joins">
-        <span style="font-size:13px;color:var(--ink-soft)">${joins.length?`已有 ${joins.length} 人：`:'还没人举手'}</span>
-        ${joins.map(j=>avatarHTML(j.cid,j.nick)).join('')}
-      </div>
+        <span style="font-size:12px">由 ${esc(p.by)||'某人'} 发起 · ${ago(p.createdAtMs||0)}</span></div>
+      <div class="joins"><span style="font-size:13px;color:var(--ink-soft)">${joins.length?`已有 ${joins.length} 人：`:'还没人举手'}</span>
+        ${joins.map(j=>avatarHTML(j.cid,j.nick)).join('')}</div>
       <button class="btn go ${iam?'in':''}" data-pgo="${p.id}">${iam?'我去 ✋ （点一下取消）':'我要去 🙋'}</button>
     </div>`}).join('');
-
   $('#planList').querySelectorAll('[data-pgo]').forEach(b=>b.onclick=()=>toggleJoin(b.dataset.pgo));
   $('#planList').querySelectorAll('[data-pkill]').forEach(b=>b.onclick=async()=>{
-    if(!confirm('取消这次约饭？')) return;
-    await deleteDoc(doc(db,'board','hcx','plans',b.dataset.pkill));
+    if(!confirm('取消这次约饭？'))return;
+    await deleteDoc(C.one('plans',b.dataset.pkill));
   });
 }
 async function toggleJoin(id){
-  const p=plans.find(x=>x.id===id); if(!p) return;
+  const p=plans.find(x=>x.id===id); if(!p)return;
   const joins=Array.isArray(p.joins)?[...p.joins]:[];
   const i=joins.findIndex(j=>j.cid===cid);
   if(i>=0) joins.splice(i,1); else joins.push({cid,nick,ms:Date.now()});
-  try{ await updateDoc(doc(db,'board','hcx','plans',id),{joins}); }
-  catch(e){ alert('没报上名：'+e.message) }
+  try{ await updateDoc(C.one('plans',id),{joins}) }catch(e){ alert('没报上名：'+e.message) }
 }
 $('#planNew').onclick=()=>{
   ['#pTitle','#pPlace','#pNote'].forEach(s=>$(s).value='');
-  const d=new Date(); d.setDate(d.getDate()+1); d.setHours(12,0,0,0);
+  const d=new Date(); d.setDate(d.getDate()+1);
   $('#pWhen').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T12:00`;
   $('#planMask').classList.add('on');
 };
@@ -1273,74 +1315,187 @@ $('#pSave').onclick=async()=>{
   if(!title){ $('#pTitle').focus(); return; }
   btn.disabled=true; btn.textContent='发出去…';
   try{
-    await addDoc(C.plans(),{
-      title, place:$('#pPlace').value.trim(), when:$('#pWhen').value,
-      note:$('#pNote').value.trim(), by:nick, cid,
-      joins:[{cid,nick,ms:Date.now()}],
-      createdAtMs:Date.now(), createdAt:serverTimestamp()
-    });
+    await addDoc(C.plans(),{title,place:$('#pPlace').value.trim(),when:$('#pWhen').value,
+      note:$('#pNote').value.trim(),by:nick,cid,joins:[{cid,nick,ms:Date.now()}],
+      createdAtMs:Date.now(),createdAt:serverTimestamp()});
     $('#planMask').classList.remove('on');
   }catch(e){ alert('没发出去：'+e.message) }
   finally{ btn.disabled=false; btn.textContent='发出去 📣' }
 };
 
-/* ===================== 食客 ===================== */
-function renderFolks(){
-  if(!$('#folks')) return;
-  const now=Date.now();
-  const sorted=[...folks].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
-  $('#folks').innerHTML = sorted.map(f=>{
-    const on=(now-(f.lastSeen||0))<ONLINE_MS;
-    const said=shouts.filter(s=>s.cid===f.id).length;
-    const ate=meals.filter(m=>m.by===f.nick).length;
-    return `<div class="folk">
-      ${avatarHTML(f.id, f.nick)}
-      <div class="fn">${esc(f.nick)||'无名氏'}</div>
-      <div class="fs"><span class="dot ${on?'on':''}"></span>${on?'在线':ago(f.lastSeen||0)}<br>
-        📣 ${said} 条 · 🍚 ${ate} 餐</div>
-      ${f.id===cid?'<span class="me-tag">这是你</span>':''}
+
+/* ===================== 相册 ===================== */
+function albumItems(){
+  const a=meals.filter(m=>m.hasPhoto).map(m=>({
+    key:m.id, title:m.name, sub:m.date, by:m.by, bycid:m.cid, level:m.level, ms:m.createdAtMs||0,
+    extra:[m.amount?money(m.amount,m.currency):'', m.note].filter(Boolean).join(' · '), kind:'meal'
+  }));
+  const b=reviews.filter(r=>r.hasPhoto).map(r=>({
+    key:'rev_'+r.id, title:r.place, sub:'品鉴', by:r.author, bycid:r.cid, level:r.level,
+    ms:r.createdAtMs||0, extra:r.verdict||'', kind:'rev'
+  }));
+  const c2=shots.map(s=>({
+    key:'shot_'+s.id, id:s.id, title:s.caption||'照片', sub:'相册', by:s.by, bycid:s.cid,
+    level:s.level, ms:s.createdAtMs||0, extra:'', kind:'shot', own:true
+  }));
+  return [...a,...b,...c2].sort((x,y)=>y.ms-x.ms);
+}
+const cmtCount = k => comments.filter(c=>c.key===k)
+  .reduce((n,c)=>n+1+((c.replies||[]).length),0);
+
+async function renderAlbum(){
+  if(!$('#album')) return;
+  const items=albumItems();
+  $('#albEmpty').classList.toggle('hidden', items.length>0);
+  $('#album').innerHTML=items.map(it=>{
+    const n=cmtCount(it.key);
+    return `<div class="shot-card" data-key="${it.key}">
+      ${n?`<span class="cbadge">💬 ${n}</span>`:''}
+      <img class="ph" data-apic="${it.key}" alt="${esc(it.title)}">
+      <div class="cap"><div class="n">${faceHTML(it.level,13)} ${esc(it.title)||'没写名字'}</div>
+        <div class="m"><span>${esc(it.sub)}</span><span>${esc(it.by)||''}</span></div></div>
     </div>`}).join('');
-  renderUserList();
-}
-function folkStats(f){
-  const said = shouts.filter(x=>x.cid===f.id).length
-    + shouts.reduce((n,x)=>n+((x.replies||[]).filter(r=>r.cid===f.id).length),0);
-  const ate  = meals.filter(m=>m.cid?m.cid===f.id:m.by===f.nick).length;
-  const wrote= reviews.filter(r=>r.cid?r.cid===f.id:r.author===f.nick).length;
-  const went = plans.filter(p=>(p.joins||[]).some(j=>j.cid===f.id)).length;
-  const shot = shots.filter(x=>x.cid===f.id).length;
-  return { said, ate, wrote, went, shot, total: said+ate+wrote+went+shot };
-}
-function renderUserList(){
-  if(!$('#ulist')) return;
-  const now=Date.now();
-  const rows=folks.map(f=>({f, st:folkStats(f), on:(now-(f.lastSeen||0))<ONLINE_MS}))
-    .sort((a,b)=> b.st.total-a.st.total || (b.f.lastSeen||0)-(a.f.lastSeen||0));
-  $('#ulSum').textContent = `共 ${rows.length} 位 · ${rows.filter(r=>r.on).length} 位在线`;
-  $('#ulist').innerHTML = rows.map((r,i)=>`
-    <div class="urow">
-      <span class="rk mono">${i+1}</span>
-      ${avatarHTML(r.f.id, r.f.nick)}
-      <div class="who2">
-        <div class="n2">${esc(r.f.nick)||'无名氏'}${r.f.id===cid?' <span class="me-tag" style="margin:0">你</span>':''}</div>
-        <div class="s2"><span class="dot ${r.on?'on':''}"></span>${r.on?'在线':'最后出现 '+ago(r.f.lastSeen||0)}
-          ${r.f.joinedAt?' · 加入于 '+ago(r.f.joinedAt):''}</div>
-      </div>
-      <div class="nums">
-        <div><div class="nv">${r.st.said}</div><div class="nk">发言</div></div>
-        <div><div class="nv">${r.st.ate}</div><div class="nk">记账</div></div>
-        <div><div class="nv">${r.st.wrote}</div><div class="nk">品鉴</div></div>
-        <div><div class="nv">${r.st.went}</div><div class="nk">约饭</div></div>
-        <div><div class="nv">${r.st.shot}</div><div class="nk">照片</div></div>
-      </div>
-      ${r.f.id!==cid?`<button class="drop" data-drop="${r.f.id}" title="从列表移除">✕</button>`:''}
-    </div>`).join('');
-  $('#ulist').querySelectorAll('[data-drop]').forEach(b=>b.onclick=async()=>{
-    if(!confirm('把这个人从列表里移除？他下次进店会重新出现。')) return;
-    await deleteDoc(C.folk(b.dataset.drop));
+  $('#album').querySelectorAll('.shot-card').forEach(card=>card.onclick=()=>{
+    const it=items.find(x=>x.key===card.dataset.key); if(!it) return;
+    openBox(it);
   });
+  for(const img of $('#album').querySelectorAll('[data-apic]')){
+    const src=await getPhoto(img.dataset.apic);
+    if(src) img.src=src; else img.closest('.shot-card')?.remove();
+  }
 }
-setInterval(()=>{ if(!document.hidden){ renderFolks(); renderUserList(); } }, 60000);
+function openBox(it){
+  boxKey=it.key; boxShotId=it.id||''; boxOwn=!!it.own;
+  $('#boxTitle').textContent=it.title||'照片';
+  $('#boxImg').src=photoCache[it.key]||'';
+  $('#boxInfo').innerHTML=`${faceHTML(it.level,18)} ${esc(LV[it.level]?.name||'')} · ${esc(it.sub)}
+    ${it.by?' · 📷 '+esc(it.by):''}${it.extra?'<br>'+esc(it.extra):''}`;
+  $('#boxDel').style.display = boxOwn?'block':'none';
+  pendCmtStk=''; $('#cmtStkPend').classList.remove('on'); $('#cmtInput').value='';
+  renderComments();
+  $('#boxMask').classList.add('on');
+}
+$('#boxDel').onclick=async()=>{
+  if(!boxShotId) return;
+  if(!confirm('删掉这张照片？评论也会一起没。')) return;
+  await deleteDoc(C.one('shots',boxShotId));
+  deleteDoc(C.photo(boxKey)).catch(()=>{});
+  for(const c of comments.filter(c=>c.key===boxKey)) deleteDoc(C.one('comments',c.id)).catch(()=>{});
+  delete photoCache[boxKey];
+  $('#boxMask').classList.remove('on');
+};
+
+/* ---------- 照片评论 ---------- */
+function renderComments(){
+  if(!$('#cmtList')||!boxKey) return;
+  const list=comments.filter(c=>c.key===boxKey);
+  $('#cmtTitle').textContent=`💬 评论${list.length?' ('+cmtCount(boxKey)+')':''}`;
+  if(!list.length){
+    $('#cmtList').innerHTML=`<p class="hint">还没人说话。第一句归你。</p>`;
+    return;
+  }
+  $('#cmtList').innerHTML=list.map(c=>{
+    const reps=Array.isArray(c.replies)?c.replies:[];
+    return `<div class="cmt">
+      <button class="kill" data-cdel="${c.id}">✕</button>
+      <div class="hd">${avatarHTML(c.cid,c.nick)}
+        <div><div class="cn">${esc(c.nick)||'匿名'}</div><div class="ct">${ago(c.ms||0)}</div></div></div>
+      ${c.text?`<div class="cx">${esc(c.text)}</div>`:''}
+      ${c.stk?`<img class="msg-stk" data-stk="${c.stk}" alt="">`:''}
+      ${reps.length?`<div class="replies">${reps.map(r=>`
+        <div class="reply"><span class="rn">${esc(r.nick)}</span>${esc(r.text)}
+          <span class="rt">${ago(r.ms||0)}</span>
+          ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}</div>`).join('')}</div>`:''}
+      <div class="acts"><button data-crep="${c.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button></div>
+      <div class="rbox" id="crbox-${c.id}">
+        <input type="text" maxlength="200" placeholder="回一句…" data-crinp="${c.id}">
+        <button class="sb" data-crstk="${c.id}">😆</button>
+        <button class="go2" data-crsend="${c.id}">发送</button>
+      </div>
+      ${pendReplyStk['c'+c.id]?`<div class="stk-pend on"><img data-stk="${pendReplyStk['c'+c.id]}" alt="">
+        <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张</span>
+        <button data-crstkclear="${c.id}">不要了</button></div>`:''}
+    </div>`}).join('');
+
+  $('#cmtList').querySelectorAll('[data-cdel]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('删掉这条评论？'))return;
+    await deleteDoc(C.one('comments',b.dataset.cdel));
+  });
+  $('#cmtList').querySelectorAll('[data-crep]').forEach(b=>b.onclick=()=>{
+    const box=$('#crbox-'+b.dataset.crep); box.classList.toggle('on');
+    if(box.classList.contains('on')) box.querySelector('input').focus();
+  });
+  $('#cmtList').querySelectorAll('[data-crstk]').forEach(b=>b.onclick=()=>openStickers({type:'reply',id:'c'+b.dataset.crstk}));
+  $('#cmtList').querySelectorAll('[data-crstkclear]').forEach(b=>b.onclick=()=>{
+    delete pendReplyStk['c'+b.dataset.crstkclear]; renderComments();
+  });
+  $('#cmtList').querySelectorAll('[data-crsend]').forEach(b=>b.onclick=()=>sendCmtReply(b.dataset.crsend));
+  $('#cmtList').querySelectorAll('[data-crinp]').forEach(i=>i.addEventListener('keydown',e=>{
+    if(e.key==='Enter') sendCmtReply(i.dataset.crinp);
+  }));
+  paintStk($('#cmtList'));
+}
+async function sendComment(){
+  const inp=$('#cmtInput'), text=inp.value.trim();
+  if(!text&&!pendCmtStk) { inp.focus(); return; }
+  const btn=$('#cmtSend'); btn.disabled=true;
+  try{
+    await addDoc(C.comments(),{key:boxKey,nick,cid,text,stk:pendCmtStk,replies:[],
+      ms:Date.now(),createdAt:serverTimestamp()});
+    inp.value=''; pendCmtStk=''; $('#cmtStkPend').classList.remove('on');
+  }catch(e){ alert('评论没发出去：'+e.message) }
+  finally{ btn.disabled=false }
+}
+async function sendCmtReply(id){
+  const inp=document.querySelector(`[data-crinp="${id}"]`);
+  const text=inp.value.trim(), stk=pendReplyStk['c'+id]||'';
+  if(!text&&!stk) return;
+  inp.disabled=true;
+  try{
+    const c=comments.find(x=>x.id===id);
+    const reps=Array.isArray(c?.replies)?[...c.replies]:[];
+    reps.push({nick,cid,text,stk,ms:Date.now()});
+    await updateDoc(C.one('comments',id),{replies:reps});
+    inp.value=''; delete pendReplyStk['c'+id];
+  }catch(e){ alert('回复没发出去：'+e.message) }
+  finally{ inp.disabled=false }
+}
+$('#cmtSend').onclick=sendComment;
+$('#cmtInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendComment()});
+
+/* ---------- 相册直传 ---------- */
+$('#albUpload').onclick=()=>$('#albFile').click();
+$('#albFile').onchange=async e=>{
+  const files=[...e.target.files].slice(0,9); if(!files.length)return;
+  upQueue=[]; upLevel='yb';
+  $('#upPrev').innerHTML='<p class="hint">正在压缩…</p>';
+  $('#upCap').value=''; renderUpLevels(); $('#upMask').classList.add('on');
+  try{
+    for(const f of files) upQueue.push(await compress(f,1200,0.74));
+    $('#upPrev').innerHTML=upQueue.map(d=>`<div class="shot-card"><img class="ph" src="${d}" alt=""></div>`).join('');
+  }catch(err){ alert(err.message); $('#upMask').classList.remove('on') }
+  finally{ e.target.value='' }
+};
+function renderUpLevels(){
+  $('#upLevels').innerHTML=LEVELS.map(l=>
+    `<button class="pick ${l.id===upLevel?'on':''}" data-ulv="${l.id}"
+      style="${l.id===upLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${l.name}</button>`).join('');
+  $('#upLevels').querySelectorAll('[data-ulv]').forEach(b=>b.onclick=()=>{upLevel=b.dataset.ulv;renderUpLevels()});
+}
+$('#upSave').onclick=async()=>{
+  if(!upQueue.length) return;
+  const btn=$('#upSave'); btn.disabled=true; btn.textContent='上传中…';
+  try{
+    const cap=$('#upCap').value.trim();
+    for(const data of upQueue){
+      const ref=await addDoc(C.shots(),{caption:cap,level:upLevel,by:nick,cid,
+        createdAtMs:Date.now(),createdAt:serverTimestamp()});
+      await setDoc(C.photo('shot_'+ref.id),{data}); photoCache['shot_'+ref.id]=data;
+    }
+    upQueue=[]; $('#upMask').classList.remove('on');
+  }catch(e){ alert('传不上去：'+e.message) }
+  finally{ btn.disabled=false; btn.textContent='传上去 🚀' }
+};
 
 /* ===================== 品鉴 ===================== */
 function renderRevLevels(){
@@ -1352,27 +1507,22 @@ function renderRevLevels(){
 async function renderReviews(){
   if(!$('#revList')) return;
   $('#revEmpty').classList.toggle('hidden', reviews.length>0);
-  $('#revList').innerHTML = reviews.map(r=>{
+  $('#revList').innerHTML=reviews.map(r=>{
     const l=LV[r.level]||LV.yb;
     return `<article class="rev">
       ${r.hasPhoto?`<img class="hero" data-rpic="${r.id}" alt="${esc(r.place)}">`:''}
-      <div class="in">
-        <div class="top">
-          <div><h3>${esc(r.place)||'无名小店'}</h3>
-            ${r.dish?`<div class="dish">🍲 ${esc(r.dish)}</div>`:''}</div>
-          <span class="stamp" style="color:${l.color}">${l.name}</span>
-        </div>
+      <div class="in"><div class="top">
+        <div><h3>${esc(r.place)||'无名小店'}</h3>${r.dish?`<div class="dish">🍲 ${esc(r.dish)}</div>`:''}</div>
+        <span class="stamp" style="color:${l.color}">${l.name}</span></div>
         ${r.verdict?`<p class="verdict">${esc(r.verdict)}</p>`:''}
         ${r.body?`<div class="body">${esc(r.body)}</div>`:''}
-        <div class="foot">
-          <span>✍️ ${esc(r.author)||'匿名'} · ${ago(r.createdAtMs||0)}
-            <button class="del" data-rdel="${r.id}" style="margin-left:10px">删掉</button></span>
-          ${r.price?`<span class="p mono">人均 ${money(r.price,r.currency)}</span>`:''}
-        </div>
+        <div class="foot"><span>✍️ ${esc(r.author)||'匿名'} · ${ago(r.createdAtMs||0)}
+          <button class="del" data-rdel="${r.id}" style="margin-left:10px;text-decoration:underline">删掉</button></span>
+          ${r.price?`<span class="p mono">人均 ${money(r.price,r.currency)}</span>`:''}</div>
       </div></article>`}).join('');
   $('#revList').querySelectorAll('[data-rdel]').forEach(b=>b.onclick=async()=>{
-    if(!confirm('删掉这篇品鉴？')) return;
-    await deleteDoc(doc(db,'board','hcx','reviews',b.dataset.rdel));
+    if(!confirm('删掉这篇品鉴？'))return;
+    await deleteDoc(C.one('reviews',b.dataset.rdel));
     deleteDoc(C.photo('rev_'+b.dataset.rdel)).catch(()=>{});
   });
   for(const img of $('#revList').querySelectorAll('[data-rpic]')){
@@ -1397,65 +1547,70 @@ $('#rSave').onclick=async()=>{
   if(!place){ $('#rPlace').focus(); return; }
   btn.disabled=true; btn.textContent='发表中…';
   try{
-    const ref=await addDoc(C.reviews(),{
-      place, dish:$('#rDish').value.trim(), level:revLevel,
-      price:parseFloat($('#rPrice').value)||0, currency:$('#rCur').value,
-      verdict:$('#rVerdict').value.trim(), body:$('#rBody').value.trim(),
-      author:nick, cid, hasPhoto:!!revPhoto,
-      createdAtMs:Date.now(), createdAt:serverTimestamp()
-    });
+    const ref=await addDoc(C.reviews(),{place,dish:$('#rDish').value.trim(),level:revLevel,
+      price:parseFloat($('#rPrice').value)||0,currency:$('#rCur').value,
+      verdict:$('#rVerdict').value.trim(),body:$('#rBody').value.trim(),
+      author:nick,cid,hasPhoto:!!revPhoto,createdAtMs:Date.now(),createdAt:serverTimestamp()});
     if(revPhoto){ await setDoc(C.photo('rev_'+ref.id),{data:revPhoto}); photoCache['rev_'+ref.id]=revPhoto; }
     $('#revMask').classList.remove('on');
   }catch(e){ alert('没发出去：'+e.message) }
   finally{ btn.disabled=false; btn.textContent='发表品鉴 🚀' }
 };
 
-/* ===================== 相册 ===================== */
-function albumItems(){
-  const a = meals.filter(m=>m.hasPhoto).map(m=>({
-    key:m.id, title:m.name, sub:m.date, by:m.by, level:m.level, ms:m.createdAtMs||0,
-    extra:[m.amount?money(m.amount,m.currency):'', m.note].filter(Boolean).join(' · ')
-  }));
-  const b = reviews.filter(r=>r.hasPhoto).map(r=>({
-    key:'rev_'+r.id, title:r.place, sub:'品鉴', by:r.author, level:r.level, ms:r.createdAtMs||0,
-    extra:r.verdict||''
-  }));
-  const c2 = shots.map(s=>({
-    key:'shot_'+s.id, id:s.id, title:s.caption||'照片', sub:'相册', by:s.by, level:s.level,
-    ms:s.createdAtMs||0, extra:'', own:true
-  }));
-  return [...a,...b,...c2].sort((x,y)=>y.ms-x.ms);
-}
-async function renderAlbum(){
-  if(!$('#album')) return;
-  const items=albumItems();
-  $('#albEmpty').classList.toggle('hidden', items.length>0);
-  $('#album').innerHTML = items.map(it=>`
-    <div class="shot-card" data-key="${it.key}">
-      <img class="ph" data-apic="${it.key}" alt="${esc(it.title)}">
-      <div class="cap">
-        <div class="n">${faceHTML(it.level,13)} ${esc(it.title)||'没写名字'}</div>
-        <div class="m"><span>${esc(it.sub)}</span><span>${esc(it.by)||''}</span></div>
-      </div>
-    </div>`).join('');
-  $('#album').querySelectorAll('.shot-card').forEach(card=>card.onclick=async()=>{
-    const it=items.find(x=>x.key===card.dataset.key); if(!it) return;
-    const src=photoCache[it.key]; if(!src) return;
-    boxKey=it.key; boxKind=it.own?'shot':''; window.boxShotId=it.id||'';
-    $('#boxDel').style.display = it.own ? 'block' : 'none';
-    $('#boxTitle').textContent=it.title||'照片';
-    $('#boxImg').src=src;
-    $('#boxInfo').innerHTML=`${faceHTML(it.level,18)} ${esc(LV[it.level]?.name||'')} · ${esc(it.sub)}
-      ${it.by?' · 📷 '+esc(it.by):''}${it.extra?'<br>'+esc(it.extra):''}`;
-    $('#boxMask').classList.add('on');
-  });
-  for(const img of $('#album').querySelectorAll('[data-apic]')){
-    const src=await getPhoto(img.dataset.apic);
-    if(src) img.src=src; else img.closest('.shot-card')?.remove();
-  }
-}
 
-/* ===================== 汇率 / 表情包 ===================== */
+/* ===================== 食客 ===================== */
+function folkStats(f){
+  const said=shouts.filter(x=>x.cid===f.id).length
+    + shouts.reduce((n,x)=>n+((x.replies||[]).filter(r=>r.cid===f.id).length),0)
+    + comments.filter(c=>c.cid===f.id).length
+    + comments.reduce((n,c)=>n+((c.replies||[]).filter(r=>r.cid===f.id).length),0);
+  const ate=meals.filter(m=>m.cid?m.cid===f.id:m.by===f.nick).length;
+  const wrote=reviews.filter(r=>r.cid?r.cid===f.id:r.author===f.nick).length;
+  const went=plans.filter(p=>(p.joins||[]).some(j=>j.cid===f.id)).length;
+  const shot=shots.filter(x=>x.cid===f.id).length;
+  return {said,ate,wrote,went,shot,total:said+ate+wrote+went+shot};
+}
+function renderFolks(){
+  if(!$('#folks')) return;
+  const now=Date.now();
+  const sorted=[...folks].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
+  $('#folks').innerHTML=sorted.map(f=>{
+    const on=(now-(f.lastSeen||0))<ONLINE_MS, st=folkStats(f);
+    return `<div class="folk">${avatarHTML(f.id,f.nick)}
+      <div class="fn">${esc(f.nick)||'无名氏'}</div>
+      <div class="fs"><span class="dot ${on?'on':''}"></span>${on?'在线':ago(f.lastSeen||0)}<br>
+        📣 ${st.said} · 🍚 ${st.ate}</div>
+      ${f.id===cid?'<span class="me-tag">这是你</span>':''}</div>`}).join('');
+  renderUserList();
+}
+function renderUserList(){
+  if(!$('#ulist')) return;
+  const now=Date.now();
+  const rows=folks.map(f=>({f,st:folkStats(f),on:(now-(f.lastSeen||0))<ONLINE_MS}))
+    .sort((a,b)=>b.st.total-a.st.total||(b.f.lastSeen||0)-(a.f.lastSeen||0));
+  $('#ulSum').textContent=`共 ${rows.length} 位 · ${rows.filter(r=>r.on).length} 位在线`;
+  $('#ulist').innerHTML=rows.map((r,i)=>`
+    <div class="urow"><span class="rk mono">${i+1}</span>${avatarHTML(r.f.id,r.f.nick)}
+      <div class="who2"><div class="n2">${esc(r.f.nick)||'无名氏'}${r.f.id===cid?' <span class="me-tag" style="margin:0">你</span>':''}</div>
+        <div class="s2"><span class="dot ${r.on?'on':''}"></span>${r.on?'在线':'最后出现 '+ago(r.f.lastSeen||0)}
+          ${r.f.joinedAt?' · 加入于 '+ago(r.f.joinedAt):''}</div></div>
+      <div class="nums">
+        <div><div class="nv">${r.st.said}</div><div class="nk">发言</div></div>
+        <div><div class="nv">${r.st.ate}</div><div class="nk">记账</div></div>
+        <div><div class="nv">${r.st.wrote}</div><div class="nk">品鉴</div></div>
+        <div><div class="nv">${r.st.went}</div><div class="nk">约饭</div></div>
+        <div><div class="nv">${r.st.shot}</div><div class="nk">照片</div></div>
+      </div>
+      ${r.f.id!==cid?`<button class="drop" data-drop="${r.f.id}">✕</button>`:''}
+    </div>`).join('');
+  $('#ulist').querySelectorAll('[data-drop]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('把这个人从列表里移除？他下次进店会重新出现。'))return;
+    await deleteDoc(C.folk(b.dataset.drop));
+  });
+}
+setInterval(()=>{ if(!document.hidden) renderFolks(); },60000);
+
+/* ===================== 汇率 / 等级表情 ===================== */
 $('#settingsBtn').onclick=()=>{ $('#baseCur').value=prefs.base; drawRates(); $('#setMask').classList.add('on') };
 function drawRates(){
   const base=$('#baseCur').value;
@@ -1476,8 +1631,7 @@ $('#saveRates').onclick=async()=>{
 $('#picsBtn').onclick=()=>{ drawPics(); $('#picMask').classList.add('on') };
 function drawPics(){
   $('#picList').innerHTML=LEVELS.map(l=>`
-    <div class="meal">
-      <div class="pic" style="display:flex;align-items:center;justify-content:center">${faceHTML(l.id,44)}</div>
+    <div class="meal"><div class="pic" style="display:flex;align-items:center;justify-content:center">${faceHTML(l.id,44)}</div>
       <div class="body"><div class="name" style="color:${l.color}">${l.name}</div>
       <input type="file" accept="image/*" data-pic-lv="${l.id}" style="margin-top:8px;font-size:12px">
       ${prefs.pics[l.id]?`<button class="del" data-pic-clear="${l.id}">恢复默认表情</button>`:''}
@@ -1485,7 +1639,8 @@ function drawPics(){
   $('#picList').querySelectorAll('[data-pic-lv]').forEach(inp=>inp.onchange=async e=>{
     const f=e.target.files[0]; if(!f)return;
     prefs.pics[inp.dataset.picLv]=await compress(f,200,0.8);
-    await savePrefs(); drawPics(); renderCal(); renderLevelPicker(); renderRevLevels(); renderReviews(); renderAlbum();
+    await savePrefs(); drawPics(); renderCal(); renderLevelPicker(); renderRevLevels();
+    renderReviews(); renderAlbum(); renderUpLevels();
   });
   $('#picList').querySelectorAll('[data-pic-clear]').forEach(b=>b.onclick=async()=>{
     delete prefs.pics[b.dataset.picClear];
@@ -1494,143 +1649,16 @@ function drawPics(){
   });
 }
 
-
-/* ===================== 表情包 ===================== */
-async function preloadStickers(){
-  for(const s of stickers) await getPhoto('stk_'+s.id);
-  paintStickerImgs(document);
-  if($('#stkMask').classList.contains('on')) renderStickers();
-}
-function paintStickerImgs(root){
-  root.querySelectorAll('[data-stk]').forEach(img=>{
-    const src=photoCache['stk_'+img.dataset.stk];
-    if(src) img.src=src; else img.style.display='none';
-  });
-}
-function openStickers(target){
-  stkTarget = target;
-  $('#stkTitle').textContent = target ? '😆 挑一张贴上去' : '🗂️ 管理表情包';
-  renderStickers();
-  $('#stkMask').classList.add('on');
-}
-function renderStickers(){
-  $('#stkEmpty').classList.toggle('hidden', stickers.length>0);
-  $('#stkGrid').innerHTML = stickers.map(s=>`
-    <div class="stk" data-pick="${s.id}">
-      <span class="rm" data-sdel="${s.id}">✕</span>
-      <img data-stk="${s.id}" alt="表情包">
-    </div>`).join('');
-  paintStickerImgs($('#stkGrid'));
-  $('#stkGrid').querySelectorAll('[data-pick]').forEach(el=>el.onclick=e=>{
-    if(e.target.dataset.sdel) return;
-    const id=el.dataset.pick;
-    if(!stkTarget){ return; }
-    if(stkTarget.type==='shout'){
-      pendShoutStk=id;
-      $('#wStkImg').src=photoCache['stk_'+id]||'';
-      $('#wStkPend').classList.add('on');
-    }else{
-      pendReplyStk[stkTarget.id]=id;
-      renderWall();
-      const box=$('#rbox-'+stkTarget.id); if(box) box.classList.add('on');
-    }
-    $('#stkMask').classList.remove('on');
-  });
-  $('#stkGrid').querySelectorAll('[data-sdel]').forEach(b=>b.onclick=async ev=>{
-    ev.stopPropagation();
-    if(!confirm('删掉这个表情包？')) return;
-    await deleteDoc(doc(db,'board','hcx','stickers',b.dataset.sdel));
-    deleteDoc(C.photo('stk_'+b.dataset.sdel)).catch(()=>{});
-  });
-}
-function clearShoutStk(){ pendShoutStk=''; $('#wStkPend').classList.remove('on'); }
-$('#wStk').onclick = ()=> openStickers({type:'shout'});
-$('#stkManage').onclick = ()=> openStickers(null);
-$('#wStkClear').onclick = clearShoutStk;
-$('#stkUpload').onclick = ()=> $('#stkFile').click();
-$('#stkFile').onchange = async e=>{
-  const files=[...e.target.files]; if(!files.length) return;
-  const btn=$('#stkUpload'); btn.disabled=true; btn.textContent='上传中…';
-  try{
-    for(const f of files){
-      const data = await compress(f, 260, 0.82);
-      const ref = await addDoc(C.stickers(), { by:nick, cid, createdAtMs:Date.now() });
-      await setDoc(C.photo('stk_'+ref.id), { data });
-      photoCache['stk_'+ref.id]=data;
-    }
-  }catch(err){ alert('传不上去：'+err.message) }
-  finally{ btn.disabled=false; btn.textContent='传新表情包 📤'; e.target.value=''; }
-};
-
-/* ===================== 相册直传 ===================== */
-$('#albUpload').onclick = ()=> $('#albFile').click();
-$('#albFile').onchange = async e=>{
-  const files=[...e.target.files].slice(0,9); if(!files.length) return;
-  upQueue=[]; upLevel='yb';
-  $('#upPrev').innerHTML='<p class="hint">正在压缩…</p>';
-  $('#upCap').value=''; renderUpLevels();
-  $('#upMask').classList.add('on');
-  try{
-    for(const f of files) upQueue.push(await compress(f,1200,0.74));
-    $('#upPrev').innerHTML = upQueue.map(d=>`<div class="shot-card"><img class="ph" src="${d}" alt=""></div>`).join('');
-  }catch(err){ alert(err.message); $('#upMask').classList.remove('on'); }
-  finally{ e.target.value=''; }
-};
-function renderUpLevels(){
-  $('#upLevels').innerHTML = LEVELS.map(l=>
-    `<button class="pick ${l.id===upLevel?'on':''}" data-ulv="${l.id}"
-      style="${l.id===upLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${l.name}</button>`).join('');
-  $('#upLevels').querySelectorAll('[data-ulv]').forEach(b=>b.onclick=()=>{upLevel=b.dataset.ulv;renderUpLevels()});
-}
-$('#upSave').onclick = async ()=>{
-  if(!upQueue.length) return;
-  const btn=$('#upSave'); btn.disabled=true; btn.textContent='上传中…';
-  try{
-    const cap=$('#upCap').value.trim();
-    for(const data of upQueue){
-      const ref = await addDoc(C.shots(), {
-        caption:cap, level:upLevel, by:nick, cid,
-        createdAtMs:Date.now(), createdAt:serverTimestamp()
-      });
-      await setDoc(C.photo('shot_'+ref.id), { data });
-      photoCache['shot_'+ref.id]=data;
-    }
-    upQueue=[]; $('#upMask').classList.remove('on');
-  }catch(e){ alert('传不上去：'+e.message) }
-  finally{ btn.disabled=false; btn.textContent='传上去 🚀' }
-};
-$('#boxDel').onclick = async ()=>{
-  if(!window.boxShotId) return;
-  if(!confirm('删掉这张照片？')) return;
-  await deleteDoc(doc(db,'board','hcx','shots',window.boxShotId));
-  deleteDoc(C.photo(boxKey)).catch(()=>{});
-  delete photoCache[boxKey];
-  $('#boxMask').classList.remove('on');
-};
-
-/* ===================== 头像选择 ===================== */
-async function renderAvatarGrid(){
-  const items = albumItems();
-  $('#avEmpty').classList.toggle('hidden', items.length>0);
-  $('#avGrid').innerHTML = items.map(it=>
-    `<div class="av-pick" data-avk="${it.key}"><img data-apic2="${it.key}" alt="${esc(it.title)}"></div>`).join('');
-  $('#avGrid').querySelectorAll('[data-avk]').forEach(el=>el.onclick=async()=>{
-    const src=photoCache[el.dataset.avk]; if(!src) return;
-    el.style.borderColor='var(--gold)';
-    await setAvatarFrom(src);
-    $('#avMask').classList.remove('on');
-  });
-  for(const img of $('#avGrid').querySelectorAll('[data-apic2]')){
-    const src=await getPhoto(img.dataset.apic2);
-    if(src) img.src=src; else img.closest('.av-pick')?.remove();
-  }
-}
-
 document.querySelectorAll('.mask').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.mask').classList.remove('on'));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.mask.on').forEach(m=>m.classList.remove('on'))});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    const on=[...document.querySelectorAll('.mask.on')];
+    if(on.length) on[on.length-1].classList.remove('on');
+  }
+});
 
-buildCurrencySelects(); renderLevelPicker(); renderRevLevels();
+buildCurrencySelects(); renderLevelPicker(); renderRevLevels(); renderUpLevels();
 </script>
 </body>
 </html>
