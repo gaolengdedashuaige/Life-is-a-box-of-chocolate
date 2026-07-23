@@ -420,6 +420,37 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .at-row.sel{background:var(--paper-2)}
 .at-row:hover{background:var(--paper-2)}
 
+
+/* ---------- 消息中心 ---------- */
+.bell{position:relative;border:1px solid rgba(255,255,255,.5);border-radius:999px;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:#fff;flex:none}
+.bell:hover{background:rgba(255,255,255,.16)}
+.bell .bdg{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;padding:0 5px;
+  border-radius:999px;background:var(--gold);color:var(--ink);font-size:11px;font-weight:700;
+  line-height:19px;text-align:center;border:2px solid var(--red);display:none}
+.bell.has .bdg{display:block}
+.bell.has{animation:ring 1.6s ease-in-out 1}
+@keyframes ring{0%,100%{transform:rotate(0)}15%{transform:rotate(-14deg)}30%{transform:rotate(11deg)}
+  45%{transform:rotate(-8deg)}60%{transform:rotate(5deg)}75%{transform:rotate(-2deg)}}
+@media (prefers-reduced-motion:reduce){.bell.has{animation:none}}
+.nlist{margin-top:4px}
+.nrow{display:flex;gap:11px;background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:11px 13px;margin-bottom:9px;cursor:pointer;position:relative}
+.nrow:hover{background:var(--paper-2)}
+.nrow.new{border-color:var(--gold);background:#FFFBEE;box-shadow:0 2px 0 rgba(242,183,5,.35)}
+.nrow .ni{position:absolute;top:9px;right:11px;font-size:15px}
+.nrow .nb{flex:1;min-width:0}
+.nrow .nt{font-size:14px;line-height:1.5;padding-right:22px}
+.nrow .nt b{color:var(--red)}
+.nrow .nx{font-size:13px;color:var(--ink-soft);margin-top:4px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.nrow .nm{font-size:11px;color:var(--ink-soft);margin-top:5px}
+.nrow .dotnew{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);
+  margin-right:5px;vertical-align:middle}
+.nhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.nhead button{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   .wrap{padding:0 12px}
@@ -479,7 +510,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v11</b></div>
+    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v12</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label>口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -504,6 +535,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         </div>
         <div class="who">
           <span id="meBox" class="nick-tag" style="display:flex;align-items:center;gap:7px"></span>
+          <button id="bell" class="bell" title="消息中心">🔔<span class="bdg" id="bellNum">0</span></button>
           <button id="logoutBtn" class="ghost">出店</button>
         </div>
       </div>
@@ -623,8 +655,8 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v11</b><br>
-      <span style="font-size:11px">@ 提到某人 · 照片评论 · 视频动图 · 分人统计 · 拖拽上传</span></p>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v12</b><br>
+      <span style="font-size:11px">消息中心 · @ 提到某人 · 照片评论 · 视频动图 · 分人统计</span></p>
   </div>
 </main>
 
@@ -736,6 +768,18 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         <button class="go2" id="cmtSend">发送</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="noteMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head"><h3 class="display">🔔 消息中心</h3><button class="x" data-close>×</button></div>
+    <div class="nhead">
+      <span class="hint" id="noteSum"></span>
+      <button id="noteClear">全部标为已读</button>
+    </div>
+    <div id="noteList" class="nlist"></div>
+    <div id="noteEmpty" class="empty hidden">还没有消息 📭<br>被 @、被回复、被评论都会出现在这里。</div>
   </div>
 </div>
 
@@ -1640,6 +1684,7 @@ function renderWall(){
   }));
   paintStk($('#wall')); paintInline($('#wall'));
   putDrafts($('#wall'),drafts);
+  refreshNotes();
 }
 async function sendReply(id){
   const inp=document.querySelector(`[data-rinp="${id}"]`);
@@ -1705,6 +1750,7 @@ function renderPlans(){
     if(!confirm('取消这次约饭？'))return;
     await deleteDoc(C.one('plans',b.dataset.pkill));
   });
+  refreshNotes();
 }
 async function toggleJoin(id){
   const p=plans.find(x=>x.id===id); if(!p)return;
@@ -1778,6 +1824,7 @@ async function renderAlbum(){
     const src=await getPhoto(img.dataset.apic);
     if(src) img.src=src; else img.closest('.shot-card')?.remove();
   }
+  refreshNotes();
 }
 function openBox(it){
   boxKey=it.key; boxShotId=it.id||''; boxOwn=!!it.own;
@@ -2115,6 +2162,111 @@ $('#rSave').onclick=async()=>{
   finally{ btn.disabled=false; btn.textContent='发表品鉴 🚀' }
 };
 
+
+
+/* ===================== 消息中心 ===================== */
+let lastRead = +(ls('hcx_read')||0);
+let noteCache = [];
+const NT = {
+  at:    {i:'📣', t:'提到了你'},
+  reply: {i:'💬', t:'回复了你的留言'},
+  cmt:   {i:'🖼️', t:'评论了你的照片'},
+  creply:{i:'↩️', t:'回复了你的评论'},
+  join:  {i:'🙋', t:'报名了你发起的约饭'}
+};
+function myPhotoKeys(){
+  const k=new Set();
+  meals.forEach(m=>{ if(m.hasPhoto && m.cid===cid) k.add(m.id) });
+  reviews.forEach(r=>{ if(r.hasPhoto && r.cid===cid) k.add('rev_'+r.id) });
+  shots.forEach(x=>{ if(x.cid===cid) k.add('shot_'+x.id) });
+  return k;
+}
+const hasMe = m => (m||[]).some(x=>x.cid===cid);
+const brief = o => (o.text||'').trim() || (o.img?'[照片]':o.stk?'[表情包]':'…');
+
+function buildNotes(){
+  const out=[], mine=myPhotoKeys();
+  shouts.forEach(s=>{
+    if(s.cid!==cid && hasMe(s.mentions))
+      out.push({ms:s.createdAtMs||0, type:'at', who:s.cid, nick:s.nick,
+        text:brief(s), go:{view:'wall'}});
+    (s.replies||[]).forEach(r=>{
+      if(r.cid===cid) return;
+      if(hasMe(r.mentions))
+        out.push({ms:r.ms||0, type:'at', who:r.cid, nick:r.nick, text:brief(r), go:{view:'wall'}});
+      else if(s.cid===cid)
+        out.push({ms:r.ms||0, type:'reply', who:r.cid, nick:r.nick, text:brief(r), go:{view:'wall'}});
+    });
+  });
+  comments.forEach(c=>{
+    if(c.cid!==cid){
+      if(hasMe(c.mentions))
+        out.push({ms:c.ms||0, type:'at', who:c.cid, nick:c.nick, text:brief(c), go:{view:'alb', key:c.key}});
+      else if(mine.has(c.key))
+        out.push({ms:c.ms||0, type:'cmt', who:c.cid, nick:c.nick, text:brief(c), go:{view:'alb', key:c.key}});
+    }
+    (c.replies||[]).forEach(r=>{
+      if(r.cid===cid) return;
+      if(hasMe(r.mentions))
+        out.push({ms:r.ms||0, type:'at', who:r.cid, nick:r.nick, text:brief(r), go:{view:'alb', key:c.key}});
+      else if(c.cid===cid)
+        out.push({ms:r.ms||0, type:'creply', who:r.cid, nick:r.nick, text:brief(r), go:{view:'alb', key:c.key}});
+    });
+  });
+  plans.forEach(p=>{
+    if(p.cid!==cid) return;
+    (p.joins||[]).forEach(j=>{
+      if(j.cid===cid) return;
+      out.push({ms:j.ms||0, type:'join', who:j.cid, nick:j.nick, text:p.title||'一次约饭', go:{view:'plan'}});
+    });
+  });
+  return out.sort((a,b)=>b.ms-a.ms).slice(0,60);
+}
+function refreshNotes(){
+  noteCache=buildNotes();
+  const n=noteCache.filter(x=>x.ms>lastRead).length;
+  const bell=$('#bell'); if(!bell) return;
+  bell.classList.toggle('has', n>0);
+  $('#bellNum').textContent = n>99?'99+':n;
+  document.title = n>0 ? `(${n}) 黄程锡美食平台` : '黄程锡美食平台';
+  if($('#noteMask')?.classList.contains('on')) renderNotes();
+}
+function renderNotes(){
+  const list=noteCache;
+  $('#noteEmpty').classList.toggle('hidden', list.length>0);
+  const unread=list.filter(x=>x.ms>lastRead).length;
+  $('#noteSum').textContent = unread?`${unread} 条未读 · 共 ${list.length} 条`:`共 ${list.length} 条，都看过了`;
+  $('#noteList').innerHTML=list.map((x,i)=>{
+    const meta=NT[x.type]||NT.at, isNew=x.ms>lastRead;
+    return `<div class="nrow ${isNew?'new':''}" data-ni="${i}">
+      ${avatarHTML(x.who,x.nick)}
+      <div class="nb">
+        <div class="nt">${isNew?'<span class="dotnew"></span>':''}<b>${esc(nameOf(x.who,x.nick))}</b> ${meta.t}</div>
+        <div class="nx">${esc(x.text)}</div>
+        <div class="nm">${ago(x.ms||0)}</div>
+      </div>
+      <span class="ni">${meta.i}</span>
+    </div>`}).join('');
+  $('#noteList').querySelectorAll('[data-ni]').forEach(el=>el.onclick=()=>goNote(list[+el.dataset.ni]));
+}
+async function goNote(x){
+  if(!x) return;
+  markRead();
+  $('#noteMask').classList.remove('on');
+  const tab=document.querySelector(`.tab[data-view="${x.go.view}"]`);
+  if(tab) tab.click();
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(x.go.key){
+    const it=albumItems().find(i=>i.key===x.go.key);
+    if(it){ await getPhoto(it.key); openBox(it); }
+  }
+}
+function markRead(){
+  lastRead=Date.now(); ls('hcx_read',String(lastRead));
+  refreshNotes(); renderNotes();
+}
+$('#bell').onclick=()=>{ renderNotes(); $('#noteMask').classList.add('on'); };
+$('#noteClear').onclick=markRead;
 
 /* ===================== 食客 ===================== */
 function folkStats(f){
