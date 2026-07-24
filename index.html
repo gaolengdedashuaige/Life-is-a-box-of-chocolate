@@ -515,6 +515,40 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   .dupbar{flex-wrap:wrap}.dupbar button{margin-left:0;width:100%}
 }
 
+
+/* ---------- 每一餐的评论 ---------- */
+.mcmt{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
+.mct{font-size:12px;color:var(--ink-soft);text-decoration:underline}
+.mcbox{display:none;margin-top:10px}
+.mcbox.on{display:block}
+.mc{background:var(--paper);border:1px solid var(--line);border-radius:11px;
+  padding:8px 10px;margin-bottom:7px;position:relative}
+.mc .mh{display:flex;align-items:center;gap:7px}
+.mc .mh .av,.mc .mh .av-txt{width:22px;height:22px;font-size:11px}
+.mc .mn{font-size:12px;font-weight:700;color:var(--red)}
+.mc .mt{font-size:10px;color:var(--ink-soft)}
+.mc .mx{font-size:13px;line-height:1.6;margin-top:5px;white-space:pre-wrap;word-break:break-word}
+.mc .mkill{position:absolute;top:7px;right:9px;font-size:11px;color:var(--ink-soft);opacity:.4}
+.mc:hover .mkill{opacity:1}
+.mc .msg-img{max-width:130px;max-height:130px}
+.mc .msg-stk{max-width:88px;max-height:88px}
+.mcin{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.mcin input{flex:1;min-width:110px;padding:9px 11px;border:1px solid var(--line);
+  border-radius:10px;background:#fff;font-size:14px}
+.mcin button{flex:none;border:1px solid var(--line);background:#fff;border-radius:10px;
+  padding:9px 11px;font-size:13px}
+.mcin button.go3{background:var(--red);color:#fff;border-color:transparent;font-weight:700}
+.mcpend{display:none;align-items:center;gap:8px;margin-top:7px;background:#fff;
+  border:1px dashed var(--line);border-radius:10px;padding:6px 9px;font-size:12px}
+.mcpend.on{display:flex}
+.mcpend img{width:40px;height:40px;object-fit:contain;border-radius:7px}
+.mcpend button{margin-left:auto;font-size:11px;color:var(--ink-soft);text-decoration:underline}
+@media (max-width:640px){
+  .mc .mkill{opacity:.8}
+  .mcin input{min-width:100%}
+  .mcin button.go3{flex:1}
+}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   .wrap{padding:0 12px}
@@ -580,7 +614,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v16</b></div>
+    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v17</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label data-i18n="gate.pwd">口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -745,7 +779,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v16</b><br>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v17</b><br>
       <span style="font-size:11px">八国语言 · 位置分享 · 英语角 · 消息中心 · 照片评论</span></p>
   </div>
 </main>
@@ -1047,6 +1081,7 @@ let stkTarget=null, pendShoutStk='', pendCmtStk='', pendReplyStk={};
 let imgTarget=null, pendShoutImg='', pendCmtImg='', pendReplyImg={};
 let pendLoc=null, engQuery='';
 let sending=false;   // 防手滑连点
+const mcOpen={}, pendMealStk={}, pendMealImg={};
 let myAvatar='';
 const photoCache = {};
 const unsubs = [];
@@ -1400,7 +1435,7 @@ function listenAll(){
   sub(C.plans(), s=>{ plans=s.docs.map(d=>({id:d.id,...d.data()})); renderPlans(); renderFolks(); });
   sub(C.shots(), s=>{ shots=s.docs.map(d=>({id:d.id,...d.data()})); renderAlbum(); renderFolks(); });
   sub(C.comments(), s=>{ comments=s.docs.map(d=>({id:d.id,...d.data()}))
-    .sort((a,b)=>(a.ms||0)-(b.ms||0)); renderComments(); renderAlbum(); });
+    .sort((a,b)=>(a.ms||0)-(b.ms||0)); renderComments(); renderAlbum(); renderMealList(); });
   sub(C.words(), s=>{ words=s.docs.map(d=>({id:d.id,...d.data()}))
     .sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0)); renderWords(); });
   sub(C.stickers(), s=>{ stickers=s.docs.map(d=>({id:d.id,...d.data()}))
@@ -1573,6 +1608,43 @@ function openDay(ds){
   catch{ $('#dayTitle').textContent=ds; }
   resetMealForm(); renderMealList(); $('#dayMask').classList.add('on');
 }
+
+/* ---------- 每一餐的评论 ---------- */
+const mealKey = id => 'meal_'+id;
+const mealCmtN = id => comments.filter(c=>c.key===mealKey(id)).length;
+function mealCmtHTML(id){
+  const list=comments.filter(c=>c.key===mealKey(id)).sort((a,b)=>(a.ms||0)-(b.ms||0));
+  if(!list.length) return `<p class="hint" style="margin:0 0 6px">${t('cmt.empty')}</p>`;
+  return list.map(c=>`
+    <div class="mc">
+      <button class="mkill" data-mcdel="${c.id}">✕</button>
+      <div class="mh">${avatarHTML(c.cid,c.nick)}
+        <span class="mn">${esc(nameOf(c.cid,c.nick))}</span>
+        <span class="mt">${ago(c.ms||0)}</span></div>
+      ${c.text?`<div class="mx">${richText(c.text,c.mentions)}</div>`:''}
+      ${c.stk?`<img class="msg-stk" data-stk="${c.stk}" alt="">`:''}
+      ${c.img?`<img class="msg-img" data-inline="${c.img}" alt="">`:''}
+    </div>`).join('');
+}
+async function sendMealCmt(id){
+  if(sending) return;
+  const inp=document.querySelector(`[data-minp="${id}"]`); if(!inp) return;
+  const text=inp.value.trim(), stk=pendMealStk[id]||'', imgData=pendMealImg[id]||'';
+  if(!text && !stk && !imgData){ inp.focus(); return; }
+  sending=true; inp.disabled=true;
+  try{
+    const img=await commitImg(imgData);
+    await addDoc(C.comments(),{ key:mealKey(id), nick, cid, text,
+      mentions:takeMentions(inp), stk, img, replies:[],
+      ms:Date.now(), createdAt:serverTimestamp() });
+    inp.value=''; clearMentions(inp);
+    delete pendMealStk[id]; delete pendMealImg[id];
+    mcOpen[id]=true;
+  }catch(e){ alert('评论没发出去：'+e.message) }
+  finally{ sending=false; inp.disabled=false; renderMealList();
+    setTimeout(()=>document.querySelector(`[data-minp="${id}"]`)?.focus(),50); }
+}
+
 async function renderMealList(){
   if(!openDate||!$('#mealList')) return;
   const list=meals.filter(x=>x.date===openDate).sort((a,b)=>(a.createdAtMs||0)-(b.createdAtMs||0));
@@ -1591,8 +1663,44 @@ async function renderMealList(){
         ${x.currency!==prefs.base&&x.amount?`<div class="nt mono">≈ ${money(toBase(x.amount,x.currency),prefs.base)}</div>`:''}
         <div class="who3">${avatarHTML(x.cid,x.by)}<span>${esc(nameOf(x.cid,x.by))} · ${t('day.by')}</span></div>
         <button class="del" data-del="${x.id}">${t('c.del')}</button>
+        <div class="mcmt">
+          <button class="mct" data-mct="${x.id}">💬 ${t('cmt.title')}${mealCmtN(x.id)?' ('+mealCmtN(x.id)+')':''}</button>
+          <div class="mcbox ${mcOpen[x.id]?'on':''}" id="mcbox-${x.id}">
+            ${mealCmtHTML(x.id)}
+            <div class="mcin">
+              <input class="at-able" type="text" maxlength="300"
+                data-i18n-ph="cmt.ph" data-minp="${x.id}">
+              <button data-mstk="${x.id}">😆</button>
+              <button data-mimg="${x.id}">📷</button>
+              <button class="go3" data-msend="${x.id}">${t('wall.sendBtn')}</button>
+            </div>
+            ${pendMealStk[x.id]?`<div class="mcpend on"><img data-stk="${pendMealStk[x.id]}" alt="">
+              <span>${t('wall.willSend')}</span><button data-mstkx="${x.id}">${t('wall.drop')}</button></div>`:''}
+            ${pendMealImg[x.id]?`<div class="mcpend on"><img src="${pendMealImg[x.id]}" alt="">
+              <span>${t('wall.willSend')}</span><button data-mimgx="${x.id}">${t('wall.drop')}</button></div>`:''}
+          </div>
+        </div>
       </div></div>`}).join('');
   box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>removeMeal(b.dataset.del));
+  box.querySelectorAll('[data-mct]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.mct; mcOpen[id]=!mcOpen[id]; renderMealList();
+    if(mcOpen[id]) setTimeout(()=>document.querySelector(`[data-minp="${id}"]`)?.focus(),50);
+  });
+  box.querySelectorAll('[data-msend]').forEach(b=>b.onclick=()=>sendMealCmt(b.dataset.msend));
+  box.querySelectorAll('[data-minp]').forEach(i=>i.addEventListener('keydown',e=>{
+    if(e.key==='Enter') sendMealCmt(i.dataset.minp);
+  }));
+  box.querySelectorAll('[data-mstk]').forEach(b=>b.onclick=()=>openStickers({type:'meal',id:b.dataset.mstk}));
+  box.querySelectorAll('[data-mimg]').forEach(b=>b.onclick=()=>pickImg({type:'meal',id:b.dataset.mimg}));
+  box.querySelectorAll('[data-mstkx]').forEach(b=>b.onclick=()=>{delete pendMealStk[b.dataset.mstkx];renderMealList()});
+  box.querySelectorAll('[data-mimgx]').forEach(b=>b.onclick=()=>{delete pendMealImg[b.dataset.mimgx];renderMealList()});
+  box.querySelectorAll('[data-mcdel]').forEach(b=>b.onclick=async()=>{
+    if(!confirm(t('c.confirmDel'))) return;
+    const c=comments.find(x=>x.id===b.dataset.mcdel);
+    await deleteDoc(C.one('comments',b.dataset.mcdel));
+    if(c?.img) deleteDoc(C.photo(c.img)).catch(()=>{});
+  });
+  paintStk(box); paintInline(box); applyI18n(box);
   for(const img of box.querySelectorAll('[data-pic]')){
     const src=await getPhoto(img.dataset.pic); if(src) img.src=src;
   }
@@ -1675,6 +1783,8 @@ function renderStickers(){
       pendShoutStk=id; $('#wStkImg').src=photoCache['stk_'+id]||''; $('#wStkPend').classList.add('on');
     }else if(stkTarget.type==='cmt'){
       pendCmtStk=id; $('#cmtStkImg').src=photoCache['stk_'+id]||''; $('#cmtStkPend').classList.add('on');
+    }else if(stkTarget.type==='meal'){
+      pendMealStk[stkTarget.id]=id; renderMealList();
     }else{
       pendReplyStk[stkTarget.id]=id; renderWall();
       const box=$('#rbox-'+stkTarget.id); if(box) box.classList.add('on');
@@ -1733,6 +1843,7 @@ $('#inlineFile').onchange=async e=>{
     const t=imgTarget;
     if(t.type==='shout'){ pendShoutImg=data; $('#wImgPrev').src=data; $('#wImgPend').classList.add('on'); }
     else if(t.type==='cmt'){ pendCmtImg=data; $('#cmtImgPrev').src=data; $('#cmtImgPend').classList.add('on'); }
+    else if(t.type==='meal'){ pendMealImg[t.id]=data; renderMealList(); }
     else if(t.type==='reply'){ pendReplyImg[t.id]=data; renderWall();
       $('#rbox-'+t.id)?.classList.add('on'); }
     else if(t.type==='creply'){ pendReplyImg['c'+t.id]=data; renderComments();
@@ -2638,7 +2749,7 @@ const NT = {
 };
 function myPhotoKeys(){
   const k=new Set();
-  meals.forEach(m=>{ if(m.hasPhoto && m.cid===cid) k.add(m.id) });
+  meals.forEach(m=>{ if(m.cid===cid){ k.add('meal_'+m.id); if(m.hasPhoto) k.add(m.id); } });
   reviews.forEach(r=>{ if(r.hasPhoto && r.cid===cid) k.add('rev_'+r.id) });
   shots.forEach(x=>{ if(x.cid===cid) k.add('shot_'+x.id) });
   return k;
@@ -2665,7 +2776,8 @@ function buildNotes(){
       if(hasMe(c.mentions))
         out.push({ms:c.ms||0, type:'at', who:c.cid, nick:c.nick, text:brief(c), go:{view:'alb', key:c.key}});
       else if(mine.has(c.key))
-        out.push({ms:c.ms||0, type:'cmt', who:c.cid, nick:c.nick, text:brief(c), go:{view:'alb', key:c.key}});
+        out.push({ms:c.ms||0, type:'cmt', who:c.cid, nick:c.nick, text:brief(c),
+          go: String(c.key).startsWith('meal_') ? {view:'cal'} : {view:'alb', key:c.key}});
     }
     (c.replies||[]).forEach(r=>{
       if(r.cid===cid) return;
