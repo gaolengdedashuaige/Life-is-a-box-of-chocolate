@@ -43,9 +43,10 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .brand .sub{font-size:11px;letter-spacing:.3em;opacity:.7;text-transform:uppercase}
 .who{display:flex;align-items:center;gap:9px;font-size:13px;flex:none}
 .ghost{border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:5px 12px;font-size:12px;color:#fff}
-.tabs{display:flex;gap:4px;margin-top:14px;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{color:rgba(255,255,255,.75);font-size:14px;padding:9px 14px;border-radius:12px 12px 0 0;white-space:nowrap;flex:none}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin-top:14px}
+.tab{color:rgba(255,255,255,.75);font-size:14px;padding:9px 13px;border-radius:12px 12px 0 0;
+  white-space:nowrap;flex:none}
+.tab:hover{color:#fff;background:rgba(0,0,0,.14)}
 .tab.on{color:var(--ink);background:var(--paper);font-weight:700}
 .view{display:none}
 .view.on{display:block}
@@ -501,8 +502,8 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   .brand h1{font-size:22px}
   .brand .sub{display:none}
   .who{font-size:12px}
-  .tabs{margin:12px -12px 0;padding:0 12px}
-  .tab{font-size:13px;padding:10px 12px}
+  .tabs{margin-top:12px;gap:3px}
+  .tab{font-size:12.5px;padding:9px 10px;flex:1 1 auto;text-align:center;min-width:0}
   .cover{flex-direction:column;text-align:center;gap:12px;padding:14px}
   .cover .shot{width:140px;height:180px}
   .cover .badge{right:auto;left:50%;transform:translateX(-50%) rotate(-3deg)}
@@ -559,7 +560,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v13</b></div>
+    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v14</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label data-i18n="gate.pwd">口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -720,7 +721,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v13</b><br>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v14</b><br>
       <span style="font-size:11px">八国语言 · 位置分享 · 英语角 · 消息中心 · 照片评论</span></p>
   </div>
 </main>
@@ -1380,6 +1381,17 @@ async function getPhoto(id){
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+t.dataset.view));
+  /* 切过去就重画一次，避免板块空着 */
+  const v=t.dataset.view;
+  try{
+    if(v==='folk'){ renderFolks(); }
+    else if(v==='eng'){ renderWords(); }
+    else if(v==='alb'){ renderAlbum(); }
+    else if(v==='wall'){ renderWall(); }
+    else if(v==='plan'){ renderPlans(); }
+    else if(v==='rev'){ renderReviews(); }
+    else if(v==='cal'){ renderWhoBar(); renderCal(); }
+  }catch(e){ console.warn('重画失败',e) }
 });
 
 
