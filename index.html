@@ -560,7 +560,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v14</b></div>
+    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v15</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label data-i18n="gate.pwd">口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -635,7 +635,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     </section>
 
     <section class="cal">
-      <div class="dow"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+      <div class="dow" id="dowRow"></div>
       <div id="grid" class="grid"></div>
     </section>
     <div id="legend" class="legend"></div>
@@ -721,7 +721,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v14</b><br>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v15</b><br>
       <span style="font-size:11px">八国语言 · 位置分享 · 英语角 · 消息中心 · 照片评论</span></p>
   </div>
 </main>
@@ -1034,19 +1034,31 @@ const todayStr = () => ymd(new Date());
 const money = (n,cur) => (CUR[cur]?.sym||'') + n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
 const toBase = (a,c) => a * (prefs.rates[c] ?? 1) / (prefs.rates[prefs.base] ?? 1);
 const esc = s => (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LOCALE = { zh:'zh-CN', tw:'zh-TW', en:'en-US', ja:'ja-JP',
+                 es:'es-ES', fr:'fr-FR', de:'de-DE', hi:'hi-IN' };
+function loc(){ return LOCALE[LANG] || 'en-US'; }
+function fmtDate(ms){
+  const x=new Date(ms);
+  try{ return x.toLocaleDateString(loc(),{month:'short',day:'numeric'}); }
+  catch{ return (x.getMonth()+1)+'/'+x.getDate(); }
+}
 function ago(ms){
   const d=Date.now()-ms;
   if(d<60000) return t('t.now');
   if(d<3600000) return Math.floor(d/60000)+' '+t('t.min');
   if(d<86400000) return Math.floor(d/3600000)+' '+t('t.hour');
   if(d<604800000) return Math.floor(d/86400000)+' '+t('t.day');
-  const t=new Date(ms); return `${t.getMonth()+1}月${t.getDate()}日`;
+  return fmtDate(ms);
 }
 function whenText(iso){
   if(!iso) return t('plan.timeTbd');
   const d=new Date(iso); if(isNaN(d)) return iso;
-  const wd=['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
-  return `${d.getMonth()+1}月${d.getDate()}日 ${wd} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  try{
+    return d.toLocaleString(loc(),{month:'short',day:'numeric',weekday:'short',
+      hour:'2-digit',minute:'2-digit',hour12:false});
+  }catch{
+    return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  }
 }
 const AVC = ['#D6242C','#F2B705','#1E6F5C','#5E7A8A','#B4568F','#C4611B','#3C7A5A','#7A5BB5'];
 function avColor(s){ let h=0; for(const ch of (s||'?')) h=(h*31+ch.charCodeAt(0))>>>0; return AVC[h%AVC.length]; }
@@ -1457,10 +1469,23 @@ function whoLabel(){
 }
 
 /* ===================== 日历 ===================== */
-function renderCal(){ renderMonth(); renderStats(); renderLegend(); }
+function renderDow(){
+  const box=$('#dowRow'); if(!box) return;
+  const out=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(2024,0,7+i);   // 2024-01-07 是周日
+    let lab;
+    try{ lab=d.toLocaleDateString(loc(),{weekday:'short'}); }
+    catch{ lab=['S','M','T','W','T','F','S'][i]; }
+    out.push(`<span>${esc(lab)}</span>`);
+  }
+  box.innerHTML=out.join('');
+}
+function renderCal(){ renderDow(); renderMonth(); renderStats(); renderLegend(); }
 function renderMonth(){
   const y=cursor.getFullYear(), m=cursor.getMonth();
-  $('#monthTitle').textContent=`${y} 年 ${m+1} 月`;
+  try{ $('#monthTitle').textContent=new Date(y,m,1).toLocaleDateString(loc(),{year:'numeric',month:'long'}); }
+  catch{ $('#monthTitle').textContent=`${y}-${m+1}`; }
   const first=new Date(y,m,1).getDay(), days=new Date(y,m+1,0).getDate();
   const list0=calMeals(), byDay={};
   list0.forEach(x=>(byDay[x.date]||=[]).push(x));
@@ -1515,8 +1540,8 @@ function renderLegend(){
 function openDay(ds){
   openDate=ds;
   const d=new Date(ds+'T00:00:00');
-  const wd=['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
-  $('#dayTitle').textContent=`${d.getMonth()+1} 月 ${d.getDate()} 日 ${wd}`;
+  try{ $('#dayTitle').textContent=d.toLocaleDateString(loc(),{month:'long',day:'numeric',weekday:'long'}); }
+  catch{ $('#dayTitle').textContent=ds; }
   resetMealForm(); renderMealList(); $('#dayMask').classList.add('on');
 }
 async function renderMealList(){
@@ -2620,39 +2645,61 @@ $('#noteClear').onclick=markRead;
 
 /* ===================== 食客 ===================== */
 function folkStats(f){
-  const said=shouts.filter(x=>x.cid===f.id).length
-    + shouts.reduce((n,x)=>n+((x.replies||[]).filter(r=>r.cid===f.id).length),0)
-    + comments.filter(c=>c.cid===f.id).length
-    + comments.reduce((n,c)=>n+((c.replies||[]).filter(r=>r.cid===f.id).length),0);
-  const ate=meals.filter(m=>m.cid===f.id||(!m.cid&&(m.by||'').trim()===(f.nick||'').trim())).length;
-  const wrote=reviews.filter(r=>r.cid?r.cid===f.id:r.author===f.nick).length;
+  const ids=new Set(f.ids||[f.id]);
+  const mine=x=>ids.has(x&&x.cid);
+  const nm=(f.nick||'').trim();
+  const said=shouts.filter(mine).length
+    + shouts.reduce((n,x)=>n+((x.replies||[]).filter(mine).length),0)
+    + comments.filter(mine).length
+    + comments.reduce((n,c)=>n+((c.replies||[]).filter(mine).length),0);
+  const ate=meals.filter(m=>ids.has(m.cid)||(!m.cid&&(m.by||'').trim()===nm)).length;
+  const wrote=reviews.filter(r=>r.cid?ids.has(r.cid):(r.author||'').trim()===nm).length;
   /* 注：早期没存 cid 的旧记录只能按名字认，改名后会对不上 */
-  const went=plans.filter(p=>(p.joins||[]).some(j=>j.cid===f.id)).length;
-  const shot=shots.filter(x=>x.cid===f.id).length + words.filter(w=>w.cid===f.id).length;
+  const went=plans.filter(p=>(p.joins||[]).some(j=>ids.has(j.cid))).length;
+  const shot=shots.filter(x=>ids.has(x.cid)).length + words.filter(w=>ids.has(w.cid)).length;
   return {said,ate,wrote,went,shot,total:said+ate+wrote+went+shot};
+}
+/* 同一个人可能因为换浏览器/清缓存留下多条记录，按昵称并成一个 */
+function mergedFolks(){
+  const by={};
+  [...folks].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0)).forEach(f=>{
+    const nm=(nameOf(f.id,f.nick)||'').trim()||t('c.anon');
+    if(!by[nm]){
+      by[nm]={ id:f.id, ids:[f.id], nick:nm, avatar:f.avatar||'',
+               lastSeen:f.lastSeen||0, joinedAt:f.joinedAt||0 };
+    }else{
+      const g=by[nm];
+      g.ids.push(f.id);
+      if(f.id===cid) g.id=f.id;                       // 自己那条优先当主
+      if(!g.avatar && f.avatar) g.avatar=f.avatar;
+      g.lastSeen=Math.max(g.lastSeen, f.lastSeen||0);
+      if(f.joinedAt) g.joinedAt=g.joinedAt?Math.min(g.joinedAt,f.joinedAt):f.joinedAt;
+    }
+  });
+  return Object.values(by).sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
 }
 function renderFolks(){
   if(!$('#folks')) return;
   const now=Date.now();
-  const sorted=[...folks].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
+  const sorted=mergedFolks();
   $('#folks').innerHTML=sorted.map(f=>{
     const on=(now-(f.lastSeen||0))<ONLINE_MS, st=folkStats(f);
     return `<div class="folk">${avatarHTML(f.id,f.nick)}
       <div class="fn">${esc(nameOf(f.id,f.nick))||t('c.anon')}</div>
       <div class="fs"><span class="dot ${on?'on':''}"></span>${on?t('folk.online'):ago(f.lastSeen||0)}<br>
         📣 ${st.said} · 🍚 ${st.ate}</div>
-      ${f.id===cid?`<span class="me-tag">${t('folk.isYou')}</span>`:''}</div>`}).join('');
+      ${(f.ids||[]).includes(cid)?`<span class="me-tag">${t('folk.isYou')}</span>`:''}</div>`}).join('');
   renderUserList();
 }
 function renderUserList(){
   if(!$('#ulist')) return;
   const now=Date.now();
-  const rows=folks.map(f=>({f,st:folkStats(f),on:(now-(f.lastSeen||0))<ONLINE_MS}))
+  const rows=mergedFolks().map(f=>({f,st:folkStats(f),on:(now-(f.lastSeen||0))<ONLINE_MS}))
     .sort((a,b)=>b.st.total-a.st.total||(b.f.lastSeen||0)-(a.f.lastSeen||0));
   $('#ulSum').textContent=`${t('folk.total')} ${rows.length} ${t('folk.people')} · ${rows.filter(r=>r.on).length} ${t('folk.onlineN')}`;
   $('#ulist').innerHTML=rows.map((r,i)=>`
     <div class="urow"><span class="rk mono">${i+1}</span>${avatarHTML(r.f.id,r.f.nick)}
-      <div class="who2"><div class="n2">${esc(nameOf(r.f.id,r.f.nick))}${r.f.id===cid?` <span class="me-tag" style="margin:0">${t('folk.you')}</span>`:''}</div>
+      <div class="who2"><div class="n2">${esc(nameOf(r.f.id,r.f.nick))}${(r.f.ids||[]).includes(cid)?` <span class="me-tag" style="margin:0">${t('folk.you')}</span>`:''}</div>
         <div class="s2"><span class="dot ${r.on?'on':''}"></span>${r.on?t('folk.online'):t('folk.lastSeen')+' '+ago(r.f.lastSeen||0)}
           ${r.f.joinedAt?' · '+t('folk.joinedAt')+' '+ago(r.f.joinedAt):''}</div></div>
       <div class="nums">
@@ -2662,11 +2709,11 @@ function renderUserList(){
         <div><div class="nv">${r.st.went}</div><div class="nk">${t('folk.went')}</div></div>
         <div><div class="nv">${r.st.shot}</div><div class="nk">${t('folk.shot')}</div></div>
       </div>
-      ${r.f.id!==cid?`<button class="drop" data-drop="${r.f.id}">✕</button>`:''}
+      ${!(r.f.ids||[]).includes(cid)?`<button class="drop" data-drop="${(r.f.ids||[r.f.id]).join(',')}">✕</button>`:''}
     </div>`).join('');
   $('#ulist').querySelectorAll('[data-drop]').forEach(b=>b.onclick=async()=>{
     if(!confirm('把这个人从列表里移除？他下次进店会重新出现。'))return;
-    await deleteDoc(C.folk(b.dataset.drop));
+    for(const id of (b.dataset.drop||'').split(',')) await deleteDoc(C.folk(id)).catch(()=>{});
   });
 }
 setInterval(()=>{ if(!document.hidden) renderFolks(); },60000);
