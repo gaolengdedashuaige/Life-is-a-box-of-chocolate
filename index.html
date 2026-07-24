@@ -495,6 +495,26 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .card-e .ft .lk{margin-left:auto;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:13px}
 .card-e .ft .lk.on{background:var(--gold);border-color:transparent;font-weight:700}
 
+
+/* ---------- 回复删除 / 清理重复 ---------- */
+.reply{position:relative;padding-right:26px}
+.reply .rkill{position:absolute;top:6px;right:0;font-size:11px;color:var(--ink-soft);
+  opacity:.35;padding:2px 5px;border-radius:6px;line-height:1}
+.reply:hover .rkill{opacity:1}
+.reply .rkill:hover{background:var(--pink);color:var(--red)}
+.cmt .kill,.note .kill{opacity:.55;font-size:14px;background:rgba(34,26,21,.06);
+  width:24px;height:24px;border-radius:50%;line-height:24px;text-align:center}
+.cmt:hover .kill,.note:hover .kill{opacity:1;background:var(--pink);color:var(--red)}
+.dupbar{display:flex;align-items:center;gap:9px;background:#FFF3CD;border:1px solid var(--gold);
+  border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.5}
+.dupbar button{margin-left:auto;flex:none;background:var(--red);color:#fff;border-radius:10px;
+  padding:8px 14px;font-size:13px;font-weight:700;box-shadow:0 2px 0 var(--red-deep)}
+.dupbar.hidden{display:none}
+@media (max-width:640px){
+  .reply .rkill,.cmt .kill,.note .kill{opacity:.8}
+  .dupbar{flex-wrap:wrap}.dupbar button{margin-left:0;width:100%}
+}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   .wrap{padding:0 12px}
@@ -560,7 +580,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v15</b></div>
+    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v16</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label data-i18n="gate.pwd">口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -672,6 +692,10 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
       <button id="wSend" class="btn send"><span data-i18n="wall.send">贴上去</span> 📌</button>
       <div style="clear:both"></div>
     </div>
+    <div id="wallDup" class="dupbar hidden">
+      <span id="wallDupTxt"></span>
+      <button id="wallDupGo">一键清理 🧹</button>
+    </div>
     <div id="wall" class="wall"></div>
     <div id="wallEmpty" class="empty hidden">墙上还是空的 🕸️<br>第一句话由你来喊。</div>
   </div>
@@ -721,7 +745,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v15</b><br>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v16</b><br>
       <span style="font-size:11px">八国语言 · 位置分享 · 英语角 · 消息中心 · 照片评论</span></p>
   </div>
 </main>
@@ -815,6 +839,10 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <button id="boxDel" class="btn btn-alt" style="margin-top:12px">删掉这张 🗑️</button>
     <div class="cmt-wrap">
       <h4 id="cmtTitle">💬 评论</h4>
+      <div id="cmtDup" class="dupbar hidden">
+        <span id="cmtDupTxt"></span>
+        <button id="cmtDupGo">一键清理 🧹</button>
+      </div>
       <div id="cmtList"></div>
       <div id="cmtStkPend" class="stk-pend">
         <img id="cmtStkImg" alt="">
@@ -1018,6 +1046,7 @@ let boxKey='', boxShotId='', boxOwn=false, boxChunks=0, boxMedia='image', boxMim
 let stkTarget=null, pendShoutStk='', pendCmtStk='', pendReplyStk={};
 let imgTarget=null, pendShoutImg='', pendCmtImg='', pendReplyImg={};
 let pendLoc=null, engQuery='';
+let sending=false;   // 防手滑连点
 let myAvatar='';
 const photoCache = {};
 const unsubs = [];
@@ -1869,8 +1898,9 @@ function renderWall(){
       ${s.stk?`<img class="msg-stk" data-stk="${s.stk}" alt="表情包">`:''}
       ${s.img?`<img class="msg-img" data-inline="${s.img}" alt="照片">`:''}
       ${locHTML(s.loc)}
-      ${reps.length?`<div class="replies">${reps.map(r=>`
-        <div class="reply"><span class="rn">${esc(nameOf(r.cid,r.nick))}</span>${richText(r.text,r.mentions)}
+      ${reps.length?`<div class="replies">${reps.map((r,ri)=>`
+        <div class="reply"><button class="rkill" data-wrdel="${s.id}|${ri}">✕</button>
+          <span class="rn">${esc(nameOf(r.cid,r.nick))}</span>${richText(r.text,r.mentions)}
           <span class="rt">${ago(r.ms||0)}</span>
           ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}
           ${r.img?`<img class="msg-img" data-inline="${r.img}" alt="">`:''}</div>`).join('')}</div>`:''}
@@ -1907,12 +1937,22 @@ function renderWall(){
   $('#wall').querySelectorAll('[data-rimgclear]').forEach(b=>b.onclick=()=>{
     delete pendReplyImg[b.dataset.rimgclear]; renderWall();
   });
+  $('#wall').querySelectorAll('[data-wrdel]').forEach(b=>b.onclick=async()=>{
+    const [id,ri]=b.dataset.wrdel.split('|');
+    if(!confirm(t('c.confirmDel'))) return;
+    const sh=shouts.find(x=>x.id===id); if(!sh) return;
+    const reps=[...(sh.replies||[])];
+    const gone=reps.splice(+ri,1)[0];
+    await updateDoc(C.one('shouts',id),{replies:reps});
+    if(gone?.img) deleteDoc(C.photo(gone.img)).catch(()=>{});
+  });
   $('#wall').querySelectorAll('[data-rsend]').forEach(b=>b.onclick=()=>sendReply(b.dataset.rsend));
   $('#wall').querySelectorAll('[data-rinp]').forEach(i=>i.addEventListener('keydown',e=>{
     if(e.key==='Enter') sendReply(i.dataset.rinp);
   }));
   paintStk($('#wall')); paintInline($('#wall'));
   putDrafts($('#wall'),drafts);
+  showDup('wallDup','wallDupTxt', findDups(shouts,'createdAtMs').length);
   refreshNotes();
   applyI18n($('#wall'));
 }
@@ -1932,9 +1972,10 @@ async function sendReply(id){
   finally{ inp.disabled=false }
 }
 async function sendShout(){
+  if(sending) return;
   const btn=$('#wSend'), text=$('#wText').value.trim();
   if(!text&&!pendShoutStk&&!pendShoutImg&&!pendLoc){ $('#wText').focus(); return; }
-  btn.disabled=true; btn.textContent='贴上去…';
+  sending=true; btn.disabled=true; btn.textContent='…';
   try{
     const img=await commitImg(pendShoutImg);
     const mentions=takeMentions($('#wText'));
@@ -1945,7 +1986,7 @@ async function sendShout(){
     pendShoutImg=''; $('#wImgPend').classList.remove('on');
     pendLoc=null; showPendLoc();
   }catch(e){ alert('没贴上：'+e.message) }
-  finally{ btn.disabled=false; btn.textContent='贴上去 📌' }
+  finally{ sending=false; btn.disabled=false; btn.textContent=t('wall.send')+' 📌' }
 }
 $('#wSend').onclick=sendShout;
 $('#wText').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))sendShout()});
@@ -2106,6 +2147,7 @@ function renderComments(){
   $('#cmtTitle').textContent=`💬 ${t('cmt.title')}${list.length?' ('+cmtCount(boxKey)+')':''}`;
   if(!list.length){
     $('#cmtList').innerHTML=`<p class="hint">${t('cmt.empty')}</p>`;
+    showDup('cmtDup','cmtDupTxt',0);
     return;
   }
   $('#cmtList').innerHTML=list.map(c=>{
@@ -2117,8 +2159,9 @@ function renderComments(){
       ${c.text?`<div class="cx">${richText(c.text,c.mentions)}</div>`:''}
       ${c.stk?`<img class="msg-stk" data-stk="${c.stk}" alt="">`:''}
       ${c.img?`<img class="msg-img" data-inline="${c.img}" alt="照片">`:''}
-      ${reps.length?`<div class="replies">${reps.map(r=>`
-        <div class="reply"><span class="rn">${esc(nameOf(r.cid,r.nick))}</span>${richText(r.text,r.mentions)}
+      ${reps.length?`<div class="replies">${reps.map((r,ri)=>`
+        <div class="reply"><button class="rkill" data-crdel="${c.id}|${ri}">✕</button>
+          <span class="rn">${esc(nameOf(r.cid,r.nick))}</span>${richText(r.text,r.mentions)}
           <span class="rt">${ago(r.ms||0)}</span>
           ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}
           ${r.img?`<img class="msg-img" data-inline="${r.img}" alt="">`:''}</div>`).join('')}</div>`:''}
@@ -2156,17 +2199,29 @@ function renderComments(){
   $('#cmtList').querySelectorAll('[data-crimgclear]').forEach(b=>b.onclick=()=>{
     delete pendReplyImg['c'+b.dataset.crimgclear]; renderComments();
   });
+  $('#cmtList').querySelectorAll('[data-crdel]').forEach(b=>b.onclick=async()=>{
+    const [id,ri]=b.dataset.crdel.split('|');
+    if(!confirm(t('c.confirmDel'))) return;
+    const c=comments.find(x=>x.id===id); if(!c) return;
+    const reps=[...(c.replies||[])];
+    const gone=reps.splice(+ri,1)[0];
+    await updateDoc(C.one('comments',id),{replies:reps});
+    if(gone?.img) deleteDoc(C.photo(gone.img)).catch(()=>{});
+  });
   $('#cmtList').querySelectorAll('[data-crsend]').forEach(b=>b.onclick=()=>sendCmtReply(b.dataset.crsend));
   $('#cmtList').querySelectorAll('[data-crinp]').forEach(i=>i.addEventListener('keydown',e=>{
     if(e.key==='Enter') sendCmtReply(i.dataset.crinp);
   }));
   paintStk($('#cmtList')); paintInline($('#cmtList'));
   putDrafts($('#cmtList'),drafts);
+  showDup('cmtDup','cmtDupTxt', findDups(list,'ms').length);
   applyI18n($('#cmtList'));
 }
 async function sendComment(){
+  if(sending) return;
   const inp=$('#cmtInput'), text=inp.value.trim();
   if(!text&&!pendCmtStk&&!pendCmtImg) { inp.focus(); return; }
+  sending=true;
   const btn=$('#cmtSend'); btn.disabled=true;
   try{
     const img=await commitImg(pendCmtImg);
@@ -2177,7 +2232,7 @@ async function sendComment(){
     pendCmtStk=''; $('#cmtStkPend').classList.remove('on');
     pendCmtImg=''; $('#cmtImgPend').classList.remove('on');
   }catch(e){ alert('评论没发出去：'+e.message) }
-  finally{ btn.disabled=false }
+  finally{ sending=false; btn.disabled=false }
 }
 async function sendCmtReply(id){
   const inp=document.querySelector(`[data-crinp="${id}"]`);
@@ -2537,6 +2592,39 @@ $('#eSave').onclick=async()=>{
   }catch(e){ alert('没分享出去：'+e.message) }
   finally{ btn.disabled=false; btn.textContent='分享出去 🚀' }
 };
+
+
+/* ===================== 重复清理 ===================== */
+/* 同一个人、同样内容、5 分钟内 → 认为是手滑连点出来的重复 */
+const DUP_WIN = 5*60*1000;
+function sigOf(o){ return [o.cid||'', (o.text||'').trim(), o.stk||'', o.img?'i':'', o.loc?'l':''].join('\u0001'); }
+function findDups(list, tsKey){
+  const groups={}, extra=[];
+  [...list].sort((a,b)=>(a[tsKey]||0)-(b[tsKey]||0)).forEach(o=>{
+    const sig=sigOf(o);
+    if(!(o.text||'').trim() && !o.stk && !o.img) return;   // 空内容不判重
+    const g=groups[sig];
+    if(g && Math.abs((o[tsKey]||0)-(g[tsKey]||0))<DUP_WIN) extra.push(o);
+    else groups[sig]=o;
+  });
+  return extra;
+}
+function showDup(barId, txtId, n){
+  const bar=$('#'+barId); if(!bar) return;
+  bar.classList.toggle('hidden', n===0);
+  if(n) $('#'+txtId).textContent = `🔁 发现 ${n} 条重复内容`;
+}
+async function wipe(items, coll){
+  if(!items.length) return;
+  if(!confirm(`确定删掉这 ${items.length} 条重复的吗？每组会保留最早的一条。`)) return;
+  for(const o of items){
+    await deleteDoc(C.one(coll,o.id)).catch(()=>{});
+    if(o.img) deleteDoc(C.photo(o.img)).catch(()=>{});
+    (o.replies||[]).forEach(r=>{ if(r.img) deleteDoc(C.photo(r.img)).catch(()=>{}) });
+  }
+}
+$('#cmtDupGo').onclick=()=>wipe(findDups(comments.filter(c=>c.key===boxKey),'ms'),'comments');
+$('#wallDupGo').onclick=()=>wipe(findDups(shouts,'createdAtMs'),'shouts');
 
 /* ===================== 消息中心 ===================== */
 let lastRead = +(ls('hcx_read')||0);
