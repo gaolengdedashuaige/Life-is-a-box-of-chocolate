@@ -451,6 +451,49 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .nhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
 .nhead button{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px}
 
+
+/* ---------- 位置 ---------- */
+.loc-card{margin-top:9px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.loc-card iframe{width:100%;height:150px;border:0;display:block;background:var(--paper-2)}
+.loc-card .lc{display:flex;align-items:center;gap:8px;padding:9px 11px;font-size:13px}
+.loc-card .lc a{color:var(--red);margin-left:auto;font-size:12px;white-space:nowrap}
+.loc-pend{display:none;align-items:center;gap:10px;margin-top:10px;background:var(--paper);
+  border:1px dashed var(--line);border-radius:12px;padding:9px 11px;font-size:13px}
+.loc-pend.on{display:flex}
+.loc-pend button{margin-left:auto;font-size:12px;color:var(--ink-soft);text-decoration:underline}
+.loc-row{display:flex;gap:8px;margin-bottom:10px}
+.loc-row input{flex:1;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--paper)}
+.loc-row button{flex:none;border:1px solid var(--line);background:#fff;border-radius:11px;padding:11px 15px;font-size:13px}
+#locStatus{font-size:12px;color:var(--ink-soft);line-height:1.7;min-height:20px}
+
+/* ---------- 英语角 ---------- */
+.eng-top{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;align-items:center}
+.eng-top .btn{width:auto;padding:12px 22px;flex:none}
+.eng-top input{flex:1;min-width:150px;padding:11px 14px;border:1px solid var(--line);
+  border-radius:12px;background:#fff}
+.card-e{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;
+  margin-top:14px;box-shadow:0 4px 0 rgba(34,26,21,.06);position:relative}
+.card-e .kill{position:absolute;top:13px;right:15px;font-size:13px;color:var(--ink-soft);opacity:.4}
+.card-e:hover .kill{opacity:1}
+.card-e .w{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card-e .w h3{font-family:"Noto Serif SC",serif;font-size:25px;margin:0;font-weight:600;
+  letter-spacing:.01em;padding-right:26px}
+.card-e .spk{border:1px solid var(--line);border-radius:999px;width:34px;height:34px;font-size:15px;flex:none}
+.card-e .spk:hover{background:var(--paper-2)}
+.card-e .pos{font-size:11px;background:var(--sky);padding:3px 9px;border-radius:999px;color:var(--ink-soft)}
+.card-e .ipa{font-family:"Space Mono",monospace;font-size:13px;color:var(--ink-soft);margin-top:5px}
+.card-e .mean{font-size:16px;margin-top:10px;line-height:1.6}
+.card-e .ex{background:var(--paper);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:10px 13px;margin-top:11px;font-size:14px;line-height:1.7}
+.card-e .ex .exs{font-family:"Noto Serif SC",serif;font-weight:600}
+.card-e .ex .ext{color:var(--ink-soft);margin-top:4px;font-size:13px}
+.card-e .nte{font-size:13px;color:var(--ink-soft);margin-top:10px;line-height:1.7;white-space:pre-wrap}
+.card-e .ft{display:flex;align-items:center;gap:8px;margin-top:13px;padding-top:11px;
+  border-top:2px dashed var(--line);font-size:12px;color:var(--ink-soft)}
+.card-e .ft .av,.card-e .ft .av-txt{width:24px;height:24px;font-size:12px}
+.card-e .ft .lk{margin-left:auto;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:13px}
+.card-e .ft .lk.on{background:var(--gold);border-color:transparent;font-weight:700}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   .wrap{padding:0 12px}
@@ -500,6 +543,12 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   .av-grid{grid-template-columns:repeat(3,1fr)}
   input,select,textarea{font-size:16px!important}
   .rate-row span{width:78px;font-size:12px}
+  .eng-top{flex-direction:column;align-items:stretch}
+  .eng-top .btn{width:100%}
+  .card-e .w h3{font-size:22px}
+  .loc-card iframe{height:130px}
+  .loc-row{flex-direction:column}
+  .loc-row button{width:100%}
 }
 @media (max-width:380px){.cell .face{font-size:17px}.folks{grid-template-columns:1fr}}
 </style>
@@ -510,18 +559,18 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag">凭口令进店 ✨ &nbsp;<b style="color:#D6242C">v12</b></div>
+    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v13</b></div>
     <div id="gateErr" class="err"></div>
-    <div class="field"><label>口令</label>
+    <div class="field"><label data-i18n="gate.pwd">口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
-    <button id="enterBtn" class="btn">进店 🚪</button>
+    <button id="enterBtn" class="btn"><span data-i18n="gate.enter">进店</span> 🚪</button>
   </div>
   <div class="card hidden" id="gateStep2">
-    <h1 class="display">先取个名 🏷️</h1>
-    <div class="tag">你记的饭、发的言都会挂在这个名下。</div>
-    <div class="field"><label>你的昵称</label>
+    <h1 class="display"><span data-i18n="gate.nickTitle">先取个名</span> 🏷️</h1>
+    <div class="tag" data-i18n="gate.nickSub">你记的饭、发的言都会挂在这个名下。</div>
+    <div class="field"><label data-i18n="gate.nick">你的昵称</label>
       <input id="nickInput" type="text" maxlength="12" placeholder="例如：小明" /></div>
-    <button id="nickBtn" class="btn">就叫这个 👌</button>
+    <button id="nickBtn" class="btn"><span data-i18n="gate.nickOk">就叫这个</span> 👌</button>
   </div>
 </section>
 
@@ -535,28 +584,30 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         </div>
         <div class="who">
           <span id="meBox" class="nick-tag" style="display:flex;align-items:center;gap:7px"></span>
-          <button id="bell" class="bell" title="消息中心">🔔<span class="bdg" id="bellNum">0</span></button>
-          <button id="logoutBtn" class="ghost">出店</button>
+          <button id="langBtn" class="bell" data-i18n-title="hd.lang">🌐</button>
+          <button id="bell" class="bell" data-i18n-title="hd.bell">🔔<span class="bdg" id="bellNum">0</span></button>
+          <button id="logoutBtn" class="ghost" data-i18n="hd.exit">出店</button>
         </div>
       </div>
       <nav class="tabs">
-        <button class="tab on" data-view="cal">📅 日历</button>
-        <button class="tab" data-view="wall">📣 喊话墙</button>
-        <button class="tab" data-view="plan">🍱 约饭</button>
-        <button class="tab" data-view="rev">✍️ 品鉴</button>
-        <button class="tab" data-view="alb">📸 相册</button>
-        <button class="tab" data-view="folk">👥 食客</button>
+        <button class="tab on" data-view="cal">📅 <span data-i18n="nav.cal">日历</span></button>
+        <button class="tab" data-view="wall">📣 <span data-i18n="nav.wall">喊话墙</span></button>
+        <button class="tab" data-view="plan">🍱 <span data-i18n="nav.plan">约饭</span></button>
+        <button class="tab" data-view="rev">✍️ <span data-i18n="nav.rev">品鉴</span></button>
+        <button class="tab" data-view="alb">📸 <span data-i18n="nav.alb">相册</span></button>
+        <button class="tab" data-view="eng">🔤 <span data-i18n="nav.eng">英语角</span></button>
+        <button class="tab" data-view="folk">👥 <span data-i18n="nav.folk">食客</span></button>
       </nav>
     </div>
   </header>
 
   <div id="v-cal" class="view on wrap">
     <div class="cover">
-      <span class="badge">本店店主 👑</span>
+      <span class="badge"><span data-i18n="cov.owner">本店店主</span> 👑</span>
       <img class="shot" src="cover.jpg" alt="黄程锡" onerror="this.style.display='none'">
       <div>
         <h2>黄程锡 🍜</h2>
-        <p>每天吃了什么、值几个钱、配得上几分——全在这儿了。<br>看到好吃的记得来喊一声。</p>
+        <p><span data-i18n="cov.desc">每天吃了什么、值几个钱、配得上几分——全在这儿了。</span><br><span data-i18n="cov.hint">看到好吃的记得来喊一声。</span></p>
         <div class="tags">
           <span class="tg">🔥 无辣不欢</span><span class="tg">🦐 海鲜信徒</span><span class="tg">💸 该花就花</span>
         </div>
@@ -570,15 +621,15 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         <h2 id="monthTitle" class="display">—</h2>
         <div class="nav-btns">
           <button id="prevM" aria-label="上个月">‹</button>
-          <button id="todayBtn" style="width:auto;padding:0 12px;font-size:13px">今天</button>
+          <button id="todayBtn" data-i18n="cal.today" style="width:auto;padding:0 12px;font-size:13px">今天</button>
           <button id="nextM" aria-label="下个月">›</button>
         </div>
       </div>
       <div class="stats">
-        <div class="stat"><div class="k">📌 打卡天数</div><div class="v" id="sDays">0</div></div>
-        <div class="stat"><div class="k">🔥 连续打卡</div><div class="v" id="sStreak">0</div></div>
-        <div class="stat"><div class="k">🍽️ 本月吃饭</div><div class="v" id="sMeals">0</div></div>
-        <div class="stat"><div class="k">💸 本月花费</div><div class="v" id="sMoney">0</div></div>
+        <div class="stat"><div class="k">📌 <span data-i18n="cal.days">打卡天数</span></div><div class="v" id="sDays">0</div></div>
+        <div class="stat"><div class="k">🔥 <span data-i18n="cal.streak">连续打卡</span></div><div class="v" id="sStreak">0</div></div>
+        <div class="stat"><div class="k">🍽️ <span data-i18n="cal.meals">本月吃饭</span></div><div class="v" id="sMeals">0</div></div>
+        <div class="stat"><div class="k">💸 <span data-i18n="cal.spend">本月花费</span></div><div class="v" id="sMoney">0</div></div>
       </div>
     </section>
 
@@ -588,19 +639,24 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     </section>
     <div id="legend" class="legend"></div>
     <div class="tools">
-      <button id="settingsBtn">💱 货币与汇率</button>
-      <button id="picsBtn">😆 换等级表情</button>
+      <button id="settingsBtn">💱 <span data-i18n="cal.rates">货币与汇率</span></button>
+      <button id="picsBtn">😆 <span data-i18n="cal.levelPics">换等级表情</span></button>
     </div>
   </div>
 
   <div id="v-wall" class="view wrap">
     <div class="shout-form">
-      <textarea id="wText" class="at-able" maxlength="500" placeholder="喊一句 📣 比如：明天中午一起去吃那家牛肉火锅"></textarea>
+      <textarea id="wText" class="at-able" maxlength="500" data-i18n-ph="wall.ph" placeholder="喊一句 📣"></textarea>
       <div class="stk-bar">
-        <button id="wStk">😆 加表情包</button>
-        <button id="wImg">📷 加照片</button>
-        <button id="wAt">@ 提到谁</button>
-        <button id="stkManage">🗂️ 管理表情包</button>
+        <button id="wStk">😆 <span data-i18n="wall.addStk">加表情包</span></button>
+        <button id="wImg">📷 <span data-i18n="wall.addImg">加照片</span></button>
+        <button id="wAt">@ <span data-i18n="wall.at">提到谁</span></button>
+        <button id="wLoc">📍 <span data-i18n="wall.loc">发位置</span></button>
+        <button id="stkManage">🗂️ <span data-i18n="wall.manage">管理表情包</span></button>
+      </div>
+      <div id="wLocPend" class="loc-pend">
+        📍 <span id="wLocName"></span>
+        <button id="wLocClear">不要了</button>
       </div>
       <div id="wImgPend" class="img-pend">
         <img id="wImgPrev" alt="已选照片">
@@ -612,7 +668,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         <span style="font-size:13px;color:var(--ink-soft)">这张会一起发</span>
         <button id="wStkClear">不要了</button>
       </div>
-      <button id="wSend" class="btn send">贴上去 📌</button>
+      <button id="wSend" class="btn send"><span data-i18n="wall.send">贴上去</span> 📌</button>
       <div style="clear:both"></div>
     </div>
     <div id="wall" class="wall"></div>
@@ -620,31 +676,40 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div id="v-plan" class="view wrap">
-    <button id="planNew" class="btn rev-new">发起一次约饭 🍱</button>
+    <button id="planNew" class="btn rev-new"><span data-i18n="plan.new">发起一次约饭</span> 🍱</button>
     <div id="planList"></div>
     <div id="planEmpty" class="empty hidden">还没人约饭 🥢<br>发起一次，看谁举手。</div>
   </div>
 
   <div id="v-rev" class="view wrap">
-    <button id="revNew" class="btn rev-new">写一篇品鉴 ✍️</button>
+    <button id="revNew" class="btn rev-new"><span data-i18n="rev.new">写一篇品鉴</span> ✍️</button>
     <div id="revList"></div>
     <div id="revEmpty" class="empty hidden">还没有品鉴 📖<br>吃到值得写的，就写一篇。</div>
   </div>
 
   <div id="v-alb" class="view wrap">
     <div class="upload-bar">
-      <button id="albUpload" class="btn">上传照片 📤</button>
+      <button id="albUpload" class="btn"><span data-i18n="alb.upload">上传照片</span> 📤</button>
       <input id="albFile" type="file" accept="image/*,video/*" multiple class="hidden">
     </div>
     <div id="dropzone" class="dropzone">
       <div class="dz-ico">🖼️</div>
-      <div class="dz-t">把照片 / 视频拖到这里</div>
+      <div class="dz-t" data-i18n="alb.dropT">把照片 / 视频拖到这里</div>
       <div class="dz-s">照片、动图 GIF、短视频都行<br>
         也可以复制后按 <b>Ctrl / ⌘ + V</b> 粘贴</div>
     </div>
     <p class="hint" style="margin-top:14px">📸 直接上传的照片，加上日历和品鉴里配过的图。点开可以看大图、写评论。</p>
     <div id="album" class="album"></div>
     <div id="albEmpty" class="empty hidden">相册还是空的 📷<br>点上面的「上传照片」传第一张。</div>
+  </div>
+
+  <div id="v-eng" class="view wrap">
+    <div class="eng-top">
+      <button id="engNew" class="btn"><span data-i18n="eng.new">分享一个词 / 一句话</span> ✏️</button>
+      <input id="engSearch" type="text" data-i18n-ph="eng.search" placeholder="🔍">
+    </div>
+    <div id="engList"></div>
+    <div id="engEmpty" class="empty hidden">英语角还空着 📚<br>把今天学到的词丢进来。</div>
   </div>
 
   <div id="v-folk" class="view wrap">
@@ -655,8 +720,8 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v12</b><br>
-      <span style="font-size:11px">消息中心 · @ 提到某人 · 照片评论 · 视频动图 · 分人统计</span></p>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v13</b><br>
+      <span style="font-size:11px">八国语言 · 位置分享 · 英语角 · 消息中心 · 照片评论</span></p>
   </div>
 </main>
 
@@ -688,7 +753,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
         <div id="fPrev" class="prev"><img alt="预览" /></div></div>
       <div class="field"><label>评价 💬（可选）</label>
         <textarea id="fNote" placeholder="好吃在哪、雷在哪、下次还点不点……"></textarea></div>
-      <button id="saveMeal" class="btn">记这一餐 ✅</button>
+      <button id="saveMeal" class="btn"><span data-i18n="day.save">记这一餐</span> ✅</button>
     </div>
   </div>
 </div>
@@ -700,7 +765,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="field"><label>在哪 📍</label><input id="pPlace" type="text" maxlength="40" placeholder="例如：陈记，地铁 B 口左转" /></div>
     <div class="field"><label>什么时候 🕐</label><input id="pWhen" type="datetime-local" /></div>
     <div class="field"><label>补充 💬（可选）</label><textarea id="pNote" placeholder="人均大概多少、要不要订位……"></textarea></div>
-    <button id="pSave" class="btn">发出去 📣</button>
+    <button id="pSave" class="btn"><span data-i18n="plan.post">发出去</span> 📣</button>
   </div>
 </div>
 
@@ -710,7 +775,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="field"><label>统计用的本位币</label><select id="baseCur"></select></div>
     <p class="hint">1 单位外币折合多少本位币，按当天的填。</p>
     <div id="rateList"></div>
-    <button id="saveRates" class="btn">保存汇率 ✅</button>
+    <button id="saveRates" class="btn"><span data-i18n="me.save">保存</span> ✅</button>
   </div>
 </div>
 
@@ -737,7 +802,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="field"><label>配图 📷（可选）</label>
       <input id="rPhoto" type="file" accept="image/*" />
       <div id="rPrev" class="prev"><img alt="预览" /></div></div>
-    <button id="rSave" class="btn">发表品鉴 🚀</button>
+    <button id="rSave" class="btn"><span data-i18n="rev.publish">发表品鉴</span> 🚀</button>
   </div>
 </div>
 
@@ -771,12 +836,60 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 </div>
 
+<div id="langMask" class="mask">
+  <div class="sheet" style="max-width:340px">
+    <div class="sheet-head"><h3 class="display">🌐 <span data-i18n="hd.lang">语言</span></h3>
+      <button class="x" data-close>×</button></div>
+    <div id="langList"></div>
+  </div>
+</div>
+
+<div id="locMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head"><h3 class="display">📍 发个位置</h3><button class="x" data-close>×</button></div>
+    <button id="locHere" class="btn"><span data-i18n="loc.here">用我现在的位置</span> 🛰️</button>
+    <div id="locStatus" style="margin-top:10px"></div>
+    <p class="hint" style="margin-top:14px">或者搜一个地方：</p>
+    <div class="loc-row">
+      <input id="locQuery" type="text" placeholder="例如：台中車站、鼎泰豐 信義店">
+      <button id="locGo" data-i18n="loc.go">搜索</button>
+    </div>
+    <div id="locResults"></div>
+  </div>
+</div>
+
+<div id="engMask" class="mask">
+  <div class="sheet">
+    <div class="sheet-head"><h3 class="display">✏️ 分享到英语角</h3><button class="x" data-close>×</button></div>
+    <div class="field"><label>单词或句子 🔤</label>
+      <input id="eWord" type="text" maxlength="120" placeholder="例如：savory / It's an acquired taste."></div>
+    <div class="field row2">
+      <div><label>词性（可选）</label>
+        <select id="ePos">
+          <option value="">—</option><option>n.</option><option>v.</option><option>adj.</option>
+          <option>adv.</option><option>phrase</option><option>idiom</option><option>sentence</option>
+        </select></div>
+      <div><label>音标（可选）</label>
+        <input id="eIpa" type="text" maxlength="40" placeholder="/ˈseɪvəri/"></div>
+    </div>
+    <div class="field"><label>意思 💡</label>
+      <input id="eMean" type="text" maxlength="120" placeholder="咸香的；不甜的"></div>
+    <div class="field"><label>例句（可选）</label>
+      <input id="eEx" type="text" maxlength="200" placeholder="This pie is more savory than sweet."></div>
+    <div class="field"><label>例句翻译（可选）</label>
+      <input id="eExT" type="text" maxlength="200" placeholder="这个派偏咸香，不算甜。"></div>
+    <div class="field"><label>笔记 📝（可选）</label>
+      <textarea id="eNote" placeholder="在哪儿看到的、跟哪个词容易混……"></textarea></div>
+    <button id="eSave" class="btn"><span data-i18n="eng.save">分享出去</span> 🚀</button>
+  </div>
+</div>
+
 <div id="noteMask" class="mask">
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">🔔 消息中心</h3><button class="x" data-close>×</button></div>
     <div class="nhead">
       <span class="hint" id="noteSum"></span>
-      <button id="noteClear">全部标为已读</button>
+      <button id="noteClear" data-i18n="note.clear">全部标为已读</button>
     </div>
     <div id="noteList" class="nlist"></div>
     <div id="noteEmpty" class="empty hidden">还没有消息 📭<br>被 @、被回复、被评论都会出现在这里。</div>
@@ -788,17 +901,17 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="sheet-head"><h3 class="display">🙋 我的资料</h3><button class="x" data-close>×</button></div>
     <div class="av-edit"><span id="meAvPrev"></span>
       <div class="hint">这是你现在的头像。<br>换了会立刻同步到所有地方。</div></div>
-    <button id="openAvatar" class="btn btn-alt" style="margin-bottom:16px">换头像 🖼️</button>
+    <button id="openAvatar" class="btn btn-alt" style="margin-bottom:16px"><span data-i18n="me.change">换头像</span> 🖼️</button>
     <div class="field"><label>昵称</label><input id="nickInput2" type="text" maxlength="12" /></div>
     <p class="hint">改名只影响以后发的内容。</p>
-    <button id="nickSave" class="btn">保存 ✅</button>
+    <button id="nickSave" class="btn"><span data-i18n="me.save">保存</span> ✅</button>
   </div>
 </div>
 
 <div id="avMask" class="mask">
   <div class="sheet">
     <div class="sheet-head"><h3 class="display">🖼️ 换头像</h3><button class="x" data-close>×</button></div>
-    <button id="avUpload" class="btn">从手机 / 电脑选一张 📤</button>
+    <button id="avUpload" class="btn"><span data-i18n="av.pick">从手机 / 电脑选一张</span> 📤</button>
     <input id="avFile" type="file" accept="image/*" class="hidden">
     <div id="avStatus" class="hint" style="margin-top:10px"></div>
     <p class="hint" style="margin-top:16px">或者从相册里挑一张现成的：</p>
@@ -810,7 +923,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <div id="stkMask" class="mask">
   <div class="sheet">
     <div class="sheet-head"><h3 id="stkTitle" class="display">😆 表情包</h3><button class="x" data-close>×</button></div>
-    <button id="stkUpload" class="btn">传新表情包 📤</button>
+    <button id="stkUpload" class="btn"><span data-i18n="stk.upload">传新表情包</span> 📤</button>
     <input id="stkFile" type="file" accept="image/*" multiple class="hidden">
     <p class="hint" style="margin-top:14px">大家共用一套。点一张贴到正在写的内容上，点红叉删除。</p>
     <div id="stkGrid" class="stk-grid"></div>
@@ -823,11 +936,11 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
     <div class="sheet-head"><h3 class="display">📤 上传到相册</h3><button class="x" data-close>×</button></div>
     <p id="upCount" class="up-count"></p>
     <div id="upPrev" class="up-grid"></div>
-    <button id="upAddMore" class="btn btn-alt" style="margin-top:10px">再加几个 ➕</button>
+    <button id="upAddMore" class="btn btn-alt" style="margin-top:10px"><span data-i18n="alb.addMore">再加几个</span> ➕</button>
     <div class="field" style="margin-top:14px"><label>说明 💬（可选）</label>
       <input id="upCap" type="text" maxlength="40" placeholder="例如：这碗面真的绝" /></div>
     <div class="field"><label>顺便评个级 ⭐</label><div id="upLevels" class="picker"></div></div>
-    <button id="upSave" class="btn">传上去 🚀</button>
+    <button id="upSave" class="btn"><span data-i18n="alb.up">传上去</span> 🚀</button>
   </div>
 </div>
 
@@ -864,6 +977,7 @@ const C = {
   shots:   () => collection(db,...B,'shots'),
   stickers:() => collection(db,...B,'stickers'),
   comments:() => collection(db,...B,'comments'),
+  words:    () => collection(db,...B,'words'),
   folks:   () => collection(db,...B,'folks'),
   folk:    id => doc(db,...B,'folks',id),
   photo:   id => doc(db,...B,'photos',id),
@@ -872,13 +986,14 @@ const C = {
 };
 
 const LEVELS = [
-  { id:'hb',  name:'夯爆了', emoji:'🤯', color:'#D6242C', rank:5 },
-  { id:'rsr', name:'人上人', emoji:'😎', color:'#F2B705', rank:4 },
-  { id:'yb',  name:'一般',   emoji:'😐', color:'#8B8178', rank:3 },
-  { id:'rxr', name:'人下人', emoji:'🥲', color:'#5E7A8A', rank:2 },
-  { id:'lwl', name:'拉完了', emoji:'💩', color:'#6B4A2F', rank:1 },
+  { id:'hb',  key:'lv.hb',  emoji:'🤯', color:'#D6242C', rank:5 },
+  { id:'rsr', key:'lv.rsr', emoji:'😎', color:'#F2B705', rank:4 },
+  { id:'yb',  key:'lv.yb',  emoji:'😐', color:'#8B8178', rank:3 },
+  { id:'rxr', key:'lv.rxr', emoji:'😥', color:'#5E7A8A', rank:2 },
+  { id:'lwl', key:'lv.lwl', emoji:'💩', color:'#6B4A2F', rank:1 },
 ];
 const LV = Object.fromEntries(LEVELS.map(l=>[l.id,l]));
+const lvName = id => t((LV[id]||LV.yb).key);
 const CURRENCIES = [
   ['CNY','人民币','¥'], ['HKD','港币','HK$'], ['USD','美元','$'], ['TWD','新台币','NT$'],
   ['MOP','澳门元','MOP$'], ['JPY','日元','¥'], ['KRW','韩元','₩'], ['EUR','欧元','€'],
@@ -890,7 +1005,7 @@ const DEFAULT_RATES = { CNY:1, HKD:0.92, USD:7.15, TWD:0.225, MOP:0.89, JPY:0.04
   KRW:0.0052, EUR:7.8, GBP:9.1, SGD:5.35, AUD:4.7, CAD:5.2, THB:0.2, MYR:1.55 };
 const ONLINE_MS = 3*60*1000;
 
-let meals=[], shouts=[], reviews=[], plans=[], shots=[], stickers=[], comments=[], folks=[];
+let meals=[], shouts=[], reviews=[], plans=[], shots=[], stickers=[], comments=[], folks=[], words=[];
 let folkMap = {};
 let prefs = { base:'CNY', rates:{...DEFAULT_RATES}, pics:{} };
 let cursor = new Date(); cursor.setDate(1);
@@ -901,6 +1016,7 @@ let upQueue=[], upLevel='yb';
 let boxKey='', boxShotId='', boxOwn=false, boxChunks=0, boxMedia='image', boxMime='';
 let stkTarget=null, pendShoutStk='', pendCmtStk='', pendReplyStk={};
 let imgTarget=null, pendShoutImg='', pendCmtImg='', pendReplyImg={};
+let pendLoc=null, engQuery='';
 let myAvatar='';
 const photoCache = {};
 const unsubs = [];
@@ -919,14 +1035,14 @@ const toBase = (a,c) => a * (prefs.rates[c] ?? 1) / (prefs.rates[prefs.base] ?? 
 const esc = s => (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function ago(ms){
   const d=Date.now()-ms;
-  if(d<60000) return '刚刚';
-  if(d<3600000) return Math.floor(d/60000)+' 分钟前';
-  if(d<86400000) return Math.floor(d/3600000)+' 小时前';
-  if(d<604800000) return Math.floor(d/86400000)+' 天前';
+  if(d<60000) return t('t.now');
+  if(d<3600000) return Math.floor(d/60000)+' '+t('t.min');
+  if(d<86400000) return Math.floor(d/3600000)+' '+t('t.hour');
+  if(d<604800000) return Math.floor(d/86400000)+' '+t('t.day');
   const t=new Date(ms); return `${t.getMonth()+1}月${t.getDate()}日`;
 }
 function whenText(iso){
-  if(!iso) return '时间待定';
+  if(!iso) return t('plan.timeTbd');
   const d=new Date(iso); if(isNaN(d)) return iso;
   const wd=['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
   return `${d.getMonth()+1}月${d.getDate()}日 ${wd} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
@@ -947,7 +1063,7 @@ function avatarHTML(id, name){
 function faceHTML(id,size){
   const l=LV[id]; if(!l) return '';
   const pic=prefs.pics[id];
-  return pic ? `<img src="${pic}" alt="${l.name}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover">`
+  return pic ? `<img src="${pic}" alt="" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover">`
              : `<span style="font-size:${size}px">${l.emoji}</span>`;
 }
 function compress(file,maxSide=1000,q0=0.72){
@@ -1052,14 +1168,63 @@ function videoPoster(file){
   });
 }
 
+const I18N = {"zh":{"app.title":"黄程锡美食平台","gate.sub":"凭口令进店","gate.pwd":"口令","gate.enter":"进店","gate.opening":"正在开门…","gate.wrong":"口令不对","gate.nickTitle":"先取个名","gate.nickSub":"你记的饭、发的言都会挂在这个名下。","gate.nick":"你的昵称","gate.nickOk":"就叫这个","nav.cal":"日历","nav.wall":"喊话墙","nav.plan":"约饭","nav.rev":"品鉴","nav.alb":"相册","nav.eng":"英语角","nav.folk":"食客","hd.exit":"出店","hd.bell":"消息中心","hd.lang":"语言","cov.owner":"本店店主","cov.desc":"每天吃了什么、值几个钱、配得上几分——全在这儿了。","cov.hint":"看到好吃的记得来喊一声。","cal.all":"全部人","cal.today":"今天","cal.days":"打卡天数","cal.streak":"连续打卡","cal.meals":"本月吃饭","cal.spend":"本月花费","cal.unitDay":"天","cal.unitMeal":"餐","cal.rates":"货币与汇率","cal.levelPics":"换等级表情","day.empty":"这天还是空的，下面记第一餐。","day.what":"吃了什么","day.rating":"评级","day.amount":"金额","day.currency":"货币","day.photo":"照片（可选）","day.note":"评价（可选）","day.save":"记这一餐","day.free":"免费","day.by":"记的","wall.ph":"喊一句，比如：明天中午一起去吃那家牛肉火锅","wall.send":"贴上去","wall.sending":"贴上去…","wall.addStk":"加表情包","wall.addImg":"加照片","wall.at":"提到谁","wall.loc":"发位置","wall.manage":"管理表情包","wall.willSend":"这张会一起发","wall.drop":"不要了","wall.reply":"回复","wall.replyPh":"回一句…","wall.sendBtn":"发送","wall.empty":"墙上还是空的，第一句话由你来喊。","plan.new":"发起一次约饭","plan.what":"吃什么","plan.where":"在哪","plan.when":"什么时候","plan.extra":"补充（可选）","plan.post":"发出去","plan.tbd":"地点待定","plan.timeTbd":"时间待定","plan.past":"已过","plan.joined":"人已报名","plan.noOne":"还没人举手","plan.go":"我要去","plan.in":"我去（点一下取消）","plan.by":"发起","plan.empty":"还没人约饭，发起一次，看谁举手。","rev.new":"写一篇品鉴","rev.shop":"店名","rev.dish":"吃的什么","rev.avg":"人均","rev.verdict":"一句话结论","rev.body":"正文","rev.cover":"配图（可选）","rev.publish":"发表品鉴","rev.empty":"还没有品鉴，吃到值得写的，就写一篇。","alb.upload":"上传照片","alb.dropT":"把照片 / 视频拖到这里","alb.dropS":"照片、动图 GIF、短视频都行","alb.paste":"也可以复制后按","alb.release":"松手就上传","alb.max":"一次最多 9 个","alb.hint":"点开可以看大图、写评论。","alb.empty":"相册还是空的，传第一张吧。","alb.addMore":"再加几个","alb.selected":"已选","alb.removeHint":"点右上角 ✕ 去掉不要的","alb.none":"一个都没剩了","alb.caption":"说明（可选）","alb.rate":"顺便评个级","alb.up":"传上去","alb.del":"删掉这个","alb.loadVid":"正在载入视频…","alb.loadGif":"正在载入动图…","cmt.title":"评论","cmt.ph":"说点什么…","cmt.empty":"还没人说话。第一句归你。","folk.hint":"所有进过店的人。绿点表示三分钟内还在线。","folk.online":"在线","folk.list":"用户列表","folk.total":"共","folk.people":"位","folk.onlineN":"位在线","folk.you":"你","folk.isYou":"这是你","folk.said":"发言","folk.ate":"记账","folk.wrote":"品鉴","folk.went":"约饭","folk.shot":"照片","folk.joinedAt":"加入于","folk.lastSeen":"最后出现","me.title":"我的资料","me.avHint":"这是你现在的头像。换了会立刻同步到所有地方。","me.change":"换头像","me.nickHint":"改名只影响以后发的内容。","me.save":"保存","av.title":"换头像","av.pick":"从手机 / 电脑选一张","av.orPick":"或者从相册里挑一张现成的：","av.none":"相册还没有照片。","av.done":"换好了","av.working":"正在处理…","stk.title":"表情包","stk.upload":"传新表情包","stk.hint":"大家共用一套。点一张贴到正在写的内容上。","stk.empty":"还没有表情包，传几张。","stk.pickTitle":"挑一张贴上去","note.title":"消息中心","note.clear":"全部标为已读","note.unread":"条未读","note.allSeen":"都看过了","note.empty":"还没有消息。被 @、被回复、被评论都会出现在这里。","note.at":"提到了你","note.reply":"回复了你的留言","note.cmt":"评论了你的照片","note.creply":"回复了你的评论","note.join":"报名了你发起的约饭","loc.title":"发个位置","loc.here":"用我现在的位置","loc.searching":"正在定位…（浏览器会问你要不要允许）","loc.denied":"你拒绝了定位权限，可以改用下面的搜索。","loc.failed":"定位失败了，试试下面的搜索。","loc.or":"或者搜一个地方：","loc.searchPh":"例如：台中車站","loc.go":"搜索","loc.searchingP":"正在搜…","loc.none":"没找到，换个说法试试。","loc.err":"搜不了，可能是网络问题。","loc.open":"打开地图","loc.somewhere":"一个地方","eng.new":"分享一个词 / 一句话","eng.search":"搜单词、意思、例句…","eng.title":"分享到英语角","eng.word":"单词或句子","eng.pos":"词性（可选）","eng.ipa":"音标（可选）","eng.mean":"意思","eng.ex":"例句（可选）","eng.exT":"例句翻译（可选）","eng.note":"笔记（可选）","eng.save":"分享出去","eng.saving":"分享中…","eng.empty":"英语角还空着，把今天学到的词丢进来。","eng.noHit":"没搜到，换个词试试。","eng.speak":"读一遍","eng.learn":"学到了","eng.learned":"学过了","lv.hb":"夯爆了","lv.rsr":"人上人","lv.yb":"一般","lv.rxr":"人下人","lv.lwl":"拉完了","t.now":"刚刚","t.min":"分钟前","t.hour":"小时前","t.day":"天前","c.del":"删掉","c.confirmDel":"确定删掉？","c.anon":"匿名","c.photo":"[照片]","c.sticker":"[表情包]","c.loc":"[位置]"},"tw":{"app.title":"黃程錫美食平台","gate.sub":"憑口令進店","gate.pwd":"口令","gate.enter":"進店","gate.opening":"正在開門…","gate.wrong":"口令不對","gate.nickTitle":"先取個名","gate.nickSub":"你記的飯、發的言都會掛在這個名下。","gate.nick":"你的暱稱","gate.nickOk":"就叫這個","nav.cal":"日曆","nav.wall":"喊話牆","nav.plan":"約飯","nav.rev":"品鑑","nav.alb":"相簿","nav.eng":"英語角","nav.folk":"食客","hd.exit":"出店","hd.bell":"訊息中心","hd.lang":"語言","cov.owner":"本店店主","cov.desc":"每天吃了什麼、值幾個錢、配得上幾分——全在這兒了。","cov.hint":"看到好吃的記得來喊一聲。","cal.all":"全部人","cal.today":"今天","cal.days":"打卡天數","cal.streak":"連續打卡","cal.meals":"本月吃飯","cal.spend":"本月花費","cal.unitDay":"天","cal.unitMeal":"餐","cal.rates":"貨幣與匯率","cal.levelPics":"換等級表情","day.empty":"這天還是空的，下面記第一餐。","day.what":"吃了什麼","day.rating":"評級","day.amount":"金額","day.currency":"貨幣","day.photo":"照片（可選）","day.note":"評價（可選）","day.save":"記這一餐","day.free":"免費","day.by":"記的","wall.ph":"喊一句，比如：明天中午一起去吃那家牛肉火鍋","wall.send":"貼上去","wall.sending":"貼上去…","wall.addStk":"加表情包","wall.addImg":"加照片","wall.at":"提到誰","wall.loc":"發位置","wall.manage":"管理表情包","wall.willSend":"這張會一起發","wall.drop":"不要了","wall.reply":"回覆","wall.replyPh":"回一句…","wall.sendBtn":"發送","wall.empty":"牆上還是空的，第一句話由你來喊。","plan.new":"發起一次約飯","plan.what":"吃什麼","plan.where":"在哪","plan.when":"什麼時候","plan.extra":"補充（可選）","plan.post":"發出去","plan.tbd":"地點待定","plan.timeTbd":"時間待定","plan.past":"已過","plan.joined":"人已報名","plan.noOne":"還沒人舉手","plan.go":"我要去","plan.in":"我去（點一下取消）","plan.by":"發起","plan.empty":"還沒人約飯，發起一次，看誰舉手。","rev.new":"寫一篇品鑑","rev.shop":"店名","rev.dish":"吃的什麼","rev.avg":"人均","rev.verdict":"一句話結論","rev.body":"正文","rev.cover":"配圖（可選）","rev.publish":"發表品鑑","rev.empty":"還沒有品鑑，吃到值得寫的，就寫一篇。","alb.upload":"上傳照片","alb.dropT":"把照片 / 影片拖到這裡","alb.dropS":"照片、動圖 GIF、短影片都行","alb.paste":"也可以複製後按","alb.release":"鬆手就上傳","alb.max":"一次最多 9 個","alb.hint":"點開可以看大圖、寫評論。","alb.empty":"相簿還是空的，傳第一張吧。","alb.addMore":"再加幾個","alb.selected":"已選","alb.removeHint":"點右上角 ✕ 去掉不要的","alb.none":"一個都沒剩了","alb.caption":"說明（可選）","alb.rate":"順便評個級","alb.up":"傳上去","alb.del":"刪掉這個","alb.loadVid":"正在載入影片…","alb.loadGif":"正在載入動圖…","cmt.title":"評論","cmt.ph":"說點什麼…","cmt.empty":"還沒人說話。第一句歸你。","folk.hint":"所有進過店的人。綠點表示三分鐘內還在線。","folk.online":"在線","folk.list":"用戶列表","folk.total":"共","folk.people":"位","folk.onlineN":"位在線","folk.you":"你","folk.isYou":"這是你","folk.said":"發言","folk.ate":"記帳","folk.wrote":"品鑑","folk.went":"約飯","folk.shot":"照片","folk.joinedAt":"加入於","folk.lastSeen":"最後出現","me.title":"我的資料","me.avHint":"這是你現在的頭像。換了會立刻同步到所有地方。","me.change":"換頭像","me.nickHint":"改名只影響以後發的內容。","me.save":"保存","av.title":"換頭像","av.pick":"從手機 / 電腦選一張","av.orPick":"或者從相簿裡挑一張現成的：","av.none":"相簿還沒有照片。","av.done":"換好了","av.working":"正在處理…","stk.title":"表情包","stk.upload":"傳新表情包","stk.hint":"大家共用一套。點一張貼到正在寫的內容上。","stk.empty":"還沒有表情包，傳幾張。","stk.pickTitle":"挑一張貼上去","note.title":"訊息中心","note.clear":"全部標為已讀","note.unread":"條未讀","note.allSeen":"都看過了","note.empty":"還沒有訊息。被 @、被回覆、被評論都會出現在這裡。","note.at":"提到了你","note.reply":"回覆了你的留言","note.cmt":"評論了你的照片","note.creply":"回覆了你的評論","note.join":"報名了你發起的約飯","loc.title":"發個位置","loc.here":"用我現在的位置","loc.searching":"正在定位…（瀏覽器會問你要不要允許）","loc.denied":"你拒絕了定位權限，可以改用下面的搜尋。","loc.failed":"定位失敗了，試試下面的搜尋。","loc.or":"或者搜一個地方：","loc.searchPh":"例如：台中車站","loc.go":"搜尋","loc.searchingP":"正在搜…","loc.none":"沒找到，換個說法試試。","loc.err":"搜不了，可能是網路問題。","loc.open":"打開地圖","loc.somewhere":"一個地方","eng.new":"分享一個詞 / 一句話","eng.search":"搜單字、意思、例句…","eng.title":"分享到英語角","eng.word":"單字或句子","eng.pos":"詞性（可選）","eng.ipa":"音標（可選）","eng.mean":"意思","eng.ex":"例句（可選）","eng.exT":"例句翻譯（可選）","eng.note":"筆記（可選）","eng.save":"分享出去","eng.saving":"分享中…","eng.empty":"英語角還空著，把今天學到的詞丟進來。","eng.noHit":"沒搜到，換個詞試試。","eng.speak":"讀一遍","eng.learn":"學到了","eng.learned":"學過了","lv.hb":"夯爆了","lv.rsr":"人上人","lv.yb":"一般","lv.rxr":"人下人","lv.lwl":"拉完了","t.now":"剛剛","t.min":"分鐘前","t.hour":"小時前","t.day":"天前","c.del":"刪掉","c.confirmDel":"確定刪掉？","c.anon":"匿名","c.photo":"[照片]","c.sticker":"[表情包]","c.loc":"[位置]"},"en":{"app.title":"HCX Food Club","gate.sub":"Enter with the passcode","gate.pwd":"Passcode","gate.enter":"Enter","gate.opening":"Opening…","gate.wrong":"Wrong passcode","gate.nickTitle":"Pick a name","gate.nickSub":"Your meals and messages will show this name.","gate.nick":"Your nickname","gate.nickOk":"Use this name","nav.cal":"Calendar","nav.wall":"Wall","nav.plan":"Meetups","nav.rev":"Reviews","nav.alb":"Album","nav.eng":"English Corner","nav.folk":"Members","hd.exit":"Log out","hd.bell":"Notifications","hd.lang":"Language","cov.owner":"Owner","cov.desc":"What we ate, what it cost, what it deserved — all here.","cov.hint":"Found something good? Shout about it.","cal.all":"Everyone","cal.today":"Today","cal.days":"Days logged","cal.streak":"Streak","cal.meals":"Meals this month","cal.spend":"Spent this month","cal.unitDay":"d","cal.unitMeal":"meals","cal.rates":"Currency & rates","cal.levelPics":"Rating icons","day.empty":"Nothing yet. Add the first meal below.","day.what":"What did you eat","day.rating":"Rating","day.amount":"Amount","day.currency":"Currency","day.photo":"Photo (optional)","day.note":"Comment (optional)","day.save":"Save this meal","day.free":"free","day.by":"logged it","wall.ph":"Shout something, e.g. hotpot tomorrow at noon?","wall.send":"Post","wall.sending":"Posting…","wall.addStk":"Sticker","wall.addImg":"Photo","wall.at":"Mention","wall.loc":"Location","wall.manage":"Manage stickers","wall.willSend":"Will be sent with it","wall.drop":"Remove","wall.reply":"Reply","wall.replyPh":"Write a reply…","wall.sendBtn":"Send","wall.empty":"The wall is empty. Say the first thing.","plan.new":"Start a meetup","plan.what":"What to eat","plan.where":"Where","plan.when":"When","plan.extra":"Notes (optional)","plan.post":"Post it","plan.tbd":"Place TBD","plan.timeTbd":"Time TBD","plan.past":"past","plan.joined":"joined","plan.noOne":"No one yet","plan.go":"I'm in","plan.in":"You're in (tap to leave)","plan.by":"started by","plan.empty":"No meetups yet. Start one and see who joins.","rev.new":"Write a review","rev.shop":"Restaurant","rev.dish":"What you ordered","rev.avg":"Per person","rev.verdict":"One-line verdict","rev.body":"Full review","rev.cover":"Cover photo (optional)","rev.publish":"Publish","rev.empty":"No reviews yet. Write one when something's worth it.","alb.upload":"Upload","alb.dropT":"Drop photos or videos here","alb.dropS":"Photos, GIFs and short clips all work","alb.paste":"or copy and press","alb.release":"Release to upload","alb.max":"Up to 9 at a time","alb.hint":"Tap to view full size and comment.","alb.empty":"Album is empty. Upload the first one.","alb.addMore":"Add more","alb.selected":"Selected","alb.removeHint":"Tap ✕ to remove any","alb.none":"Nothing left","alb.caption":"Caption (optional)","alb.rate":"Rate it too","alb.up":"Upload","alb.del":"Delete this","alb.loadVid":"Loading video…","alb.loadGif":"Loading GIF…","cmt.title":"Comments","cmt.ph":"Say something…","cmt.empty":"No comments yet. Go first.","folk.hint":"Everyone who's been here. Green dot = active in the last 3 min.","folk.online":"online","folk.list":"Member list","folk.total":"Total","folk.people":"members","folk.onlineN":"online","folk.you":"You","folk.isYou":"That's you","folk.said":"Posts","folk.ate":"Meals","folk.wrote":"Reviews","folk.went":"Meetups","folk.shot":"Photos","folk.joinedAt":"joined","folk.lastSeen":"last seen","me.title":"My profile","me.avHint":"Your current avatar. Changing it syncs everywhere instantly.","me.change":"Change avatar","me.nickHint":"Renaming affects future posts only.","me.save":"Save","av.title":"Change avatar","av.pick":"Pick from your device","av.orPick":"Or pick one from the album:","av.none":"No photos in the album yet.","av.done":"Done","av.working":"Working…","stk.title":"Stickers","stk.upload":"Upload stickers","stk.hint":"Shared by everyone. Tap one to attach it.","stk.empty":"No stickers yet. Upload a few.","stk.pickTitle":"Pick one to attach","note.title":"Notifications","note.clear":"Mark all read","note.unread":"unread","note.allSeen":"all caught up","note.empty":"No notifications yet. Mentions, replies and comments show up here.","note.at":"mentioned you","note.reply":"replied to your post","note.cmt":"commented on your photo","note.creply":"replied to your comment","note.join":"joined your meetup","loc.title":"Share a location","loc.here":"Use my current location","loc.searching":"Locating… (your browser will ask permission)","loc.denied":"Permission denied. Try searching below.","loc.failed":"Couldn't locate you. Try searching below.","loc.or":"Or search for a place:","loc.searchPh":"e.g. Taichung Station","loc.go":"Search","loc.searchingP":"Searching…","loc.none":"Nothing found. Try different words.","loc.err":"Search failed, maybe a network issue.","loc.open":"Open map","loc.somewhere":"a place","eng.new":"Share a word or phrase","eng.search":"Search words, meanings, examples…","eng.title":"Share to English Corner","eng.word":"Word or sentence","eng.pos":"Part of speech (optional)","eng.ipa":"Phonetics (optional)","eng.mean":"Meaning","eng.ex":"Example (optional)","eng.exT":"Example translation (optional)","eng.note":"Notes (optional)","eng.save":"Share it","eng.saving":"Sharing…","eng.empty":"English Corner is empty. Drop in a word you learned.","eng.noHit":"No match. Try another word.","eng.speak":"Play","eng.learn":"Got it","eng.learned":"Learned","lv.hb":"Mind-blowing","lv.rsr":"Top tier","lv.yb":"Just okay","lv.rxr":"Below par","lv.lwl":"Disaster","t.now":"just now","t.min":"min ago","t.hour":"h ago","t.day":"d ago","c.del":"Delete","c.confirmDel":"Delete this?","c.anon":"Anonymous","c.photo":"[photo]","c.sticker":"[sticker]","c.loc":"[location]"},"ja":{"app.title":"黄程錫グルメ広場","gate.sub":"合言葉で入店","gate.pwd":"合言葉","gate.enter":"入店","gate.opening":"開けています…","gate.wrong":"合言葉が違います","gate.nickTitle":"名前を決めよう","gate.nickSub":"記録や投稿はこの名前で表示されます。","gate.nick":"ニックネーム","gate.nickOk":"これにする","nav.cal":"カレンダー","nav.wall":"掲示板","nav.plan":"食事会","nav.rev":"レビュー","nav.alb":"アルバム","nav.eng":"英語コーナー","nav.folk":"メンバー","hd.exit":"退店","hd.bell":"お知らせ","hd.lang":"言語","cov.owner":"店主","cov.desc":"何を食べ、いくら使い、何点か——全部ここに。","cov.hint":"美味しい店を見つけたら教えて。","cal.all":"全員","cal.today":"今日","cal.days":"記録日数","cal.streak":"連続記録","cal.meals":"今月の食事","cal.spend":"今月の支出","cal.unitDay":"日","cal.unitMeal":"食","cal.rates":"通貨とレート","cal.levelPics":"評価アイコン","day.empty":"まだ空です。下から追加を。","day.what":"何を食べた","day.rating":"評価","day.amount":"金額","day.currency":"通貨","day.photo":"写真（任意）","day.note":"感想（任意）","day.save":"この食事を記録","day.free":"無料","day.by":"が記録","wall.ph":"一言どうぞ。例：明日のお昼に火鍋どう？","wall.send":"投稿","wall.sending":"投稿中…","wall.addStk":"スタンプ","wall.addImg":"写真","wall.at":"メンション","wall.loc":"位置","wall.manage":"スタンプ管理","wall.willSend":"一緒に送ります","wall.drop":"取り消す","wall.reply":"返信","wall.replyPh":"返信を書く…","wall.sendBtn":"送信","wall.empty":"まだ何もありません。最初の一言を。","plan.new":"食事会を立てる","plan.what":"何を食べる","plan.where":"どこで","plan.when":"いつ","plan.extra":"補足（任意）","plan.post":"投稿する","plan.tbd":"場所未定","plan.timeTbd":"時間未定","plan.past":"終了","plan.joined":"人参加","plan.noOne":"まだ誰も","plan.go":"参加する","plan.in":"参加中（タップで取消）","plan.by":"が企画","plan.empty":"まだ食事会がありません。立ててみよう。","rev.new":"レビューを書く","rev.shop":"店名","rev.dish":"注文したもの","rev.avg":"一人あたり","rev.verdict":"ひと言まとめ","rev.body":"本文","rev.cover":"写真（任意）","rev.publish":"公開する","rev.empty":"レビューはまだ。書きたい店に出会ったら。","alb.upload":"アップロード","alb.dropT":"写真・動画をここへ","alb.dropS":"写真・GIF・短い動画に対応","alb.paste":"またはコピーして","alb.release":"離すとアップロード","alb.max":"一度に9件まで","alb.hint":"タップで拡大・コメント。","alb.empty":"アルバムは空です。最初の一枚を。","alb.addMore":"もっと追加","alb.selected":"選択中","alb.removeHint":"✕で不要なものを削除","alb.none":"何も残っていません","alb.caption":"説明（任意）","alb.rate":"ついでに評価","alb.up":"アップロード","alb.del":"これを削除","alb.loadVid":"動画を読み込み中…","alb.loadGif":"GIFを読み込み中…","cmt.title":"コメント","cmt.ph":"何か書く…","cmt.empty":"コメントはまだ。最初にどうぞ。","folk.hint":"来店した全員。緑は3分以内にオンライン。","folk.online":"オンライン","folk.list":"メンバー一覧","folk.total":"合計","folk.people":"人","folk.onlineN":"人オンライン","folk.you":"あなた","folk.isYou":"あなたです","folk.said":"投稿","folk.ate":"記録","folk.wrote":"レビュー","folk.went":"食事会","folk.shot":"写真","folk.joinedAt":"参加","folk.lastSeen":"最終","me.title":"プロフィール","me.avHint":"現在のアイコン。変更は即座に反映されます。","me.change":"アイコンを変更","me.nickHint":"改名は今後の投稿にのみ反映。","me.save":"保存","av.title":"アイコンを変更","av.pick":"端末から選ぶ","av.orPick":"またはアルバムから：","av.none":"アルバムに写真がありません。","av.done":"変更しました","av.working":"処理中…","stk.title":"スタンプ","stk.upload":"スタンプを追加","stk.hint":"全員共通。タップで添付。","stk.empty":"スタンプがありません。追加を。","stk.pickTitle":"貼るスタンプを選ぶ","note.title":"お知らせ","note.clear":"すべて既読に","note.unread":"件未読","note.allSeen":"すべて確認済み","note.empty":"お知らせはまだ。メンションや返信がここに。","note.at":"があなたにメンション","note.reply":"があなたの投稿に返信","note.cmt":"があなたの写真にコメント","note.creply":"があなたのコメントに返信","note.join":"があなたの食事会に参加","loc.title":"位置を送る","loc.here":"現在地を使う","loc.searching":"位置取得中…（許可を求められます）","loc.denied":"許可が拒否されました。下で検索を。","loc.failed":"位置を取得できません。検索をどうぞ。","loc.or":"または場所を検索：","loc.searchPh":"例：台中駅","loc.go":"検索","loc.searchingP":"検索中…","loc.none":"見つかりません。言い換えて。","loc.err":"検索できません。通信をご確認ください。","loc.open":"地図を開く","loc.somewhere":"ある場所","eng.new":"単語やフレーズを共有","eng.search":"単語・意味・例文を検索…","eng.title":"英語コーナーに共有","eng.word":"単語または文","eng.pos":"品詞（任意）","eng.ipa":"発音記号（任意）","eng.mean":"意味","eng.ex":"例文（任意）","eng.exT":"例文の訳（任意）","eng.note":"メモ（任意）","eng.save":"共有する","eng.saving":"共有中…","eng.empty":"英語コーナーは空です。覚えた単語をどうぞ。","eng.noHit":"見つかりません。別の語で。","eng.speak":"読み上げ","eng.learn":"覚えた","eng.learned":"習得済み","lv.hb":"神うま","lv.rsr":"かなり良い","lv.yb":"ふつう","lv.rxr":"いまいち","lv.lwl":"最悪","t.now":"たった今","t.min":"分前","t.hour":"時間前","t.day":"日前","c.del":"削除","c.confirmDel":"削除しますか？","c.anon":"匿名","c.photo":"[写真]","c.sticker":"[スタンプ]","c.loc":"[位置]"},"es":{"app.title":"Club Gastronómico HCX","gate.sub":"Entra con la contraseña","gate.pwd":"Contraseña","gate.enter":"Entrar","gate.opening":"Abriendo…","gate.wrong":"Contraseña incorrecta","gate.nickTitle":"Elige un nombre","gate.nickSub":"Tus comidas y mensajes usarán este nombre.","gate.nick":"Tu apodo","gate.nickOk":"Usar este","nav.cal":"Calendario","nav.wall":"Muro","nav.plan":"Quedadas","nav.rev":"Reseñas","nav.alb":"Álbum","nav.eng":"Rincón de inglés","nav.folk":"Miembros","hd.exit":"Salir","hd.bell":"Notificaciones","hd.lang":"Idioma","cov.owner":"Dueño","cov.desc":"Qué comimos, cuánto costó, cuánto merece — todo aquí.","cov.hint":"¿Algo bueno? Cuéntalo.","cal.all":"Todos","cal.today":"Hoy","cal.days":"Días registrados","cal.streak":"Racha","cal.meals":"Comidas del mes","cal.spend":"Gasto del mes","cal.unitDay":"d","cal.unitMeal":"comidas","cal.rates":"Moneda y tipos","cal.levelPics":"Iconos de nivel","day.empty":"Aún nada. Añade la primera comida.","day.what":"¿Qué comiste?","day.rating":"Valoración","day.amount":"Importe","day.currency":"Moneda","day.photo":"Foto (opcional)","day.note":"Comentario (opcional)","day.save":"Guardar comida","day.free":"gratis","day.by":"lo registró","wall.ph":"Di algo, p.ej. ¿mañana hotpot al mediodía?","wall.send":"Publicar","wall.sending":"Publicando…","wall.addStk":"Sticker","wall.addImg":"Foto","wall.at":"Mencionar","wall.loc":"Ubicación","wall.manage":"Gestionar stickers","wall.willSend":"Se enviará junto","wall.drop":"Quitar","wall.reply":"Responder","wall.replyPh":"Escribe una respuesta…","wall.sendBtn":"Enviar","wall.empty":"El muro está vacío. Di lo primero.","plan.new":"Crear una quedada","plan.what":"Qué comer","plan.where":"Dónde","plan.when":"Cuándo","plan.extra":"Notas (opcional)","plan.post":"Publicar","plan.tbd":"Lugar por definir","plan.timeTbd":"Hora por definir","plan.past":"pasado","plan.joined":"apuntados","plan.noOne":"Nadie aún","plan.go":"Me apunto","plan.in":"Apuntado (toca para salir)","plan.by":"creado por","plan.empty":"No hay quedadas. Crea una y mira quién viene.","rev.new":"Escribir reseña","rev.shop":"Restaurante","rev.dish":"Qué pediste","rev.avg":"Por persona","rev.verdict":"Veredicto en una línea","rev.body":"Reseña completa","rev.cover":"Foto (opcional)","rev.publish":"Publicar","rev.empty":"Sin reseñas. Escribe una cuando valga la pena.","alb.upload":"Subir","alb.dropT":"Suelta fotos o vídeos aquí","alb.dropS":"Fotos, GIF y clips cortos","alb.paste":"o copia y pulsa","alb.release":"Suelta para subir","alb.max":"Hasta 9 a la vez","alb.hint":"Toca para ver y comentar.","alb.empty":"El álbum está vacío. Sube la primera.","alb.addMore":"Añadir más","alb.selected":"Seleccionados","alb.removeHint":"Toca ✕ para quitar","alb.none":"No queda ninguno","alb.caption":"Descripción (opcional)","alb.rate":"Valóralo también","alb.up":"Subir","alb.del":"Eliminar","alb.loadVid":"Cargando vídeo…","alb.loadGif":"Cargando GIF…","cmt.title":"Comentarios","cmt.ph":"Di algo…","cmt.empty":"Sin comentarios. Empieza tú.","folk.hint":"Todos los que han entrado. Verde = activo hace 3 min.","folk.online":"en línea","folk.list":"Lista de miembros","folk.total":"Total","folk.people":"miembros","folk.onlineN":"en línea","folk.you":"Tú","folk.isYou":"Eres tú","folk.said":"Mensajes","folk.ate":"Comidas","folk.wrote":"Reseñas","folk.went":"Quedadas","folk.shot":"Fotos","folk.joinedAt":"se unió","folk.lastSeen":"visto","me.title":"Mi perfil","me.avHint":"Tu avatar actual. El cambio se sincroniza al instante.","me.change":"Cambiar avatar","me.nickHint":"El cambio afecta solo a lo futuro.","me.save":"Guardar","av.title":"Cambiar avatar","av.pick":"Elegir del dispositivo","av.orPick":"O elige del álbum:","av.none":"Aún no hay fotos.","av.done":"Listo","av.working":"Procesando…","stk.title":"Stickers","stk.upload":"Subir stickers","stk.hint":"Compartidos por todos. Toca para adjuntar.","stk.empty":"Sin stickers. Sube algunos.","stk.pickTitle":"Elige uno para adjuntar","note.title":"Notificaciones","note.clear":"Marcar todo leído","note.unread":"sin leer","note.allSeen":"todo al día","note.empty":"Sin notificaciones. Menciones y respuestas aparecen aquí.","note.at":"te mencionó","note.reply":"respondió a tu mensaje","note.cmt":"comentó tu foto","note.creply":"respondió a tu comentario","note.join":"se apuntó a tu quedada","loc.title":"Compartir ubicación","loc.here":"Usar mi ubicación","loc.searching":"Localizando… (el navegador pedirá permiso)","loc.denied":"Permiso denegado. Usa la búsqueda.","loc.failed":"No se pudo localizar. Prueba a buscar.","loc.or":"O busca un lugar:","loc.searchPh":"p.ej. Estación de Taichung","loc.go":"Buscar","loc.searchingP":"Buscando…","loc.none":"No se encontró. Prueba otras palabras.","loc.err":"Fallo la búsqueda, revisa la red.","loc.open":"Abrir mapa","loc.somewhere":"un lugar","eng.new":"Comparte una palabra o frase","eng.search":"Busca palabras, significados…","eng.title":"Compartir en el rincón","eng.word":"Palabra o frase","eng.pos":"Categoría (opcional)","eng.ipa":"Fonética (opcional)","eng.mean":"Significado","eng.ex":"Ejemplo (opcional)","eng.exT":"Traducción (opcional)","eng.note":"Notas (opcional)","eng.save":"Compartir","eng.saving":"Compartiendo…","eng.empty":"El rincón está vacío. Comparte una palabra.","eng.noHit":"Sin resultados. Prueba otra.","eng.speak":"Escuchar","eng.learn":"Aprendido","eng.learned":"Aprendido","lv.hb":"Espectacular","lv.rsr":"De lujo","lv.yb":"Normal","lv.rxr":"Flojo","lv.lwl":"Un desastre","t.now":"ahora","t.min":"min","t.hour":"h","t.day":"d","c.del":"Eliminar","c.confirmDel":"¿Eliminar esto?","c.anon":"Anónimo","c.photo":"[foto]","c.sticker":"[sticker]","c.loc":"[ubicación]"},"fr":{"app.title":"Club Gourmet HCX","gate.sub":"Entrez avec le mot de passe","gate.pwd":"Mot de passe","gate.enter":"Entrer","gate.opening":"Ouverture…","gate.wrong":"Mot de passe incorrect","gate.nickTitle":"Choisis un nom","gate.nickSub":"Vos repas et messages porteront ce nom.","gate.nick":"Ton pseudo","gate.nickOk":"Utiliser","nav.cal":"Calendrier","nav.wall":"Mur","nav.plan":"Sorties","nav.rev":"Avis","nav.alb":"Album","nav.eng":"Coin anglais","nav.folk":"Membres","hd.exit":"Quitter","hd.bell":"Notifications","hd.lang":"Langue","cov.owner":"Propriétaire","cov.desc":"Ce qu'on a mangé, le prix, la note — tout est là.","cov.hint":"Un bon plan ? Dis-le.","cal.all":"Tout le monde","cal.today":"Aujourd'hui","cal.days":"Jours enregistrés","cal.streak":"Série","cal.meals":"Repas du mois","cal.spend":"Dépenses du mois","cal.unitDay":"j","cal.unitMeal":"repas","cal.rates":"Devise et taux","cal.levelPics":"Icônes de niveau","day.empty":"Rien encore. Ajoute le premier repas.","day.what":"Qu'as-tu mangé","day.rating":"Note","day.amount":"Montant","day.currency":"Devise","day.photo":"Photo (facultatif)","day.note":"Commentaire (facultatif)","day.save":"Enregistrer","day.free":"gratuit","day.by":"l'a noté","wall.ph":"Lance un mot, ex. : fondue demain midi ?","wall.send":"Publier","wall.sending":"Envoi…","wall.addStk":"Sticker","wall.addImg":"Photo","wall.at":"Mentionner","wall.loc":"Position","wall.manage":"Gérer les stickers","wall.willSend":"Sera envoyé avec","wall.drop":"Retirer","wall.reply":"Répondre","wall.replyPh":"Écrire une réponse…","wall.sendBtn":"Envoyer","wall.empty":"Le mur est vide. Lance le premier mot.","plan.new":"Lancer une sortie","plan.what":"Quoi manger","plan.where":"Où","plan.when":"Quand","plan.extra":"Notes (facultatif)","plan.post":"Publier","plan.tbd":"Lieu à définir","plan.timeTbd":"Heure à définir","plan.past":"passé","plan.joined":"inscrits","plan.noOne":"Personne encore","plan.go":"Je viens","plan.in":"Inscrit (touchez pour annuler)","plan.by":"lancé par","plan.empty":"Aucune sortie. Lance-en une.","rev.new":"Écrire un avis","rev.shop":"Restaurant","rev.dish":"Ce que tu as pris","rev.avg":"Par personne","rev.verdict":"Verdict en une ligne","rev.body":"Avis complet","rev.cover":"Photo (facultatif)","rev.publish":"Publier","rev.empty":"Aucun avis. Écris-en un quand ça vaut le coup.","alb.upload":"Téléverser","alb.dropT":"Dépose photos ou vidéos ici","alb.dropS":"Photos, GIF et clips courts","alb.paste":"ou copie et appuie sur","alb.release":"Relâche pour envoyer","alb.max":"9 maximum à la fois","alb.hint":"Touche pour agrandir et commenter.","alb.empty":"L'album est vide. Envoie la première.","alb.addMore":"Ajouter","alb.selected":"Sélectionnés","alb.removeHint":"Touche ✕ pour retirer","alb.none":"Il ne reste rien","alb.caption":"Légende (facultatif)","alb.rate":"Note-le aussi","alb.up":"Envoyer","alb.del":"Supprimer","alb.loadVid":"Chargement de la vidéo…","alb.loadGif":"Chargement du GIF…","cmt.title":"Commentaires","cmt.ph":"Dis quelque chose…","cmt.empty":"Aucun commentaire. À toi.","folk.hint":"Tous ceux qui sont venus. Vert = actif depuis 3 min.","folk.online":"en ligne","folk.list":"Liste des membres","folk.total":"Total","folk.people":"membres","folk.onlineN":"en ligne","folk.you":"Toi","folk.isYou":"C'est toi","folk.said":"Messages","folk.ate":"Repas","folk.wrote":"Avis","folk.went":"Sorties","folk.shot":"Photos","folk.joinedAt":"inscrit","folk.lastSeen":"vu","me.title":"Mon profil","me.avHint":"Ton avatar actuel. Le changement est instantané.","me.change":"Changer d'avatar","me.nickHint":"Le changement n'affecte que la suite.","me.save":"Enregistrer","av.title":"Changer d'avatar","av.pick":"Choisir depuis l'appareil","av.orPick":"Ou choisis dans l'album :","av.none":"Pas encore de photos.","av.done":"C'est fait","av.working":"Traitement…","stk.title":"Stickers","stk.upload":"Ajouter des stickers","stk.hint":"Partagés par tous. Touche pour joindre.","stk.empty":"Aucun sticker. Ajoutes-en.","stk.pickTitle":"Choisis-en un","note.title":"Notifications","note.clear":"Tout marquer lu","note.unread":"non lus","note.allSeen":"tout est lu","note.empty":"Aucune notification. Mentions et réponses ici.","note.at":"t'a mentionné","note.reply":"a répondu à ton message","note.cmt":"a commenté ta photo","note.creply":"a répondu à ton commentaire","note.join":"a rejoint ta sortie","loc.title":"Partager un lieu","loc.here":"Utiliser ma position","loc.searching":"Localisation… (le navigateur demandera l'autorisation)","loc.denied":"Permission refusée. Utilise la recherche.","loc.failed":"Localisation impossible. Essaie la recherche.","loc.or":"Ou cherche un lieu :","loc.searchPh":"ex. : gare de Taichung","loc.go":"Chercher","loc.searchingP":"Recherche…","loc.none":"Rien trouvé. Essaie autrement.","loc.err":"Échec de la recherche, vérifie le réseau.","loc.open":"Ouvrir la carte","loc.somewhere":"un lieu","eng.new":"Partage un mot ou une phrase","eng.search":"Cherche mots, sens, exemples…","eng.title":"Partager au coin anglais","eng.word":"Mot ou phrase","eng.pos":"Nature (facultatif)","eng.ipa":"Phonétique (facultatif)","eng.mean":"Sens","eng.ex":"Exemple (facultatif)","eng.exT":"Traduction (facultatif)","eng.note":"Notes (facultatif)","eng.save":"Partager","eng.saving":"Partage…","eng.empty":"Le coin est vide. Partage un mot appris.","eng.noHit":"Aucun résultat. Essaie un autre mot.","eng.speak":"Écouter","eng.learn":"Appris","eng.learned":"Appris","lv.hb":"Une tuerie","lv.rsr":"Au top","lv.yb":"Correct","lv.rxr":"Bof","lv.lwl":"Catastrophe","t.now":"à l'instant","t.min":"min","t.hour":"h","t.day":"j","c.del":"Supprimer","c.confirmDel":"Supprimer ceci ?","c.anon":"Anonyme","c.photo":"[photo]","c.sticker":"[sticker]","c.loc":"[position]"},"de":{"app.title":"HCX Food-Club","gate.sub":"Mit Passwort eintreten","gate.pwd":"Passwort","gate.enter":"Eintreten","gate.opening":"Öffne…","gate.wrong":"Falsches Passwort","gate.nickTitle":"Wähle einen Namen","gate.nickSub":"Deine Mahlzeiten und Beiträge zeigen diesen Namen.","gate.nick":"Dein Spitzname","gate.nickOk":"Übernehmen","nav.cal":"Kalender","nav.wall":"Pinnwand","nav.plan":"Treffen","nav.rev":"Kritiken","nav.alb":"Album","nav.eng":"Englischecke","nav.folk":"Mitglieder","hd.exit":"Abmelden","hd.bell":"Mitteilungen","hd.lang":"Sprache","cov.owner":"Inhaber","cov.desc":"Was gegessen, was gekostet, wie bewertet — alles hier.","cov.hint":"Was Gutes gefunden? Sag Bescheid.","cal.all":"Alle","cal.today":"Heute","cal.days":"Erfasste Tage","cal.streak":"Serie","cal.meals":"Mahlzeiten diesen Monat","cal.spend":"Ausgaben diesen Monat","cal.unitDay":"T","cal.unitMeal":"Mahlz.","cal.rates":"Währung & Kurse","cal.levelPics":"Bewertungs-Icons","day.empty":"Noch nichts. Füge unten hinzu.","day.what":"Was gegessen","day.rating":"Bewertung","day.amount":"Betrag","day.currency":"Währung","day.photo":"Foto (optional)","day.note":"Kommentar (optional)","day.save":"Speichern","day.free":"gratis","day.by":"erfasst","wall.ph":"Ruf was rein, z.B.: morgen Mittag Hotpot?","wall.send":"Posten","wall.sending":"Sende…","wall.addStk":"Sticker","wall.addImg":"Foto","wall.at":"Erwähnen","wall.loc":"Standort","wall.manage":"Sticker verwalten","wall.willSend":"Wird mitgesendet","wall.drop":"Entfernen","wall.reply":"Antworten","wall.replyPh":"Antwort schreiben…","wall.sendBtn":"Senden","wall.empty":"Die Pinnwand ist leer. Sag das Erste.","plan.new":"Treffen starten","plan.what":"Was essen","plan.where":"Wo","plan.when":"Wann","plan.extra":"Notizen (optional)","plan.post":"Veröffentlichen","plan.tbd":"Ort offen","plan.timeTbd":"Zeit offen","plan.past":"vorbei","plan.joined":"dabei","plan.noOne":"Noch niemand","plan.go":"Ich komme","plan.in":"Dabei (tippen zum Abmelden)","plan.by":"gestartet von","plan.empty":"Noch keine Treffen. Starte eins.","rev.new":"Kritik schreiben","rev.shop":"Restaurant","rev.dish":"Was bestellt","rev.avg":"Pro Person","rev.verdict":"Fazit in einem Satz","rev.body":"Volltext","rev.cover":"Foto (optional)","rev.publish":"Veröffentlichen","rev.empty":"Noch keine Kritiken. Schreib eine, wenn's lohnt.","alb.upload":"Hochladen","alb.dropT":"Fotos oder Videos hierher ziehen","alb.dropS":"Fotos, GIFs und kurze Clips","alb.paste":"oder kopieren und drücken","alb.release":"Loslassen zum Hochladen","alb.max":"Bis zu 9 auf einmal","alb.hint":"Antippen zum Ansehen und Kommentieren.","alb.empty":"Album ist leer. Lade das erste hoch.","alb.addMore":"Mehr hinzufügen","alb.selected":"Ausgewählt","alb.removeHint":"Mit ✕ entfernen","alb.none":"Nichts übrig","alb.caption":"Bildtext (optional)","alb.rate":"Bewerte es auch","alb.up":"Hochladen","alb.del":"Löschen","alb.loadVid":"Video wird geladen…","alb.loadGif":"GIF wird geladen…","cmt.title":"Kommentare","cmt.ph":"Sag etwas…","cmt.empty":"Noch keine Kommentare. Fang an.","folk.hint":"Alle Besucher. Grün = in den letzten 3 Min. aktiv.","folk.online":"online","folk.list":"Mitgliederliste","folk.total":"Gesamt","folk.people":"Mitglieder","folk.onlineN":"online","folk.you":"Du","folk.isYou":"Das bist du","folk.said":"Beiträge","folk.ate":"Mahlzeiten","folk.wrote":"Kritiken","folk.went":"Treffen","folk.shot":"Fotos","folk.joinedAt":"beigetreten","folk.lastSeen":"zuletzt","me.title":"Mein Profil","me.avHint":"Dein Avatar. Änderungen gelten sofort überall.","me.change":"Avatar ändern","me.nickHint":"Umbenennen gilt nur für Neues.","me.save":"Speichern","av.title":"Avatar ändern","av.pick":"Vom Gerät wählen","av.orPick":"Oder aus dem Album wählen:","av.none":"Noch keine Fotos.","av.done":"Fertig","av.working":"Verarbeite…","stk.title":"Sticker","stk.upload":"Sticker hochladen","stk.hint":"Für alle. Antippen zum Anhängen.","stk.empty":"Noch keine Sticker. Lade welche hoch.","stk.pickTitle":"Wähle einen aus","note.title":"Mitteilungen","note.clear":"Alle gelesen","note.unread":"ungelesen","note.allSeen":"alles gelesen","note.empty":"Keine Mitteilungen. Erwähnungen und Antworten hier.","note.at":"hat dich erwähnt","note.reply":"hat auf dich geantwortet","note.cmt":"hat dein Foto kommentiert","note.creply":"hat auf deinen Kommentar geantwortet","note.join":"ist deinem Treffen beigetreten","loc.title":"Standort teilen","loc.here":"Aktuellen Standort nutzen","loc.searching":"Ortung… (Browser fragt nach Erlaubnis)","loc.denied":"Zugriff verweigert. Nutze die Suche.","loc.failed":"Ortung fehlgeschlagen. Versuch die Suche.","loc.or":"Oder Ort suchen:","loc.searchPh":"z.B. Bahnhof Taichung","loc.go":"Suchen","loc.searchingP":"Suche…","loc.none":"Nichts gefunden. Anders formulieren.","loc.err":"Suche fehlgeschlagen, Netzwerk prüfen.","loc.open":"Karte öffnen","loc.somewhere":"ein Ort","eng.new":"Wort oder Satz teilen","eng.search":"Wörter, Bedeutungen, Beispiele…","eng.title":"In der Englischecke teilen","eng.word":"Wort oder Satz","eng.pos":"Wortart (optional)","eng.ipa":"Lautschrift (optional)","eng.mean":"Bedeutung","eng.ex":"Beispiel (optional)","eng.exT":"Übersetzung (optional)","eng.note":"Notizen (optional)","eng.save":"Teilen","eng.saving":"Teile…","eng.empty":"Die Ecke ist leer. Teile ein neues Wort.","eng.noHit":"Kein Treffer. Anderes Wort probieren.","eng.speak":"Vorlesen","eng.learn":"Gelernt","eng.learned":"Gelernt","lv.hb":"Der Wahnsinn","lv.rsr":"Erste Klasse","lv.yb":"Geht so","lv.rxr":"Schwach","lv.lwl":"Katastrophe","t.now":"gerade eben","t.min":"Min.","t.hour":"Std.","t.day":"T","c.del":"Löschen","c.confirmDel":"Wirklich löschen?","c.anon":"Anonym","c.photo":"[Foto]","c.sticker":"[Sticker]","c.loc":"[Standort]"},"hi":{"app.title":"HCX फ़ूड क्लब","gate.sub":"पासकोड से प्रवेश करें","gate.pwd":"पासकोड","gate.enter":"प्रवेश","gate.opening":"खोल रहे हैं…","gate.wrong":"ग़लत पासकोड","gate.nickTitle":"एक नाम चुनें","gate.nickSub":"आपके भोजन और संदेश इसी नाम से दिखेंगे।","gate.nick":"आपका उपनाम","gate.nickOk":"यही रखें","nav.cal":"कैलेंडर","nav.wall":"दीवार","nav.plan":"मीटअप","nav.rev":"समीक्षाएँ","nav.alb":"एल्बम","nav.eng":"इंग्लिश कॉर्नर","nav.folk":"सदस्य","hd.exit":"लॉग आउट","hd.bell":"सूचनाएँ","hd.lang":"भाषा","cov.owner":"मालिक","cov.desc":"क्या खाया, कितना लगा, कितने अंक — सब यहाँ।","cov.hint":"कुछ अच्छा मिला? बताइए।","cal.all":"सभी","cal.today":"आज","cal.days":"दर्ज दिन","cal.streak":"लगातार","cal.meals":"इस माह भोजन","cal.spend":"इस माह ख़र्च","cal.unitDay":"दिन","cal.unitMeal":"भोजन","cal.rates":"मुद्रा और दरें","cal.levelPics":"रेटिंग आइकॉन","day.empty":"अभी कुछ नहीं। नीचे जोड़ें।","day.what":"क्या खाया","day.rating":"रेटिंग","day.amount":"राशि","day.currency":"मुद्रा","day.photo":"फ़ोटो (वैकल्पिक)","day.note":"टिप्पणी (वैकल्पिक)","day.save":"भोजन सहेजें","day.free":"मुफ़्त","day.by":"ने दर्ज किया","wall.ph":"कुछ कहिए, जैसे: कल दोपहर हॉटपॉट?","wall.send":"पोस्ट","wall.sending":"भेज रहे हैं…","wall.addStk":"स्टिकर","wall.addImg":"फ़ोटो","wall.at":"मेंशन","wall.loc":"स्थान","wall.manage":"स्टिकर प्रबंधन","wall.willSend":"इसके साथ भेजा जाएगा","wall.drop":"हटाएँ","wall.reply":"जवाब","wall.replyPh":"जवाब लिखें…","wall.sendBtn":"भेजें","wall.empty":"दीवार ख़ाली है। पहली बात कहिए।","plan.new":"मीटअप बनाएँ","plan.what":"क्या खाएँ","plan.where":"कहाँ","plan.when":"कब","plan.extra":"नोट्स (वैकल्पिक)","plan.post":"पोस्ट करें","plan.tbd":"स्थान तय नहीं","plan.timeTbd":"समय तय नहीं","plan.past":"बीत गया","plan.joined":"शामिल","plan.noOne":"अभी कोई नहीं","plan.go":"मैं आऊँगा","plan.in":"शामिल (हटाने को टैप करें)","plan.by":"द्वारा शुरू","plan.empty":"अभी कोई मीटअप नहीं। एक बनाइए।","rev.new":"समीक्षा लिखें","rev.shop":"रेस्तराँ","rev.dish":"क्या मंगवाया","rev.avg":"प्रति व्यक्ति","rev.verdict":"एक पंक्ति का फ़ैसला","rev.body":"पूरी समीक्षा","rev.cover":"फ़ोटो (वैकल्पिक)","rev.publish":"प्रकाशित करें","rev.empty":"अभी कोई समीक्षा नहीं। लिखिए जब कुछ ख़ास मिले।","alb.upload":"अपलोड","alb.dropT":"फ़ोटो या वीडियो यहाँ छोड़ें","alb.dropS":"फ़ोटो, GIF और छोटे क्लिप","alb.paste":"या कॉपी करके दबाएँ","alb.release":"छोड़ते ही अपलोड","alb.max":"एक बार में 9 तक","alb.hint":"बड़ा देखने और टिप्पणी के लिए टैप करें।","alb.empty":"एल्बम ख़ाली है। पहली अपलोड करें।","alb.addMore":"और जोड़ें","alb.selected":"चयनित","alb.removeHint":"हटाने को ✕ दबाएँ","alb.none":"कुछ नहीं बचा","alb.caption":"कैप्शन (वैकल्पिक)","alb.rate":"रेटिंग भी दें","alb.up":"अपलोड","alb.del":"हटाएँ","alb.loadVid":"वीडियो लोड हो रहा है…","alb.loadGif":"GIF लोड हो रहा है…","cmt.title":"टिप्पणियाँ","cmt.ph":"कुछ कहिए…","cmt.empty":"अभी कोई टिप्पणी नहीं। आप शुरू करें।","folk.hint":"सभी सदस्य। हरा = पिछले 3 मिनट में सक्रिय।","folk.online":"ऑनलाइन","folk.list":"सदस्य सूची","folk.total":"कुल","folk.people":"सदस्य","folk.onlineN":"ऑनलाइन","folk.you":"आप","folk.isYou":"यह आप हैं","folk.said":"संदेश","folk.ate":"भोजन","folk.wrote":"समीक्षाएँ","folk.went":"मीटअप","folk.shot":"फ़ोटो","folk.joinedAt":"शामिल हुए","folk.lastSeen":"अंतिम बार","me.title":"मेरी प्रोफ़ाइल","me.avHint":"आपका अवतार। बदलाव तुरंत हर जगह लागू।","me.change":"अवतार बदलें","me.nickHint":"नाम बदलना केवल आगे लागू होगा।","me.save":"सहेजें","av.title":"अवतार बदलें","av.pick":"डिवाइस से चुनें","av.orPick":"या एल्बम से चुनें:","av.none":"अभी कोई फ़ोटो नहीं।","av.done":"हो गया","av.working":"प्रोसेस हो रहा है…","stk.title":"स्टिकर","stk.upload":"स्टिकर अपलोड","stk.hint":"सबके लिए साझा। जोड़ने को टैप करें।","stk.empty":"अभी कोई स्टिकर नहीं। कुछ जोड़ें।","stk.pickTitle":"जोड़ने के लिए चुनें","note.title":"सूचनाएँ","note.clear":"सभी पढ़ा हुआ","note.unread":"अपठित","note.allSeen":"सब पढ़ लिया","note.empty":"अभी कोई सूचना नहीं। मेंशन और जवाब यहाँ दिखेंगे।","note.at":"ने आपको मेंशन किया","note.reply":"ने आपके संदेश का जवाब दिया","note.cmt":"ने आपकी फ़ोटो पर टिप्पणी की","note.creply":"ने आपकी टिप्पणी का जवाब दिया","note.join":"आपके मीटअप में शामिल हुए","loc.title":"स्थान साझा करें","loc.here":"मेरा वर्तमान स्थान","loc.searching":"स्थान खोज रहे हैं… (ब्राउज़र अनुमति माँगेगा)","loc.denied":"अनुमति नहीं मिली। नीचे खोजें।","loc.failed":"स्थान नहीं मिला। खोज आज़माएँ।","loc.or":"या कोई जगह खोजें:","loc.searchPh":"जैसे: ताइचुंग स्टेशन","loc.go":"खोजें","loc.searchingP":"खोज रहे हैं…","loc.none":"कुछ नहीं मिला। दूसरे शब्द आज़माएँ।","loc.err":"खोज विफल, नेटवर्क जाँचें।","loc.open":"मानचित्र खोलें","loc.somewhere":"एक जगह","eng.new":"शब्द या वाक्य साझा करें","eng.search":"शब्द, अर्थ, उदाहरण खोजें…","eng.title":"इंग्लिश कॉर्नर में साझा करें","eng.word":"शब्द या वाक्य","eng.pos":"शब्द-भेद (वैकल्पिक)","eng.ipa":"उच्चारण (वैकल्पिक)","eng.mean":"अर्थ","eng.ex":"उदाहरण (वैकल्पिक)","eng.exT":"अनुवाद (वैकल्पिक)","eng.note":"नोट्स (वैकल्पिक)","eng.save":"साझा करें","eng.saving":"साझा हो रहा है…","eng.empty":"कॉर्नर ख़ाली है। कोई नया शब्द जोड़ें।","eng.noHit":"कुछ नहीं मिला। दूसरा शब्द आज़माएँ।","eng.speak":"सुनें","eng.learn":"सीख लिया","eng.learned":"सीखा","lv.hb":"लाजवाब","lv.rsr":"शानदार","lv.yb":"ठीक-ठाक","lv.rxr":"कमज़ोर","lv.lwl":"बहुत बुरा","t.now":"अभी","t.min":"मिनट पहले","t.hour":"घंटे पहले","t.day":"दिन पहले","c.del":"हटाएँ","c.confirmDel":"इसे हटाएँ?","c.anon":"अनाम","c.photo":"[फ़ोटो]","c.sticker":"[स्टिकर]","c.loc":"[स्थान]"}};
+
+const LANG_NAMES = { zh:'简体中文', tw:'繁體中文', en:'English', ja:'日本語',
+  es:'Español', fr:'Français', de:'Deutsch', hi:'हिन्दी' };
+const LANG_FLAG  = { zh:'🇨🇳', tw:'🇹🇼', en:'🇬🇧', ja:'🇯🇵', es:'🇪🇸', fr:'🇫🇷', de:'🇩🇪', hi:'🇮🇳' };
+function guessLang(){
+  const saved = (()=>{ try{ return localStorage.getItem('hcx_lang') }catch{ return null } })();
+  if(saved && I18N[saved]) return saved;
+  const n=(navigator.language||'en').toLowerCase();
+  if(n.startsWith('zh')) return /tw|hk|mo|hant/.test(n) ? 'tw' : 'zh';
+  for(const c of ['ja','es','fr','de','hi','en']) if(n.startsWith(c)) return c;
+  return 'en';
+}
+let LANG = guessLang();
+function t(k){ return (I18N[LANG] && I18N[LANG][k]) || I18N.zh[k] || k; }
+function applyI18n(root){
+  const r = root || document;
+  r.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+  r.querySelectorAll('[data-i18n-ph]').forEach(el=>{ el.placeholder = t(el.dataset.i18nPh); });
+  r.querySelectorAll('[data-i18n-html]').forEach(el=>{ el.innerHTML = t(el.dataset.i18nHtml); });
+  r.querySelectorAll('[data-i18n-title]').forEach(el=>{ el.title = t(el.dataset.i18nTitle); });
+  document.documentElement.lang = LANG==='tw'?'zh-TW':LANG==='zh'?'zh-CN':LANG;
+}
+function setLang(code){
+  if(!I18N[code]) return;
+  LANG = code;
+  try{ localStorage.setItem('hcx_lang', code) }catch{}
+  applyI18n();
+  renderLangMenu();
+  $('#langBtn').textContent = LANG_FLAG[LANG];
+  /* 全部重画一遍 */
+  try{
+    buildCurrencySelects(); renderLevelPicker(); renderRevLevels(); renderUpLevels();
+    renderWhoBar(); renderCal(); renderWall(); renderPlans(); renderReviews();
+    renderAlbum(); renderWords(); renderFolks(); renderComments(); refreshNotes(); renderMealList();
+  }catch(e){ console.warn(e) }
+}
+function renderLangMenu(){
+  const box=$('#langList'); if(!box) return;
+  box.innerHTML = Object.keys(LANG_NAMES).map(c=>`
+    <div class="at-row ${c===LANG?'sel':''}" data-lang="${c}">
+      <span style="font-size:20px">${LANG_FLAG[c]}</span>
+      <span class="an">${LANG_NAMES[c]}</span>
+      ${c===LANG?'<span class="ao">✓</span>':''}</div>`).join('');
+  box.querySelectorAll('[data-lang]').forEach(el=>el.onclick=()=>{
+    setLang(el.dataset.lang); $('#langMask').classList.remove('on');
+  });
+}
+
 /* ===================== 进店 ===================== */
 const gateErr = $('#gateErr');
 async function enter(){
   gateErr.classList.remove('on');
   const btn=$('#enterBtn'), v=$('#pwd').value.trim();
   if(!v){ $('#pwd').focus(); return; }
-  if(v!==GATE){ gateErr.textContent='口令不对 🙅'; gateErr.classList.add('on'); $('#pwd').select(); return; }
-  btn.disabled=true; btn.textContent='正在开门…';
+  if(v!==GATE){ gateErr.textContent=t('gate.wrong')+' 🙅'; gateErr.classList.add('on'); $('#pwd').select(); return; }
+  btn.disabled=true; btn.textContent=t('gate.opening');
   try{ await signInAnonymously(auth); }
   catch(e){
     const map={
@@ -1068,7 +1233,7 @@ async function enter(){
       'auth/network-request-failed':'连不上 Firebase，检查网络'
     };
     gateErr.textContent=map[e.code]||e.message; gateErr.classList.add('on');
-  }finally{ btn.disabled=false; btn.textContent='进店 🚪'; }
+  }finally{ btn.disabled=false; btn.textContent=t('gate.enter')+' 🚪'; }
 }
 $('#enterBtn').onclick=enter;
 $('#pwd').addEventListener('keydown',e=>{if(e.key==='Enter')enter()});
@@ -1138,10 +1303,10 @@ $('#openAvatar').onclick=()=>{
 $('#avUpload').onclick=()=>$('#avFile').click();
 $('#avFile').onchange=async e=>{
   const f=e.target.files[0]; if(!f)return;
-  $('#avStatus').textContent='正在处理…';
+  $('#avStatus').textContent=t('av.working');
   try{
     await setAvatarFrom(await compress(f,700,0.85));
-    $('#avStatus').textContent='换好了 🎉';
+    $('#avStatus').textContent=t('av.done')+' 🎉';
     setTimeout(()=>$('#avMask').classList.remove('on'),500);
   }catch(err){ $('#avStatus').textContent='失败：'+err.message }
   finally{ e.target.value='' }
@@ -1159,8 +1324,8 @@ async function renderAvatarGrid(){
     `<div class="av-pick" data-avk="${it.key}"><img data-apic2="${it.key}" alt=""></div>`).join('');
   $('#avGrid').querySelectorAll('[data-avk]').forEach(el=>el.onclick=async()=>{
     const src=photoCache[el.dataset.avk]; if(!src)return;
-    $('#avStatus').textContent='正在处理…';
-    try{ await setAvatarFrom(src); $('#avStatus').textContent='换好了 🎉';
+    $('#avStatus').textContent=t('av.working');
+    try{ await setAvatarFrom(src); $('#avStatus').textContent=t('av.done')+' 🎉';
       setTimeout(()=>$('#avMask').classList.remove('on'),500);
     }catch(e){ $('#avStatus').textContent='失败：'+e.message }
   });
@@ -1194,6 +1359,8 @@ function listenAll(){
   sub(C.shots(), s=>{ shots=s.docs.map(d=>({id:d.id,...d.data()})); renderAlbum(); renderFolks(); });
   sub(C.comments(), s=>{ comments=s.docs.map(d=>({id:d.id,...d.data()}))
     .sort((a,b)=>(a.ms||0)-(b.ms||0)); renderComments(); renderAlbum(); });
+  sub(C.words(), s=>{ words=s.docs.map(d=>({id:d.id,...d.data()}))
+    .sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0)); renderWords(); });
   sub(C.stickers(), s=>{ stickers=s.docs.map(d=>({id:d.id,...d.data()}))
     .sort((a,b)=>(b.createdAtMs||0)-(a.createdAtMs||0)); preloadStickers(); });
   sub(C.folks(), s=>{
@@ -1217,29 +1384,53 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
 
 
 /* ===================== 谁的日历 ===================== */
+/* 名字 → cid 索引：让没带 cid 的老记录也能认回本人 */
+function nickIdx(){
+  const idx={};
+  folks.forEach(f=>{ const n=(f.nick||'').trim(); if(n && !idx[n]) idx[n]=f.id; });
+  return idx;
+}
+/* 一条记录归谁：优先 cid，其次按名字找回，最后才当无主 */
+function mineOf(m, idx){
+  if(m.cid) return m.cid;
+  const n=(m.by||'').trim();
+  const i=idx||nickIdx();
+  return (n && i[n]) ? i[n] : ('n:'+(n||'匿名'));
+}
 function mealOwners(){
-  const seen={};
+  const idx=nickIdx(), seen={}, byName={};
+  const put=(k,cidv,nk)=>{
+    const nm=nameOf(cidv,nk)||'匿名';
+    /* 同名的一律并成一个，避免同一个人出现两次 */
+    if(byName[nm]!==undefined) return byName[nm];
+    seen[k]={key:k, cid:cidv||'', nick:nm, n:0};
+    byName[nm]=k;
+    return k;
+  };
+  folks.forEach(f=>put(f.id, f.id, f.nick));
   meals.forEach(m=>{
-    const k=m.cid||('n:'+(m.by||'匿名'));
-    if(!seen[k]) seen[k]={key:k, cid:m.cid||'', nick:nameOf(m.cid,m.by), n:0};
+    const raw=mineOf(m,idx);
+    const k=seen[raw]?raw:put(raw, m.cid||'', m.by);
     seen[k].n++;
-  });
-  folks.forEach(f=>{
-    if(seen[f.id]) seen[f.id].nick=nameOf(f.id,f.nick);
-    else seen[f.id]={key:f.id, cid:f.id, nick:nameOf(f.id,f.nick), n:0};
   });
   return Object.values(seen).sort((a,b)=>b.n-a.n);
 }
-function mineOf(m){ return m.cid ? m.cid : ('n:'+(m.by||'匿名')); }
 function calMeals(){
   if(calWho==='all') return meals;
-  return meals.filter(m=>mineOf(m)===calWho);
+  const idx=nickIdx();
+  const o=mealOwners().find(x=>x.key===calWho);
+  const wantName=o?o.nick:'';
+  return meals.filter(m=>{
+    if(mineOf(m,idx)===calWho) return true;
+    /* 同名的老记录也算进来 */
+    return wantName && nameOf(m.cid,m.by)===wantName;
+  });
 }
 function renderWhoBar(){
   if(!$('#whobar')) return;
   const owners=mealOwners();
   const all=`<button class="wchip ${calWho==='all'?'on':''}" data-who="all">
-      <span class="allico">👥</span>全部人 <span class="cnt2">${meals.length}</span></button>`;
+      <span class="allico">👥</span>${t('cal.all')} <span class="cnt2">${meals.length}</span></button>`;
   $('#whobar').innerHTML = all + owners.map(o=>`
     <button class="wchip ${calWho===o.key?'on':''}" data-who="${o.key}">
       ${avatarHTML(o.cid,o.nick)}${esc(o.nick)} <span class="cnt2">${o.n}</span></button>`).join('');
@@ -1248,9 +1439,9 @@ function renderWhoBar(){
   });
 }
 function whoLabel(){
-  if(calWho==='all') return '全部人';
+  if(calWho==='all') return t('cal.all');
   const o=mealOwners().find(x=>x.key===calWho);
-  return o?o.nick:'某人';
+  return o?o.nick:t('c.anon');
 }
 
 /* ===================== 日历 ===================== */
@@ -1270,7 +1461,7 @@ function renderMonth(){
     if(list.length){
       const best=list.reduce((a,b)=>(LV[b.level]?.rank||0)>(LV[a.level]?.rank||0)?b:a);
       const sum=list.reduce((s,x)=>s+toBase(x.amount||0,x.currency||prefs.base),0);
-      const who=[...new Set(list.map(mineOf))];
+      const _idx=nickIdx(); const who=[...new Set(list.map(m=>mineOf(m,_idx)))];
       const dots = calWho==='all' && who.length>1
         ? `<div class="dots">${who.slice(0,3).map(k=>{
              const nm=folkMap[k]?.nick||k.replace('n:','');  // 仅用于取色
@@ -1290,23 +1481,23 @@ function renderStats(){
   const pre=`${cursor.getFullYear()}-${String(cursor.getMonth()+1).padStart(2,'0')}`;
   const inM=list.filter(x=>(x.date||'').startsWith(pre));
   const total=inM.reduce((s,x)=>s+toBase(x.amount||0,x.currency||prefs.base),0);
-  $('#sDays').innerHTML=`${new Set(inM.map(x=>x.date)).size}<small> 天</small>`;
-  $('#sMeals').innerHTML=`${inM.length}<small> 餐</small>`;
+  $('#sDays').innerHTML=`${new Set(inM.map(x=>x.date)).size}<small> ${t('cal.unitDay')}</small>`;
+  $('#sMeals').innerHTML=`${inM.length}<small> ${t('cal.unitMeal')}</small>`;
   $('#sMoney').innerHTML=`<span class="mono">${money(total,prefs.base)}</span>`;
   const all=new Set(list.map(x=>x.date)); let streak=0; const c=new Date();
   if(!all.has(ymd(c))) c.setDate(c.getDate()-1);
   while(all.has(ymd(c))){streak++;c.setDate(c.getDate()-1)}
-  $('#sStreak').innerHTML=`${streak}<small> 天</small>`;
+  $('#sStreak').innerHTML=`${streak}<small> ${t('cal.unitDay')}</small>`;
 }
 function renderLegend(){
   const list=calMeals();
   $('#legend').innerHTML=`<div class="lv" style="background:var(--paper-2)">
       <span style="font-weight:700">${esc(whoLabel())}</span>
-      <span class="mono" style="color:var(--ink-soft)">${list.length} 餐</span></div>` +
+      <span class="mono" style="color:var(--ink-soft)">${list.length} ${t('cal.unitMeal')}</span></div>` +
     LEVELS.map(l=>{
       const n=list.filter(x=>x.level===l.id).length;
       return `<div class="lv"><span>${faceHTML(l.id,20)}</span>
-        <span style="color:${l.color};font-weight:700">${l.name}</span>
+        <span style="color:${l.color};font-weight:700">${lvName(l.id)}</span>
         <span class="mono" style="color:var(--ink-soft)">${n}</span></div>`}).join('');
 }
 function openDay(ds){
@@ -1320,20 +1511,20 @@ async function renderMealList(){
   if(!openDate||!$('#mealList')) return;
   const list=meals.filter(x=>x.date===openDate).sort((a,b)=>(a.createdAtMs||0)-(b.createdAtMs||0));
   const box=$('#mealList');
-  if(!list.length){ box.innerHTML=`<p class="hint" style="margin:0 0 14px">这天还是空的 🍽️ 下面记第一餐。</p>`; return; }
+  if(!list.length){ box.innerHTML=`<p class="hint" style="margin:0 0 14px">🍽️ ${t('day.empty')}</p>`; return; }
   box.innerHTML=list.map(x=>{
     const l=LV[x.level]||LV.yb;
     return `<div class="meal">
       ${x.hasPhoto?`<img class="pic" data-pic="${x.id}" alt="${esc(x.name)}">`
         :`<div class="pic" style="display:flex;align-items:center;justify-content:center">${faceHTML(x.level,34)}</div>`}
       <div class="body">
-        <div class="t"><div class="name">${esc(x.name)||'没写名字'}</div>
-          <div class="price mono">${x.amount?money(x.amount,x.currency):'<small>免费</small>'}</div></div>
-        <div style="margin-top:6px"><span class="stamp" style="color:${l.color}">${l.name}</span></div>
+        <div class="t"><div class="name">${esc(x.name)||'—'}</div>
+          <div class="price mono">${x.amount?money(x.amount,x.currency):`<small>${t('day.free')}</small>`}</div></div>
+        <div style="margin-top:6px"><span class="stamp" style="color:${l.color}">${lvName(l.id)}</span></div>
         ${x.note?`<div class="nt">💬 ${esc(x.note)}</div>`:''}
         ${x.currency!==prefs.base&&x.amount?`<div class="nt mono">≈ ${money(toBase(x.amount,x.currency),prefs.base)}</div>`:''}
-        <div class="who3">${avatarHTML(x.cid,x.by)}<span>${esc(nameOf(x.cid,x.by))} 记的</span></div>
-        <button class="del" data-del="${x.id}">删掉</button>
+        <div class="who3">${avatarHTML(x.cid,x.by)}<span>${esc(nameOf(x.cid,x.by))} · ${t('day.by')}</span></div>
+        <button class="del" data-del="${x.id}">${t('c.del')}</button>
       </div></div>`}).join('');
   box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>removeMeal(b.dataset.del));
   for(const img of box.querySelectorAll('[data-pic]')){
@@ -1343,7 +1534,7 @@ async function renderMealList(){
 function renderLevelPicker(){
   $('#fLevels').innerHTML=LEVELS.map(l=>
     `<button class="pick ${l.id===pickedLevel?'on':''}" data-lv="${l.id}"
-      style="${l.id===pickedLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${l.name}</button>`).join('');
+      style="${l.id===pickedLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${lvName(l.id)}</button>`).join('');
   $('#fLevels').querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>{pickedLevel=b.dataset.lv;renderLevelPicker()});
 }
 function buildCurrencySelects(){
@@ -1640,17 +1831,18 @@ function renderWall(){
       ${s.text?`<div class="txt">${richText(s.text,s.mentions)}</div>`:''}
       ${s.stk?`<img class="msg-stk" data-stk="${s.stk}" alt="表情包">`:''}
       ${s.img?`<img class="msg-img" data-inline="${s.img}" alt="照片">`:''}
+      ${locHTML(s.loc)}
       ${reps.length?`<div class="replies">${reps.map(r=>`
         <div class="reply"><span class="rn">${esc(nameOf(r.cid,r.nick))}</span>${richText(r.text,r.mentions)}
           <span class="rt">${ago(r.ms||0)}</span>
           ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}
           ${r.img?`<img class="msg-img" data-inline="${r.img}" alt="">`:''}</div>`).join('')}</div>`:''}
-      <div class="acts"><button data-rep="${s.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button></div>
+      <div class="acts"><button data-rep="${s.id}">💬 ${t('wall.reply')}${reps.length?' ('+reps.length+')':''}</button></div>
       <div class="rbox" id="rbox-${s.id}">
-        <input class="at-able" type="text" maxlength="200" placeholder="回一句…" data-rinp="${s.id}">
+        <input class="at-able" type="text" maxlength="200" data-i18n-ph="wall.replyPh" data-rinp="${s.id}">
         <button class="sb" data-rstk="${s.id}">😆</button>
         <button class="sb" data-rimg="${s.id}">📷</button>
-        <button class="go2" data-rsend="${s.id}">发送</button>
+        <button class="go2" data-rsend="${s.id}">${t('wall.sendBtn')}</button>
       </div>
       ${pendReplyStk[s.id]?`<div class="stk-pend on"><img data-stk="${pendReplyStk[s.id]}" alt="">
         <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张表情</span>
@@ -1685,6 +1877,7 @@ function renderWall(){
   paintStk($('#wall')); paintInline($('#wall'));
   putDrafts($('#wall'),drafts);
   refreshNotes();
+  applyI18n($('#wall'));
 }
 async function sendReply(id){
   const inp=document.querySelector(`[data-rinp="${id}"]`);
@@ -1703,16 +1896,17 @@ async function sendReply(id){
 }
 async function sendShout(){
   const btn=$('#wSend'), text=$('#wText').value.trim();
-  if(!text&&!pendShoutStk&&!pendShoutImg){ $('#wText').focus(); return; }
+  if(!text&&!pendShoutStk&&!pendShoutImg&&!pendLoc){ $('#wText').focus(); return; }
   btn.disabled=true; btn.textContent='贴上去…';
   try{
     const img=await commitImg(pendShoutImg);
     const mentions=takeMentions($('#wText'));
-    await addDoc(C.shouts(),{nick,cid,text,mentions,stk:pendShoutStk,img,replies:[],
+    await addDoc(C.shouts(),{nick,cid,text,mentions,stk:pendShoutStk,img,loc:pendLoc||null,replies:[],
       createdAtMs:Date.now(),createdAt:serverTimestamp()});
     $('#wText').value=''; clearMentions($('#wText'));
     pendShoutStk=''; $('#wStkPend').classList.remove('on');
     pendShoutImg=''; $('#wImgPend').classList.remove('on');
+    pendLoc=null; showPendLoc();
   }catch(e){ alert('没贴上：'+e.message) }
   finally{ btn.disabled=false; btn.textContent='贴上去 📌' }
 }
@@ -1737,13 +1931,13 @@ function renderPlans(){
     return `<div class="plan ${past?'past':''}">
       <button class="kill" data-pkill="${p.id}">✕</button>
       <h3>🍱 ${esc(p.title)}</h3>
-      <div class="meta">📍 <b>${esc(p.place)||'地点待定'}</b><br>
-        🕐 <b>${whenText(p.when)}</b>${past?' <span style="color:var(--red)">（已过）</span>':''}<br>
+      <div class="meta">📍 <b>${esc(p.place)||t('plan.tbd')}</b><br>
+        🕐 <b>${whenText(p.when)}</b>${past?` <span style="color:var(--red)">${t('plan.past')}</span>`:''}<br>
         ${p.note?'💬 '+esc(p.note)+'<br>':''}
-        <span style="font-size:12px">由 ${esc(nameOf(p.cid,p.by))} 发起 · ${ago(p.createdAtMs||0)}</span></div>
-      <div class="joins"><span style="font-size:13px;color:var(--ink-soft)">${joins.length?`已有 ${joins.length} 人：`:'还没人举手'}</span>
+        <span style="font-size:12px">${esc(nameOf(p.cid,p.by))} · ${t('plan.by')} · ${ago(p.createdAtMs||0)}</span></div>
+      <div class="joins"><span style="font-size:13px;color:var(--ink-soft)">${joins.length?`${joins.length} ${t('plan.joined')}`:t('plan.noOne')}</span>
         ${joins.map(j=>avatarHTML(j.cid,j.nick)).join('')}</div>
-      <button class="btn go ${iam?'in':''}" data-pgo="${p.id}">${iam?'我去 ✋ （点一下取消）':'我要去 🙋'}</button>
+      <button class="btn go ${iam?'in':''}" data-pgo="${p.id}">${iam?'✋ '+t('plan.in'):'🙋 '+t('plan.go')}</button>
     </div>`}).join('');
   $('#planList').querySelectorAll('[data-pgo]').forEach(b=>b.onclick=()=>toggleJoin(b.dataset.pgo));
   $('#planList').querySelectorAll('[data-pkill]').forEach(b=>b.onclick=async()=>{
@@ -1831,7 +2025,7 @@ function openBox(it){
   boxChunks=it.chunks||0; boxMedia=it.media||'image'; boxMime=it.mime||'';
   $('#boxTitle').textContent=it.title||'照片';
   renderBoxMedia(it);
-  $('#boxInfo').innerHTML=`${faceHTML(it.level,18)} ${esc(LV[it.level]?.name||'')} · ${esc(it.sub)}
+  $('#boxInfo').innerHTML=`${faceHTML(it.level,18)} ${esc(lvName(it.level))} · ${esc(it.sub)}
     ${' · 📷 '+esc(nameOf(it.bycid,it.by))}${it.extra?'<br>'+esc(it.extra):''}`;
   $('#boxDel').style.display = boxOwn?'block':'none';
   pendCmtStk=''; $('#cmtStkPend').classList.remove('on'); $('#cmtInput').value='';
@@ -1872,9 +2066,9 @@ function renderComments(){
   if(!$('#cmtList')||!boxKey) return;
   const drafts=grabDrafts($('#cmtList'));
   const list=comments.filter(c=>c.key===boxKey);
-  $('#cmtTitle').textContent=`💬 评论${list.length?' ('+cmtCount(boxKey)+')':''}`;
+  $('#cmtTitle').textContent=`💬 ${t('cmt.title')}${list.length?' ('+cmtCount(boxKey)+')':''}`;
   if(!list.length){
-    $('#cmtList').innerHTML=`<p class="hint">还没人说话。第一句归你。</p>`;
+    $('#cmtList').innerHTML=`<p class="hint">${t('cmt.empty')}</p>`;
     return;
   }
   $('#cmtList').innerHTML=list.map(c=>{
@@ -1891,12 +2085,12 @@ function renderComments(){
           <span class="rt">${ago(r.ms||0)}</span>
           ${r.stk?`<img class="msg-stk" data-stk="${r.stk}" alt="">`:''}
           ${r.img?`<img class="msg-img" data-inline="${r.img}" alt="">`:''}</div>`).join('')}</div>`:''}
-      <div class="acts"><button data-crep="${c.id}">💬 回复${reps.length?' ('+reps.length+')':''}</button></div>
+      <div class="acts"><button data-crep="${c.id}">💬 ${t('wall.reply')}${reps.length?' ('+reps.length+')':''}</button></div>
       <div class="rbox" id="crbox-${c.id}">
-        <input class="at-able" type="text" maxlength="200" placeholder="回一句…" data-crinp="${c.id}">
+        <input class="at-able" type="text" maxlength="200" data-i18n-ph="wall.replyPh" data-crinp="${c.id}">
         <button class="sb" data-crstk="${c.id}">😆</button>
         <button class="sb" data-crimg="${c.id}">📷</button>
-        <button class="go2" data-crsend="${c.id}">发送</button>
+        <button class="go2" data-crsend="${c.id}">${t('wall.sendBtn')}</button>
       </div>
       ${pendReplyStk['c'+c.id]?`<div class="stk-pend on"><img data-stk="${pendReplyStk['c'+c.id]}" alt="">
         <span style="font-size:13px;color:var(--ink-soft)">回复会带上这张表情</span>
@@ -1931,6 +2125,7 @@ function renderComments(){
   }));
   paintStk($('#cmtList')); paintInline($('#cmtList'));
   putDrafts($('#cmtList'),drafts);
+  applyI18n($('#cmtList'));
 }
 async function sendComment(){
   const inp=$('#cmtInput'), text=inp.value.trim();
@@ -2070,7 +2265,7 @@ document.addEventListener('paste',async e=>{
 function renderUpLevels(){
   $('#upLevels').innerHTML=LEVELS.map(l=>
     `<button class="pick ${l.id===upLevel?'on':''}" data-ulv="${l.id}"
-      style="${l.id===upLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${l.name}</button>`).join('');
+      style="${l.id===upLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${lvName(l.id)}</button>`).join('');
   $('#upLevels').querySelectorAll('[data-ulv]').forEach(b=>b.onclick=()=>{upLevel=b.dataset.ulv;renderUpLevels()});
 }
 $('#upSave').onclick=async()=>{
@@ -2106,7 +2301,7 @@ $('#upSave').onclick=async()=>{
 function renderRevLevels(){
   $('#rLevels').innerHTML=LEVELS.map(l=>
     `<button class="pick ${l.id===revLevel?'on':''}" data-rlv="${l.id}"
-      style="${l.id===revLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${l.name}</button>`).join('');
+      style="${l.id===revLevel?`background:${l.color}`:''}">${faceHTML(l.id,18)} ${lvName(l.id)}</button>`).join('');
   $('#rLevels').querySelectorAll('[data-rlv]').forEach(b=>b.onclick=()=>{revLevel=b.dataset.rlv;renderRevLevels()});
 }
 async function renderReviews(){
@@ -2117,13 +2312,13 @@ async function renderReviews(){
     return `<article class="rev">
       ${r.hasPhoto?`<img class="hero" data-rpic="${r.id}" alt="${esc(r.place)}">`:''}
       <div class="in"><div class="top">
-        <div><h3>${esc(r.place)||'无名小店'}</h3>${r.dish?`<div class="dish">🍲 ${esc(r.dish)}</div>`:''}</div>
-        <span class="stamp" style="color:${l.color}">${l.name}</span></div>
+        <div><h3>${esc(r.place)||'—'}</h3>${r.dish?`<div class="dish">🍲 ${esc(r.dish)}</div>`:''}</div>
+        <span class="stamp" style="color:${l.color}">${lvName(l.id)}</span></div>
         ${r.verdict?`<p class="verdict">${esc(r.verdict)}</p>`:''}
         ${r.body?`<div class="body">${esc(r.body)}</div>`:''}
         <div class="foot"><span>✍️ ${esc(nameOf(r.cid,r.author))} · ${ago(r.createdAtMs||0)}
-          <button class="del" data-rdel="${r.id}" style="margin-left:10px;text-decoration:underline">删掉</button></span>
-          ${r.price?`<span class="p mono">人均 ${money(r.price,r.currency)}</span>`:''}</div>
+          <button class="del" data-rdel="${r.id}" style="margin-left:10px;text-decoration:underline">${t('c.del')}</button></span>
+          ${r.price?`<span class="p mono">${t('rev.avg')} ${money(r.price,r.currency)}</span>`:''}</div>
       </div></article>`}).join('');
   $('#revList').querySelectorAll('[data-rdel]').forEach(b=>b.onclick=async()=>{
     if(!confirm('删掉这篇品鉴？'))return;
@@ -2164,15 +2359,157 @@ $('#rSave').onclick=async()=>{
 
 
 
+
+/* ===================== 位置 ===================== */
+function osmSrc(lat,lng){
+  const d=0.006;
+  return `https://www.openstreetmap.org/export/embed.html?bbox=${lng-d}%2C${lat-d}%2C${lng+d}%2C${lat+d}`
+    + `&layer=mapnik&marker=${lat}%2C${lng}`;
+}
+function mapLink(lat,lng){ return `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=17/${lat}/${lng}`; }
+function locHTML(loc){
+  if(!loc||typeof loc.lat!=='number') return '';
+  return `<div class="loc-card">
+    <iframe loading="lazy" src="${osmSrc(loc.lat,loc.lng)}" title="地图"></iframe>
+    <div class="lc">📍 <span>${esc(loc.name||t('loc.somewhere'))}</span>
+      <a href="${mapLink(loc.lat,loc.lng)}" target="_blank" rel="noopener">${t('loc.open')} ↗</a></div>
+  </div>`;
+}
+function showPendLoc(){
+  if(pendLoc){ $('#wLocName').textContent=pendLoc.name; $('#wLocPend').classList.add('on'); }
+  else $('#wLocPend').classList.remove('on');
+}
+$('#wLoc').onclick=()=>{
+  $('#locStatus').textContent=''; $('#locResults').innerHTML=''; $('#locQuery').value='';
+  $('#locMask').classList.add('on');
+};
+$('#wLocClear').onclick=()=>{ pendLoc=null; showPendLoc(); };
+$('#locHere').onclick=()=>{
+  const st=$('#locStatus');
+  if(!navigator.geolocation){ st.textContent='这个浏览器不支持定位。'; return; }
+  st.textContent=t('loc.searching');
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    const lat=+pos.coords.latitude.toFixed(6), lng=+pos.coords.longitude.toFixed(6);
+    st.textContent='定位到了，正在查地名…';
+    let name='我在这儿';
+    try{
+      const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=zh`);
+      const j=await r.json();
+      name=j.name || j.display_name?.split(',').slice(0,2).join(', ') || name;
+    }catch{}
+    pendLoc={lat,lng,name};
+    showPendLoc(); $('#locMask').classList.remove('on');
+  }, err=>{
+    st.textContent = err.code===1 ? t('loc.denied') : t('loc.failed');
+  }, {enableHighAccuracy:true, timeout:12000});
+};
+async function locSearch(){
+  const q=$('#locQuery').value.trim(); if(!q) return;
+  const st=$('#locStatus'); st.textContent=t('loc.searchingP');
+  $('#locResults').innerHTML='';
+  try{
+    const r=await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language=zh&q=${encodeURIComponent(q)}`);
+    const j=await r.json();
+    if(!j.length){ st.textContent=t('loc.none'); return; }
+    st.textContent='';
+    $('#locResults').innerHTML=j.map((x,i)=>`
+      <div class="meal" data-loc="${i}" style="cursor:pointer">
+        <div class="pic" style="display:flex;align-items:center;justify-content:center;font-size:26px">📍</div>
+        <div class="body"><div class="name">${esc(x.name||x.display_name.split(',')[0])}</div>
+          <div class="nt">${esc(x.display_name)}</div></div></div>`).join('');
+    $('#locResults').querySelectorAll('[data-loc]').forEach(el=>el.onclick=()=>{
+      const x=j[+el.dataset.loc];
+      pendLoc={lat:+(+x.lat).toFixed(6), lng:+(+x.lon).toFixed(6),
+        name:x.name||x.display_name.split(',').slice(0,2).join(', ')};
+      showPendLoc(); $('#locMask').classList.remove('on');
+    });
+  }catch{ st.textContent=t('loc.err') }
+}
+$('#locGo').onclick=locSearch;
+$('#locQuery').addEventListener('keydown',e=>{ if(e.key==='Enter') locSearch(); });
+
+/* ===================== 英语角 ===================== */
+function speak(text, lang='en-US'){
+  try{
+    if(!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=lang; u.rate=0.92;
+    speechSynthesis.speak(u);
+  }catch{}
+}
+function renderWords(){
+  if(!$('#engList')) return;
+  const q=engQuery.trim().toLowerCase();
+  const list=words.filter(w=>!q||[w.word,w.mean,w.ex,w.exT,w.note].some(v=>(v||'').toLowerCase().includes(q)));
+  $('#engEmpty').classList.toggle('hidden', list.length>0);
+  $('#engEmpty').innerHTML = words.length
+    ? '🔍 '+t('eng.noHit')
+    : '📚 '+t('eng.empty');
+  $('#engList').innerHTML=list.map(w=>{
+    const likes=Array.isArray(w.likes)?w.likes:[];
+    const iLike=likes.some(l=>l.cid===cid);
+    return `<div class="card-e">
+      <button class="kill" data-wdel="${w.id}">✕</button>
+      <div class="w">
+        <h3>${esc(w.word)}</h3>
+        <button class="spk" data-spk="${esc(w.word)}" data-i18n-title="eng.speak">🔊</button>
+        ${w.pos?`<span class="pos">${esc(w.pos)}</span>`:''}
+      </div>
+      ${w.ipa?`<div class="ipa">${esc(w.ipa)}</div>`:''}
+      ${w.mean?`<div class="mean">💡 ${esc(w.mean)}</div>`:''}
+      ${w.ex?`<div class="ex"><div class="exs">“${esc(w.ex)}”
+        <button class="spk" data-spk="${esc(w.ex)}" style="width:28px;height:28px;font-size:13px">🔊</button></div>
+        ${w.exT?`<div class="ext">${esc(w.exT)}</div>`:''}</div>`:''}
+      ${w.note?`<div class="nte">📝 ${esc(w.note)}</div>`:''}
+      <div class="ft">${avatarHTML(w.cid,w.by)}
+        <span>${esc(nameOf(w.cid,w.by))} · ${ago(w.createdAtMs||0)}</span>
+        <button class="lk ${iLike?'on':''}" data-wlike="${w.id}">${iLike?'✅ '+t('eng.learned'):'📖 '+t('eng.learn')} ${likes.length||''}</button>
+      </div>
+    </div>`}).join('');
+  $('#engList').querySelectorAll('[data-spk]').forEach(b=>b.onclick=()=>speak(b.dataset.spk));
+  $('#engList').querySelectorAll('[data-wdel]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('删掉这一条？'))return;
+    await deleteDoc(C.one('words',b.dataset.wdel));
+  });
+  $('#engList').querySelectorAll('[data-wlike]').forEach(b=>b.onclick=async()=>{
+    const w=words.find(x=>x.id===b.dataset.wlike); if(!w) return;
+    const likes=Array.isArray(w.likes)?[...w.likes]:[];
+    const i=likes.findIndex(l=>l.cid===cid);
+    if(i>=0) likes.splice(i,1); else likes.push({cid,nick,ms:Date.now()});
+    try{ await updateDoc(C.one('words',b.dataset.wlike),{likes}) }catch(e){ alert(e.message) }
+  });
+}
+$('#engSearch').addEventListener('input',e=>{ engQuery=e.target.value; renderWords(); });
+$('#engNew').onclick=()=>{
+  ['#eWord','#eIpa','#eMean','#eEx','#eExT','#eNote'].forEach(x=>$(x).value='');
+  $('#ePos').value=''; $('#engMask').classList.add('on'); $('#eWord').focus();
+};
+$('#eSave').onclick=async()=>{
+  const btn=$('#eSave'), word=$('#eWord').value.trim();
+  if(!word){ $('#eWord').focus(); return; }
+  btn.disabled=true; btn.textContent='分享中…';
+  try{
+    await addDoc(C.words(),{
+      word, pos:$('#ePos').value, ipa:$('#eIpa').value.trim(),
+      mean:$('#eMean').value.trim(), ex:$('#eEx').value.trim(), exT:$('#eExT').value.trim(),
+      note:$('#eNote').value.trim(), by:nick, cid, likes:[],
+      createdAtMs:Date.now(), createdAt:serverTimestamp()
+    });
+    $('#engMask').classList.remove('on');
+  }catch(e){ alert('没分享出去：'+e.message) }
+  finally{ btn.disabled=false; btn.textContent='分享出去 🚀' }
+};
+
 /* ===================== 消息中心 ===================== */
 let lastRead = +(ls('hcx_read')||0);
 let noteCache = [];
 const NT = {
-  at:    {i:'📣', t:'提到了你'},
-  reply: {i:'💬', t:'回复了你的留言'},
-  cmt:   {i:'🖼️', t:'评论了你的照片'},
-  creply:{i:'↩️', t:'回复了你的评论'},
-  join:  {i:'🙋', t:'报名了你发起的约饭'}
+  at:    {i:'📣', k:'note.at'},
+  reply: {i:'💬', k:'note.reply'},
+  cmt:   {i:'🖼️', k:'note.cmt'},
+  creply:{i:'↩️', k:'note.creply'},
+  join:  {i:'🙋', k:'note.join'}
 };
 function myPhotoKeys(){
   const k=new Set();
@@ -2182,7 +2519,7 @@ function myPhotoKeys(){
   return k;
 }
 const hasMe = m => (m||[]).some(x=>x.cid===cid);
-const brief = o => (o.text||'').trim() || (o.img?'[照片]':o.stk?'[表情包]':'…');
+const brief = o => (o.text||'').trim() || (o.img?t('c.photo'):o.stk?t('c.sticker'):o.loc?t('c.loc'):'…');
 
 function buildNotes(){
   const out=[], mine=myPhotoKeys();
@@ -2235,13 +2572,13 @@ function renderNotes(){
   const list=noteCache;
   $('#noteEmpty').classList.toggle('hidden', list.length>0);
   const unread=list.filter(x=>x.ms>lastRead).length;
-  $('#noteSum').textContent = unread?`${unread} 条未读 · 共 ${list.length} 条`:`共 ${list.length} 条，都看过了`;
+  $('#noteSum').textContent = unread?`${unread} ${t('note.unread')}`:t('note.allSeen');
   $('#noteList').innerHTML=list.map((x,i)=>{
     const meta=NT[x.type]||NT.at, isNew=x.ms>lastRead;
     return `<div class="nrow ${isNew?'new':''}" data-ni="${i}">
       ${avatarHTML(x.who,x.nick)}
       <div class="nb">
-        <div class="nt">${isNew?'<span class="dotnew"></span>':''}<b>${esc(nameOf(x.who,x.nick))}</b> ${meta.t}</div>
+        <div class="nt">${isNew?'<span class="dotnew"></span>':''}<b>${esc(nameOf(x.who,x.nick))}</b> ${t(meta.k)}</div>
         <div class="nx">${esc(x.text)}</div>
         <div class="nm">${ago(x.ms||0)}</div>
       </div>
@@ -2266,6 +2603,7 @@ function markRead(){
   refreshNotes(); renderNotes();
 }
 $('#bell').onclick=()=>{ renderNotes(); $('#noteMask').classList.add('on'); };
+$('#langBtn').onclick=()=>{ renderLangMenu(); $('#langMask').classList.add('on'); };
 $('#noteClear').onclick=markRead;
 
 /* ===================== 食客 ===================== */
@@ -2274,11 +2612,11 @@ function folkStats(f){
     + shouts.reduce((n,x)=>n+((x.replies||[]).filter(r=>r.cid===f.id).length),0)
     + comments.filter(c=>c.cid===f.id).length
     + comments.reduce((n,c)=>n+((c.replies||[]).filter(r=>r.cid===f.id).length),0);
-  const ate=meals.filter(m=>m.cid?m.cid===f.id:m.by===f.nick).length;
+  const ate=meals.filter(m=>m.cid===f.id||(!m.cid&&(m.by||'').trim()===(f.nick||'').trim())).length;
   const wrote=reviews.filter(r=>r.cid?r.cid===f.id:r.author===f.nick).length;
   /* 注：早期没存 cid 的旧记录只能按名字认，改名后会对不上 */
   const went=plans.filter(p=>(p.joins||[]).some(j=>j.cid===f.id)).length;
-  const shot=shots.filter(x=>x.cid===f.id).length;
+  const shot=shots.filter(x=>x.cid===f.id).length + words.filter(w=>w.cid===f.id).length;
   return {said,ate,wrote,went,shot,total:said+ate+wrote+went+shot};
 }
 function renderFolks(){
@@ -2288,10 +2626,10 @@ function renderFolks(){
   $('#folks').innerHTML=sorted.map(f=>{
     const on=(now-(f.lastSeen||0))<ONLINE_MS, st=folkStats(f);
     return `<div class="folk">${avatarHTML(f.id,f.nick)}
-      <div class="fn">${esc(nameOf(f.id,f.nick))}</div>
-      <div class="fs"><span class="dot ${on?'on':''}"></span>${on?'在线':ago(f.lastSeen||0)}<br>
+      <div class="fn">${esc(nameOf(f.id,f.nick))||t('c.anon')}</div>
+      <div class="fs"><span class="dot ${on?'on':''}"></span>${on?t('folk.online'):ago(f.lastSeen||0)}<br>
         📣 ${st.said} · 🍚 ${st.ate}</div>
-      ${f.id===cid?'<span class="me-tag">这是你</span>':''}</div>`}).join('');
+      ${f.id===cid?`<span class="me-tag">${t('folk.isYou')}</span>`:''}</div>`}).join('');
   renderUserList();
 }
 function renderUserList(){
@@ -2299,18 +2637,18 @@ function renderUserList(){
   const now=Date.now();
   const rows=folks.map(f=>({f,st:folkStats(f),on:(now-(f.lastSeen||0))<ONLINE_MS}))
     .sort((a,b)=>b.st.total-a.st.total||(b.f.lastSeen||0)-(a.f.lastSeen||0));
-  $('#ulSum').textContent=`共 ${rows.length} 位 · ${rows.filter(r=>r.on).length} 位在线`;
+  $('#ulSum').textContent=`${t('folk.total')} ${rows.length} ${t('folk.people')} · ${rows.filter(r=>r.on).length} ${t('folk.onlineN')}`;
   $('#ulist').innerHTML=rows.map((r,i)=>`
     <div class="urow"><span class="rk mono">${i+1}</span>${avatarHTML(r.f.id,r.f.nick)}
-      <div class="who2"><div class="n2">${esc(nameOf(r.f.id,r.f.nick))}${r.f.id===cid?' <span class="me-tag" style="margin:0">你</span>':''}</div>
-        <div class="s2"><span class="dot ${r.on?'on':''}"></span>${r.on?'在线':'最后出现 '+ago(r.f.lastSeen||0)}
-          ${r.f.joinedAt?' · 加入于 '+ago(r.f.joinedAt):''}</div></div>
+      <div class="who2"><div class="n2">${esc(nameOf(r.f.id,r.f.nick))}${r.f.id===cid?` <span class="me-tag" style="margin:0">${t('folk.you')}</span>`:''}</div>
+        <div class="s2"><span class="dot ${r.on?'on':''}"></span>${r.on?t('folk.online'):t('folk.lastSeen')+' '+ago(r.f.lastSeen||0)}
+          ${r.f.joinedAt?' · '+t('folk.joinedAt')+' '+ago(r.f.joinedAt):''}</div></div>
       <div class="nums">
-        <div><div class="nv">${r.st.said}</div><div class="nk">发言</div></div>
-        <div><div class="nv">${r.st.ate}</div><div class="nk">记账</div></div>
-        <div><div class="nv">${r.st.wrote}</div><div class="nk">品鉴</div></div>
-        <div><div class="nv">${r.st.went}</div><div class="nk">约饭</div></div>
-        <div><div class="nv">${r.st.shot}</div><div class="nk">照片</div></div>
+        <div><div class="nv">${r.st.said}</div><div class="nk">${t('folk.said')}</div></div>
+        <div><div class="nv">${r.st.ate}</div><div class="nk">${t('folk.ate')}</div></div>
+        <div><div class="nv">${r.st.wrote}</div><div class="nk">${t('folk.wrote')}</div></div>
+        <div><div class="nv">${r.st.went}</div><div class="nk">${t('folk.went')}</div></div>
+        <div><div class="nv">${r.st.shot}</div><div class="nk">${t('folk.shot')}</div></div>
       </div>
       ${r.f.id!==cid?`<button class="drop" data-drop="${r.f.id}">✕</button>`:''}
     </div>`).join('');
@@ -2343,7 +2681,7 @@ $('#picsBtn').onclick=()=>{ drawPics(); $('#picMask').classList.add('on') };
 function drawPics(){
   $('#picList').innerHTML=LEVELS.map(l=>`
     <div class="meal"><div class="pic" style="display:flex;align-items:center;justify-content:center">${faceHTML(l.id,44)}</div>
-      <div class="body"><div class="name" style="color:${l.color}">${l.name}</div>
+      <div class="body"><div class="name" style="color:${l.color}">${lvName(l.id)}</div>
       <input type="file" accept="image/*" data-pic-lv="${l.id}" style="margin-top:8px;font-size:12px">
       ${prefs.pics[l.id]?`<button class="del" data-pic-clear="${l.id}">恢复默认表情</button>`:''}
       </div></div>`).join('');
@@ -2376,6 +2714,9 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+applyI18n();
+$('#langBtn').textContent = LANG_FLAG[LANG];
+renderLangMenu();
 buildCurrencySelects(); renderLevelPicker(); renderRevLevels(); renderUpLevels();
 </script>
 </body>
