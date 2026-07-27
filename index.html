@@ -549,6 +549,20 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   .mcin button.go3{flex:1}
 }
 
+
+/* ---------- 手动合并 ---------- */
+.ul-tools{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.ul-tools button{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px}
+.ul-tools button.on{background:var(--red);color:#fff;border-color:transparent;font-weight:700}
+.urow.pick{cursor:pointer}
+.urow.pick:hover{background:var(--pink)}
+.urow.chosen{background:#FFF3CD;box-shadow:inset 0 0 0 2px var(--gold)}
+.urow .chk{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+.urow.chosen .chk{background:var(--red);border-color:var(--red)}
+.merge-hint{font-size:12px;color:var(--ink-soft);line-height:1.6;margin:8px 0 0;
+  background:var(--paper);border-radius:10px;padding:9px 11px}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   .wrap{padding:0 12px}
@@ -614,7 +628,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v17</b></div>
+    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v18</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label data-i18n="gate.pwd">口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -774,12 +788,18 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   <div id="v-folk" class="view wrap">
     <p class="hint" style="margin-top:20px">👥 所有进过店的人。绿点表示三分钟内还在线。</p>
     <div id="folks" class="folks"></div>
-    <div class="ul-head"><h3>📋 用户列表</h3><span class="sum" id="ulSum"></span></div>
+    <div class="ul-head"><h3>📋 <span data-i18n="folk.list">用户列表</span></h3><span class="sum" id="ulSum"></span></div>
+    <div class="ul-tools">
+      <button id="mergeToggle">🔗 合并同一个人</button>
+      <button id="mergeDo" class="hidden">✅ 合并选中的</button>
+      <button id="mergeCancel" class="hidden">取消</button>
+    </div>
+    <p id="mergeHint" class="merge-hint hidden">勾选属于同一个人的多个账号（比如「网页版」和「手机版」），再点「合并选中的」。合并后统计、日历、人物条都会算作一个人。选第一个被点的作为主账号。</p>
     <div id="ulist" class="ulist"></div>
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v17</b><br>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v18</b><br>
       <span style="font-size:11px">八国语言 · 位置分享 · 英语角 · 消息中心 · 照片评论</span></p>
   </div>
 </main>
@@ -1070,7 +1090,7 @@ const ONLINE_MS = 3*60*1000;
 
 let meals=[], shouts=[], reviews=[], plans=[], shots=[], stickers=[], comments=[], folks=[], words=[];
 let folkMap = {};
-let prefs = { base:'CNY', rates:{...DEFAULT_RATES}, pics:{} };
+let prefs = { base:'CNY', rates:{...DEFAULT_RATES}, pics:{}, alias:{} };
 let cursor = new Date(); cursor.setDate(1);
 let calWho = 'all';
 let openDate=null, pickedLevel='yb', pickedPhoto=null;
@@ -1417,7 +1437,7 @@ async function loadPrefs(){
   try{
     const s=await getDoc(C.prefs());
     if(s.exists()){ const d=s.data();
-      prefs.base=d.base||'CNY'; prefs.rates={...DEFAULT_RATES,...(d.rates||{})}; prefs.pics=d.pics||{}; }
+      prefs.base=d.base||'CNY'; prefs.rates={...DEFAULT_RATES,...(d.rates||{})}; prefs.pics=d.pics||{}; prefs.alias=d.alias||{}; }
   }catch(e){ console.warn('设置读取失败',e) }
   buildCurrencySelects(); renderLevelPicker(); renderRevLevels();
 }
@@ -1473,45 +1493,50 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
 
 /* ===================== 谁的日历 ===================== */
 /* 名字 → cid 索引：让没带 cid 的老记录也能认回本人 */
+/* 手动合并表：把子身份解析到主身份，最多跳几层防止环 */
+function rootId(id){
+  let cur=id, hop=0;
+  while(prefs.alias && prefs.alias[cur] && hop++<8) cur=prefs.alias[cur];
+  return cur;
+}
 function nickIdx(){
   const idx={};
-  folks.forEach(f=>{ const n=(f.nick||'').trim(); if(n && !idx[n]) idx[n]=f.id; });
+  folks.forEach(f=>{ const n=(f.nick||'').trim(); if(n && !idx[n]) idx[n]=rootId(f.id); });
   return idx;
 }
 /* 一条记录归谁：优先 cid，其次按名字找回，最后才当无主 */
 function mineOf(m, idx){
-  if(m.cid) return m.cid;
+  if(m.cid) return rootId(m.cid);
   const n=(m.by||'').trim();
   const i=idx||nickIdx();
   return (n && i[n]) ? i[n] : ('n:'+(n||'匿名'));
 }
 function mealOwners(){
-  const idx=nickIdx(), seen={}, byName={};
-  const put=(k,cidv,nk)=>{
-    const nm=nameOf(cidv,nk)||'匿名';
-    /* 同名的一律并成一个，避免同一个人出现两次 */
-    if(byName[nm]!==undefined) return byName[nm];
-    seen[k]={key:k, cid:cidv||'', nick:nm, n:0};
-    byName[nm]=k;
-    return k;
-  };
-  folks.forEach(f=>put(f.id, f.id, f.nick));
+  const idx=nickIdx();
+  /* 直接用合并后的人做骨架，保证跟食客页一致 */
+  const groups=mergedFolks();
+  const byId={}, byName={};
+  groups.forEach(g=>{ g.n=0; (g.ids||[]).forEach(id=>byId[id]=g); byName[(g.nick||'').trim()]=g;
+    g.key=g.id; g.cid=g.id; });
   meals.forEach(m=>{
-    const raw=mineOf(m,idx);
-    const k=seen[raw]?raw:put(raw, m.cid||'', m.by);
-    seen[k].n++;
+    const r=mineOf(m,idx);
+    let g=byId[r] || byName[(nameOf(m.cid,m.by)||'').trim()];
+    if(!g){ g={key:r, cid:m.cid||'', nick:nameOf(m.cid,m.by)||'匿名', ids:[r], n:0};
+      byId[r]=g; byName[(g.nick||'').trim()]=g; groups.push(g); }
+    g.n++;
   });
-  return Object.values(seen).sort((a,b)=>b.n-a.n);
+  return groups.filter(g=>g.n>0 || folkMap[g.id]).sort((a,b)=>b.n-a.n);
 }
 function calMeals(){
   if(calWho==='all') return meals;
   const idx=nickIdx();
   const o=mealOwners().find(x=>x.key===calWho);
-  const wantName=o?o.nick:'';
+  const ids=new Set(o?(o.ids||[o.id]):[calWho]);
+  const wantName=(o?.nick||'').trim();
   return meals.filter(m=>{
-    if(mineOf(m,idx)===calWho) return true;
-    /* 同名的老记录也算进来 */
-    return wantName && nameOf(m.cid,m.by)===wantName;
+    const r=mineOf(m,idx);
+    if(ids.has(r)||r===calWho) return true;
+    return wantName && (nameOf(m.cid,m.by)||'').trim()===wantName;
   });
 }
 function renderWhoBar(){
@@ -2863,20 +2888,37 @@ function folkStats(f){
 function mergedFolks(){
   const by={};
   [...folks].sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0)).forEach(f=>{
-    const nm=(nameOf(f.id,f.nick)||'').trim()||t('c.anon');
-    if(!by[nm]){
-      by[nm]={ id:f.id, ids:[f.id], nick:nm, avatar:f.avatar||'',
-               lastSeen:f.lastSeen||0, joinedAt:f.joinedAt||0 };
+    /* 先按手动合并的主身份归组；主身份相同的必然合并，即使昵称不同 */
+    const root=rootId(f.id);
+    const rootFolk=folkMap[root];
+    const gk = rootFolk ? root : ((nameOf(f.id,f.nick)||'').trim()||t('c.anon'));
+    if(!by[gk]){
+      by[gk]={ id:root, ids:[f.id], nick:nameOf(root, rootFolk?.nick||f.nick),
+               avatar:f.avatar||'', lastSeen:f.lastSeen||0, joinedAt:f.joinedAt||0 };
     }else{
-      const g=by[nm];
-      g.ids.push(f.id);
-      if(f.id===cid) g.id=f.id;                       // 自己那条优先当主
+      const g=by[gk];
+      if(!g.ids.includes(f.id)) g.ids.push(f.id);
+      if(f.id===cid) g.id=cid;
       if(!g.avatar && f.avatar) g.avatar=f.avatar;
       g.lastSeen=Math.max(g.lastSeen, f.lastSeen||0);
       if(f.joinedAt) g.joinedAt=g.joinedAt?Math.min(g.joinedAt,f.joinedAt):f.joinedAt;
     }
   });
-  return Object.values(by).sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
+  /* 再按昵称并一次，处理没进合并表但同名的 */
+  const byName={};
+  Object.values(by).forEach(g=>{
+    const nm=(g.nick||'').trim()||t('c.anon');
+    if(!byName[nm]) byName[nm]=g;
+    else{
+      const h=byName[nm];
+      g.ids.forEach(x=>{ if(!h.ids.includes(x)) h.ids.push(x) });
+      if(g.ids.includes(cid)) h.id=cid;
+      if(!h.avatar && g.avatar) h.avatar=g.avatar;
+      h.lastSeen=Math.max(h.lastSeen,g.lastSeen);
+      if(g.joinedAt) h.joinedAt=h.joinedAt?Math.min(h.joinedAt,g.joinedAt):g.joinedAt;
+    }
+  });
+  return Object.values(byName).sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
 }
 function renderFolks(){
   if(!$('#folks')) return;
@@ -2888,17 +2930,26 @@ function renderFolks(){
       <div class="fn">${esc(nameOf(f.id,f.nick))||t('c.anon')}</div>
       <div class="fs"><span class="dot ${on?'on':''}"></span>${on?t('folk.online'):ago(f.lastSeen||0)}<br>
         📣 ${st.said} · 🍚 ${st.ate}</div>
-      ${(f.ids||[]).includes(cid)?`<span class="me-tag">${t('folk.isYou')}</span>`:''}</div>`}).join('');
+      ${(f.ids||[]).includes(cid)?`<span class="me-tag">${t('folk.isYou')}</span>`:''}
+      ${(f.ids||[]).length>1?`<div style="margin-top:7px"><button class="mct" data-unmerge="${(f.ids||[]).join(',')}">🔗 已合并 ${f.ids.length} 个 · 点此拆开</button></div>`:''}
+      </div>`}).join('');
   renderUserList();
 }
+let mergeMode=false;      // 合并模式开关
+let mergePicks=[];        // 已选中的组（按点击顺序，第一个是主账号）
 function renderUserList(){
   if(!$('#ulist')) return;
   const now=Date.now();
   const rows=mergedFolks().map(f=>({f,st:folkStats(f),on:(now-(f.lastSeen||0))<ONLINE_MS}))
     .sort((a,b)=>b.st.total-a.st.total||(b.f.lastSeen||0)-(a.f.lastSeen||0));
   $('#ulSum').textContent=`${t('folk.total')} ${rows.length} ${t('folk.people')} · ${rows.filter(r=>r.on).length} ${t('folk.onlineN')}`;
-  $('#ulist').innerHTML=rows.map((r,i)=>`
-    <div class="urow"><span class="rk mono">${i+1}</span>${avatarHTML(r.f.id,r.f.nick)}
+  $('#ulist').innerHTML=rows.map((r,i)=>{
+    const rootIdVal=r.f.id;
+    const pickPos=mergePicks.indexOf(rootIdVal);
+    const chosen=pickPos>=0;
+    return `
+    <div class="urow ${mergeMode?'pick':''} ${chosen?'chosen':''}" data-uid="${rootIdVal}">
+      ${mergeMode?`<span class="chk">${chosen?(pickPos===0?'主':'✓'):''}</span>`:`<span class="rk mono">${i+1}</span>`}${avatarHTML(r.f.id,r.f.nick)}
       <div class="who2"><div class="n2">${esc(nameOf(r.f.id,r.f.nick))}${(r.f.ids||[]).includes(cid)?` <span class="me-tag" style="margin:0">${t('folk.you')}</span>`:''}</div>
         <div class="s2"><span class="dot ${r.on?'on':''}"></span>${r.on?t('folk.online'):t('folk.lastSeen')+' '+ago(r.f.lastSeen||0)}
           ${r.f.joinedAt?' · '+t('folk.joinedAt')+' '+ago(r.f.joinedAt):''}</div></div>
@@ -2909,13 +2960,54 @@ function renderUserList(){
         <div><div class="nv">${r.st.went}</div><div class="nk">${t('folk.went')}</div></div>
         <div><div class="nv">${r.st.shot}</div><div class="nk">${t('folk.shot')}</div></div>
       </div>
-      ${!(r.f.ids||[]).includes(cid)?`<button class="drop" data-drop="${(r.f.ids||[r.f.id]).join(',')}">✕</button>`:''}
-    </div>`).join('');
-  $('#ulist').querySelectorAll('[data-drop]').forEach(b=>b.onclick=async()=>{
-    if(!confirm('把这个人从列表里移除？他下次进店会重新出现。'))return;
-    for(const id of (b.dataset.drop||'').split(',')) await deleteDoc(C.folk(id)).catch(()=>{});
-  });
+      ${(!mergeMode && !(r.f.ids||[]).includes(cid))?`<button class="drop" data-drop="${(r.f.ids||[r.f.id]).join(',')}">✕</button>`:''}
+    </div>`}).join('');
+  if(mergeMode){
+    $('#ulist').querySelectorAll('[data-uid]').forEach(row=>row.onclick=()=>{
+      const id=row.dataset.uid;
+      const i=mergePicks.indexOf(id);
+      if(i>=0) mergePicks.splice(i,1); else mergePicks.push(id);
+      renderUserList();
+    });
+  }else{
+    $('#ulist').querySelectorAll('[data-drop]').forEach(b=>b.onclick=async(e)=>{
+      e.stopPropagation();
+      if(!confirm('把这个人从列表里移除？他下次进店会重新出现。'))return;
+      for(const id of (b.dataset.drop||'').split(',')) await deleteDoc(C.folk(id)).catch(()=>{});
+    });
+  }
 }
+
+/* ---------- 手动合并操作 ---------- */
+function setMergeMode(on){
+  mergeMode=on; mergePicks=[];
+  $('#mergeToggle').classList.toggle('on', on);
+  $('#mergeToggle').textContent = on ? '🔗 选择中…' : '🔗 合并同一个人';
+  $('#mergeDo').classList.toggle('hidden', !on);
+  $('#mergeCancel').classList.toggle('hidden', !on);
+  $('#mergeHint').classList.toggle('hidden', !on);
+  renderUserList();
+}
+$('#mergeToggle').onclick=()=>setMergeMode(!mergeMode);
+$('#mergeCancel').onclick=()=>setMergeMode(false);
+$('#mergeDo').onclick=async()=>{
+  if(mergePicks.length<2){ alert('至少选 2 个账号才能合并'); return; }
+  const primary=mergePicks[0];
+  const subs=mergePicks.slice(1);
+  const primaryName=nameOf(primary, folkMap[primary]?.nick)||'这个人';
+  if(!confirm(`把选中的 ${subs.length} 个账号并入「${primaryName}」？\n以后它们会算作同一个人。可随时在同一个人的卡片上取消。`)) return;
+  const alias={...(prefs.alias||{})};
+  subs.forEach(id=>{ if(id!==primary) alias[id]=primary; });
+  /* 如果主账号本身曾被并到别处，解开它 */
+  delete alias[primary];
+  prefs.alias=alias;
+  try{
+    await setDoc(C.prefs(),{alias},{merge:true});
+  }catch(e){ alert('合并没保存上：'+e.message); return; }
+  setMergeMode(false);
+  renderWhoBar(); renderCal(); renderFolks();
+};
+
 setInterval(()=>{ if(!document.hidden) renderFolks(); },60000);
 
 /* ===================== 汇率 / 等级表情 ===================== */
