@@ -639,6 +639,40 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 .wcpend button{margin-left:auto;font-size:11px;color:var(--ink-soft);text-decoration:underline}
 @media (max-width:640px){.wc .wkill{opacity:.8}.wcin input{min-width:100%}.wcin button.go3{flex:1}}
 
+
+/* ---------- 多图帖子（九宫格） ---------- */
+.grid-1{display:block}
+.grid-1 .gph{width:100%;aspect-ratio:auto;max-height:280px;object-fit:cover;border-radius:14px 14px 0 0;display:block;background:var(--paper-2)}
+.gmulti{display:grid;gap:3px;border-radius:14px 14px 0 0;overflow:hidden}
+.gmulti.g2{grid-template-columns:1fr 1fr}
+.gmulti.g3{grid-template-columns:1fr 1fr 1fr}
+.gmulti.g4{grid-template-columns:1fr 1fr}
+.gmulti .gph{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:var(--paper-2)}
+.gcell{position:relative}
+.gcell .more{position:absolute;inset:0;background:rgba(34,26,21,.5);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
+.gcell .mb2{position:absolute;top:5px;left:5px;background:rgba(34,26,21,.7);color:#fff;
+  font-size:10px;padding:2px 6px;border-radius:999px}
+.gcell .play-ov{width:36px;height:36px;font-size:14px}
+/* 帖子大图查看：主图 + 缩略图条 */
+.post-main{width:100%;border-radius:14px;background:#000;display:block;max-height:60vh;object-fit:contain}
+.post-main-wrap{position:relative}
+.post-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.85);font-size:20px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:2}
+.post-nav.prev{left:8px}.post-nav.next{right:8px}
+.post-count{position:absolute;top:10px;right:12px;background:rgba(34,26,21,.7);color:#fff;
+  font-size:12px;padding:4px 10px;border-radius:999px;z-index:2}
+.post-thumbs{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+.post-thumbs::-webkit-scrollbar{display:none}
+.post-thumbs img{width:52px;height:52px;object-fit:cover;border-radius:9px;flex:none;
+  border:2px solid transparent;cursor:pointer}
+.post-thumbs img.on{border-color:var(--red)}
+@media (max-width:640px){
+  .grid-1 .gph{max-height:340px}
+  .post-nav{width:34px;height:34px;font-size:17px}
+}
+
 /* ================= 手机端 ================= */
 @media (max-width:640px){
   .wrap{padding:0 12px}
@@ -704,7 +738,7 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
 <section id="gate" class="gate">
   <div class="card" id="gateStep1">
     <h1 class="display">黄程锡美食平台 🍚</h1>
-    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v20</b></div>
+    <div class="tag"><span data-i18n="gate.sub">凭口令进店</span> ✨ &nbsp;<b style="color:#D6242C">v21</b></div>
     <div id="gateErr" class="err"></div>
     <div class="field"><label data-i18n="gate.pwd">口令</label>
       <input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••" /></div>
@@ -891,8 +925,8 @@ input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
   </div>
 
   <div class="wrap">
-    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v20</b><br>
-      <span style="font-size:11px">约饭可改 · 单词评论 · 学习资料 · 八国语言 · 英语角</span></p>
+    <p class="ver">🍚 黄程锡美食平台 · 版本 <b>v21</b><br>
+      <span style="font-size:11px">多图帖子 · 约饭可改 · 单词评论 · 学习资料 · 八国语言</span></p>
   </div>
 </main>
 
@@ -1533,12 +1567,18 @@ async function setAvatarFrom(src){
   renderMe(); renderWall(); renderPlans(); renderFolks(); renderWhoBar(); renderMealList(); renderComments();
 }
 async function renderAvatarGrid(){
-  const items=albumItems().filter(it=>(it.media||'image')!=='video');
-  $('#avEmpty').classList.toggle('hidden', items.length>0);
-  $('#avGrid').innerHTML=items.map(it=>
-    `<div class="av-pick" data-avk="${it.key}"><img data-apic2="${it.key}" alt=""></div>`).join('');
+  /* 把每个帖子里的每张静态图都摊开，供选头像 */
+  const pics=[];
+  albumItems().forEach(it=>{
+    (it.photos||[{mkey:it.coverKey||it.key, kind:it.media||'image'}]).forEach(m=>{
+      if((m.kind||'image')!=='video') pics.push(m.mkey);
+    });
+  });
+  $('#avEmpty').classList.toggle('hidden', pics.length>0);
+  $('#avGrid').innerHTML=pics.map(k=>
+    `<div class="av-pick" data-avk="${k}"><img data-apic2="${k}" alt=""></div>`).join('');
   $('#avGrid').querySelectorAll('[data-avk]').forEach(el=>el.onclick=async()=>{
-    const src=photoCache[el.dataset.avk]; if(!src)return;
+    let src=photoCache[el.dataset.avk]; if(!src) src=await getPhoto(el.dataset.avk); if(!src)return;
     $('#avStatus').textContent=t('av.working');
     try{ await setAvatarFrom(src); $('#avStatus').textContent=t('av.done')+' 🎉';
       setTimeout(()=>$('#avMask').classList.remove('on'),500);
@@ -2337,17 +2377,31 @@ $('#pSave').onclick=async()=>{
 function albumItems(){
   const a=meals.filter(m=>m.hasPhoto).map(m=>({
     key:m.id, title:m.name, sub:m.date, by:m.by, bycid:m.cid, level:m.level, ms:m.createdAtMs||0,
-    extra:[m.amount?money(m.amount,m.currency):'', m.note].filter(Boolean).join(' · '), kind:'meal'
+    extra:[m.amount?money(m.amount,m.currency):'', m.note].filter(Boolean).join(' · '), kind:'meal',
+    photos:[{mkey:m.id, kind:'image', chunks:0}], coverKey:m.id
   }));
   const b=reviews.filter(r=>r.hasPhoto).map(r=>({
     key:'rev_'+r.id, title:r.place, sub:'品鉴', by:r.author, bycid:r.cid, level:r.level,
-    ms:r.createdAtMs||0, extra:r.verdict||'', kind:'rev'
+    ms:r.createdAtMs||0, extra:r.verdict||'', kind:'rev',
+    photos:[{mkey:'rev_'+r.id, kind:'image', chunks:0}], coverKey:'rev_'+r.id
   }));
-  const c2=shots.map(s=>({
-    key:'shot_'+s.id, id:s.id, title:s.caption||'照片', sub:'相册', by:s.by, bycid:s.cid,
-    level:s.level, ms:s.createdAtMs||0, extra:'', kind:'shot', own:true,
-    media:s.kind||'image', chunks:s.chunks||0, mime:s.mime||'', dur:s.dur||0
-  }));
+  const c2=shots.map(s=>{
+    /* 新版：s.items 是数组；老版：单图，用 shot_<id> 那张 */
+    let media;
+    if(Array.isArray(s.items) && s.items.length){
+      media=s.items.map(m=>({mkey:m.mkey, kind:m.kind||'image', chunks:m.chunks||0,
+        mime:m.mime||'', dur:m.dur||0}));
+    }else{
+      media=[{mkey:'shot_'+s.id, kind:s.kind||'image', chunks:s.chunks||0,
+        mime:s.mime||'', dur:s.dur||0}];
+    }
+    return {
+      key:'shot_'+s.id, id:s.id, title:s.caption||'照片', sub:'相册', by:s.by, bycid:s.cid,
+      level:s.level, ms:s.createdAtMs||0, extra:'', kind:'shot', own:true,
+      media:media[0].kind, chunks:media[0].chunks, mime:media[0].mime, dur:media[0].dur,
+      photos:media, coverKey:media[0].mkey
+    };
+  });
   return [...a,...b,...c2].sort((x,y)=>y.ms-x.ms);
 }
 const cmtCount = k => comments.filter(c=>c.key===k)
@@ -2359,14 +2413,30 @@ async function renderAlbum(){
   $('#albEmpty').classList.toggle('hidden', items.length>0);
   $('#album').innerHTML=items.map(it=>{
     const n=cmtCount(it.key);
-    const mk=it.media||'image';
+    const ph=it.photos||[{mkey:it.coverKey||it.key, kind:it.media||'image'}];
+    const cnt=ph.length;
+    let grid;
+    if(cnt<=1){
+      const m0=ph[0]||{};
+      grid=`<div class="grid-1"><div class="gcell">
+        <img class="gph" data-apic="${m0.mkey}" alt="${esc(it.title)}">
+        ${m0.kind==='video'?`<span class="mbadge">🎬 ${durText(m0.dur)}</span><span class="play-ov">▶</span>`:''}
+        ${m0.kind==='gif'?`<span class="mbadge gif">GIF</span>`:''}</div></div>`;
+    }else{
+      const show=ph.slice(0,4);
+      const gc=cnt===2?'g2':cnt===3?'g3':'g4';
+      grid=`<div class="gmulti ${gc}">`+show.map((m,i)=>`
+        <div class="gcell">
+          <img class="gph" data-apic="${m.mkey}" alt="">
+          ${m.kind==='video'?`<span class="play-ov">▶</span>`:''}
+          ${m.kind==='gif'?`<span class="mb2">GIF</span>`:''}
+          ${(i===3 && cnt>4)?`<div class="more">+${cnt-4}</div>`:''}
+        </div>`).join('')+`</div>`;
+    }
     return `<div class="shot-card" data-key="${it.key}">
       ${n?`<span class="cbadge">💬 ${n}</span>`:''}
-      <div class="ph-wrap">
-        <img class="ph" data-apic="${it.key}" alt="${esc(it.title)}">
-        ${mk==='video'?`<span class="mbadge">🎬 ${durText(it.dur)}</span><span class="play-ov">▶</span>`:''}
-        ${mk==='gif'?`<span class="mbadge gif">GIF</span>`:''}
-      </div>
+      ${cnt>1?`<span class="mbadge" style="z-index:2">🖼️ ${cnt}</span>`:''}
+      ${grid}
       <div class="cap"><div class="n">${faceHTML(it.level,13)} ${esc(it.title)||'没写名字'}</div>
         <div class="m"><span>${esc(it.sub)}</span><span>${esc(nameOf(it.bycid,it.by))}</span></div></div>
     </div>`}).join('');
@@ -2376,48 +2446,76 @@ async function renderAlbum(){
   });
   for(const img of $('#album').querySelectorAll('[data-apic]')){
     const src=await getPhoto(img.dataset.apic);
-    if(src) img.src=src; else img.closest('.shot-card')?.remove();
+    if(src) img.src=src; else img.style.visibility='hidden';
   }
   refreshNotes();
 }
+let boxPhotos=[], boxIdx=0;
 function openBox(it){
   boxKey=it.key; boxShotId=it.id||''; boxOwn=!!it.own;
-  boxChunks=it.chunks||0; boxMedia=it.media||'image'; boxMime=it.mime||'';
-  $('#boxTitle').textContent=it.title||'照片';
-  renderBoxMedia(it);
+  boxPhotos = it.photos || [{mkey:it.coverKey||it.key, kind:it.media||'image', chunks:it.chunks||0}];
+  boxIdx=0;
+  $('#boxTitle').textContent = it.title||'照片';
   $('#boxInfo').innerHTML=`${faceHTML(it.level,18)} ${esc(lvName(it.level))} · ${esc(it.sub)}
     ${' · 📷 '+esc(nameOf(it.bycid,it.by))}${it.extra?'<br>'+esc(it.extra):''}`;
   $('#boxDel').style.display = boxOwn?'block':'none';
   pendCmtStk=''; $('#cmtStkPend').classList.remove('on'); $('#cmtInput').value='';
   pendCmtImg=''; $('#cmtImgPend').classList.remove('on');
+  renderPost();
   renderComments();
   $('#boxMask').classList.add('on');
 }
-async function renderBoxMedia(it){
-  const box=$('#boxMedia'), thumb=photoCache[it.key]||'';
-  const mk=it.media||'image';
-  if(mk==='image' || !it.chunks){
-    box.innerHTML=`<img class="big" src="${thumb}" alt="">`;
+function renderPost(){
+  const box=$('#boxMedia');
+  const multi=boxPhotos.length>1;
+  const thumbs = multi ? `<div class="post-thumbs">${boxPhotos.map((m,i)=>
+    `<img data-pthumb="${i}" class="${i===boxIdx?'on':''}" data-apic2="${m.mkey}" alt="">`).join('')}</div>` : '';
+  box.innerHTML = `<div class="post-main-wrap">
+      <div class="post-count" ${multi?'':'style="display:none"'}>${boxIdx+1} / ${boxPhotos.length}</div>
+      ${multi?`<button class="post-nav prev" data-pnav="-1">‹</button>
+               <button class="post-nav next" data-pnav="1">›</button>`:''}
+      <div id="postSlot"></div>
+    </div>${thumbs}`;
+  box.querySelectorAll('[data-pnav]').forEach(b=>b.onclick=()=>{
+    boxIdx=(boxIdx+ (+b.dataset.pnav) + boxPhotos.length)%boxPhotos.length; renderPost();
+  });
+  box.querySelectorAll('[data-pthumb]').forEach(im=>im.onclick=()=>{ boxIdx=+im.dataset.pthumb; renderPost(); });
+  for(const im of box.querySelectorAll('[data-apic2]')){
+    getPhoto(im.dataset.apic2).then(src=>{ if(src) im.src=src; });
+  }
+  renderSlot();
+}
+async function renderSlot(){
+  const slot=$('#postSlot'); if(!slot) return;
+  const m=boxPhotos[boxIdx]; if(!m) return;
+  const thumb=photoCache[m.mkey]||'';
+  const mk=m.kind||'image';
+  if(mk==='image' || !m.chunks){
+    slot.innerHTML=`<img class="post-main" src="${thumb}" alt="">`;
+    if(!thumb){ const src=await getPhoto(m.mkey); if(src && boxPhotos[boxIdx]===m) slot.querySelector('img').src=src; }
     return;
   }
-  box.innerHTML=`<img class="big" src="${thumb}" alt="">
-    <div class="loadbar">${mk==='video'?'🎬 正在载入视频…':'正在载入动图…'}</div>`;
-  const full=await loadMedia(it.key, it.chunks);
-  if(boxKey!==it.key) return;                 // 已经切走了
-  if(!full){ box.innerHTML=`<img class="big" src="${thumb}" alt="">
-    <div class="loadbar">原文件丢了，只剩封面。</div>`; return; }
-  box.innerHTML = mk==='video'
-    ? `<video class="big" controls playsinline preload="metadata" poster="${thumb}" src="${full}"></video>`
-    : `<img class="big" src="${full}" alt="">`;
+  slot.innerHTML=`<img class="post-main" src="${thumb}" alt="">
+    <div class="loadbar">${mk==='video'?'🎬 '+t('alb.loadVid'):t('alb.loadGif')}</div>`;
+  const full=await loadMedia(m.mkey, m.chunks);
+  if(boxPhotos[boxIdx]!==m) return;
+  if(!full){ slot.innerHTML=`<img class="post-main" src="${thumb}" alt=""><div class="loadbar">—</div>`; return; }
+  slot.innerHTML = mk==='video'
+    ? `<video class="post-main" controls playsinline preload="metadata" poster="${thumb}" src="${full}"></video>`
+    : `<img class="post-main" src="${full}" alt="">`;
 }
 $('#boxDel').onclick=async()=>{
   if(!boxShotId) return;
-  if(!confirm('删掉这个？评论也会一起没。')) return;
+  if(!confirm('删掉这个帖子？里面所有图和评论都会没。')) return;
   await deleteDoc(C.one('shots',boxShotId));
+  /* 清掉帖子里每一张图（含分片） */
+  (boxPhotos||[]).forEach(m=>{
+    deleteDoc(C.photo(m.mkey)).catch(()=>{});
+    delMedia(m.mkey, m.chunks||0);
+    delete photoCache[m.mkey];
+  });
   deleteDoc(C.photo(boxKey)).catch(()=>{});
-  delMedia(boxKey, boxChunks);
   for(const c of comments.filter(c=>c.key===boxKey)) deleteDoc(C.one('comments',c.id)).catch(()=>{});
-  delete photoCache[boxKey];
   $('#boxMask').classList.remove('on');
 };
 
@@ -2646,29 +2744,28 @@ $('#upSave').onclick=async()=>{
   if(!upQueue.length) return;
   const btn=$('#upSave'); btn.disabled=true;
   const cap=$('#upCap').value.trim();
-  let done=0;
   try{
+    /* 一次上传的多张图 = 一个帖子（一个 shot 文档，内含 items 数组） */
+    const ref=await addDoc(C.shots(),{caption:cap,level:upLevel,by:nick,cid,
+      count:upQueue.length, createdAtMs:Date.now(),createdAt:serverTimestamp()});
+    const items=[];
+    let done=0;
     for(const it of upQueue){
       done++; btn.textContent=`上传中 ${done}/${upQueue.length}…`;
-      const ref=await addDoc(C.shots(),{caption:cap,level:upLevel,by:nick,cid,
-        kind:it.kind, mime:it.mime, dur:it.dur||0, chunks:0,
-        createdAtMs:Date.now(),createdAt:serverTimestamp()});
-      const key='shot_'+ref.id;
-      await setDoc(C.photo(key),{data:it.thumb});
-      photoCache[key]=it.thumb;
+      const mkey='shot_'+ref.id+'_'+done;   // 每张图独立的媒体 key
+      await setDoc(C.photo(mkey),{data:it.thumb});
+      photoCache[mkey]=it.thumb;
+      let chunks=0;
       if(it.full){
-        try{
-          const n=await saveMedia(key,it.full);
-          await updateDoc(C.one('shots',ref.id),{chunks:n});
-        }catch(e){
-          await updateDoc(C.one('shots',ref.id),{kind:'image',chunks:0});
-          alert(`「${it.name}」只存下了封面：${e.message}`);
-        }
+        try{ chunks=await saveMedia(mkey,it.full); }
+        catch(e){ alert(`「${it.name}」只存下了封面：${e.message}`); it.kind='image'; }
       }
+      items.push({ mkey, kind:it.kind, mime:it.mime, dur:it.dur||0, chunks });
     }
+    await updateDoc(C.one('shots',ref.id),{items});
     upQueue=[]; $('#upMask').classList.remove('on');
   }catch(e){ alert('传不上去：'+e.message) }
-  finally{ btn.disabled=false; btn.textContent='传上去 🚀' }
+  finally{ btn.disabled=false; btn.textContent=t('alb.up')+' 🚀' }
 };
 
 /* ===================== 品鉴 ===================== */
@@ -3446,6 +3543,7 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.m
 new MutationObserver(()=>{
   if(!$('#boxMask').classList.contains('on')){
     const v=$('#boxMedia')?.querySelector('video'); if(v) v.pause();
+    const v2=$('#postSlot')?.querySelector('video'); if(v2) v2.pause();
   }
 }).observe($('#boxMask'),{attributes:true,attributeFilter:['class']});
 document.addEventListener('keydown',e=>{
